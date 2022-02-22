@@ -5,4 +5,4 @@ This Boards can be imported / provisioned to a Grafana that is connected to a Sp
 
 All dashboards seen here are subject to be integrated into the tooling itself once in a while (only with permission of the owner). 
 
-One folder per area (Db2, PostgreSQL, SQL Server, Oracle, Linux, Windows) and one folder per dashboard is needed. Please provide a readme besides the dashboard describing the prereqs and needed collectors and minimum version of speedgain for databases for that board to be working.
+One folder per area (Db2, PostgreSQL, SQL Server, Oracle, Linux, Windows, Speedgain System) and one folder per dashboard is needed. Please provide a readme besides the dashboard describing the prereqs and needed collectors and minimum version of speedgain for databases for that board to be working.
