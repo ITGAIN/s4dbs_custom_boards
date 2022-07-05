@@ -42,8 +42,7 @@
       "includeVars": false,
       "keepTime": false,
       "tags": [
-        "overview",
-        "custom"
+        "overview"
       ],
       "title": "Overview Dashboards",
       "type": "dashboards"
