@@ -236,7 +236,7 @@
           "hide": false,
           "metricColumn": "fs_id",
           "rawQuery": true,
-          "rawSql": "SELECT\n  current_timestamp as time,\n  fs_id||' '||substring(last(container_name,snapshot_time),1,100) AS metric,\n  last(fs_used_size,snapshot_time)::decimal  /\n  last(fs_total_size,snapshot_time)::decimal as fs_used_pct\nFROM spg_mon_db2.mon_get_container\nWHERE\n  $__timeFilter(snapshot_time) AND\n  display_name||member = '$datasource'\n   AND case when -1 in ($TBSPPicker) then 1=1 else tbsp_id in ($TBSPPicker) end\n  AND case when -1::int in ($FSPicker) then 1=1 else fs_id::int in ($FSPicker) end\nGROUP BY 1,fs_id\nORDER BY 3 desc",
+          "rawSql": "SELECT\n  current_timestamp as time,\n  fs_id||' '||substring(last(container_name,snapshot_time),1,100) AS metric,\n  last(fs_used_size,snapshot_time)::decimal  /\n  last(fs_total_size,snapshot_time)::decimal as fs_used_pct\nFROM spg_mon_db2.v_mon_get_container\nWHERE\n  $__timeFilter(snapshot_time) AND\n  display_name||member = '$datasource'\n   AND case when -1 in ($TBSPPicker) then 1=1 else tbsp_id in ($TBSPPicker) end\n  AND case when -1::int in ($FSPicker) then 1=1 else fs_id::int in ($FSPicker) end\nGROUP BY 1,fs_id\nORDER BY 3 desc",
           "refId": "B",
           "select": [
             [
@@ -354,7 +354,7 @@
           "hide": false,
           "metricColumn": "fs_id",
           "rawQuery": true,
-          "rawSql": "SELECT\n  current_timestamp as time,\n  fs_id AS metric,\n  last(fs_total_size,snapshot_time)::decimal- last(fs_used_size,snapshot_time)::decimal  \n   as fs_free\nFROM spg_mon_db2.mon_get_container\nWHERE\n  $__timeFilter(snapshot_time) AND\n  display_name||member = '$datasource'\n   AND case when -1 in ($TBSPPicker) then 1=1 else tbsp_id in ($TBSPPicker) end\n  AND case when -1::int in ($FSPicker) then 1=1 else fs_id::int in ($FSPicker) end\nGROUP BY 1,fs_id\nORDER BY 3 asc",
+          "rawSql": "SELECT\n  current_timestamp as time,\n  fs_id AS metric,\n  last(fs_total_size,snapshot_time)::decimal- last(fs_used_size,snapshot_time)::decimal  \n   as fs_free\nFROM spg_mon_db2.v_mon_get_container\nWHERE\n  $__timeFilter(snapshot_time) AND\n  display_name||member = '$datasource'\n   AND case when -1 in ($TBSPPicker) then 1=1 else tbsp_id in ($TBSPPicker) end\n  AND case when -1::int in ($FSPicker) then 1=1 else fs_id::int in ($FSPicker) end\nGROUP BY 1,fs_id\nORDER BY 3 asc",
           "refId": "B",
           "select": [
             [
@@ -512,7 +512,7 @@
           "hide": false,
           "metricColumn": "fs_id",
           "rawQuery": true,
-          "rawSql": "SELECT\n  $__timeGroupAlias(snapshot_time,$__interval),\n  fs_id AS metric,\n  avg(fs_used_size)\n   as fs_used\nFROM spg_mon_db2.mon_get_container\nWHERE\n  $__timeFilter(snapshot_time) AND\n  display_name||member = '$datasource'\n   AND case when -1 in ($TBSPPicker) then 1=1 else tbsp_id in ($TBSPPicker) end\n  AND case when -1::int in ($FSPicker) then 1=1 else fs_id::int in ($FSPicker) end\nGROUP BY 1,fs_id\nORDER BY 1",
+          "rawSql": "SELECT\n  $__timeGroupAlias(snapshot_time,$__interval),\n  fs_id AS metric,\n  avg(fs_used_size)\n   as fs_used\nFROM spg_mon_db2.v_mon_get_container\nWHERE\n  $__timeFilter(snapshot_time) AND\n  display_name||member = '$datasource'\n   AND case when -1 in ($TBSPPicker) then 1=1 else tbsp_id in ($TBSPPicker) end\n  AND case when -1::int in ($FSPicker) then 1=1 else fs_id::int in ($FSPicker) end\nGROUP BY 1,fs_id\nORDER BY 1",
           "refId": "B",
           "select": [
             [
@@ -668,7 +668,7 @@
           "hide": false,
           "metricColumn": "fs_id",
           "rawQuery": true,
-          "rawSql": "SELECT\n  $__timeGroupAlias(snapshot_time,$__interval),\n  fs_id AS metric,\n  --last(fs_total_size,snapshot_time)::decimal- last(fs_used_size,snapshot_time)::\n  avg(fs_total_size) - avg(fs_used_size)\n   as fs_free\nFROM spg_mon_db2.mon_get_container\nWHERE\n  $__timeFilter(snapshot_time) AND\n  display_name||member = '$datasource'\n   AND case when -1 in ($TBSPPicker) then 1=1 else tbsp_id in ($TBSPPicker) end\n  AND case when -1::int in ($FSPicker) then 1=1 else fs_id::int in ($FSPicker) end\nGROUP BY 1,fs_id\nORDER BY 1 ",
+          "rawSql": "SELECT\n  $__timeGroupAlias(snapshot_time,$__interval),\n  fs_id AS metric,\n  --last(fs_total_size,snapshot_time)::decimal- last(fs_used_size,snapshot_time)::\n  avg(fs_total_size) - avg(fs_used_size)\n   as fs_free\nFROM spg_mon_db2.v_mon_get_container\nWHERE\n  $__timeFilter(snapshot_time) AND\n  display_name||member = '$datasource'\n   AND case when -1 in ($TBSPPicker) then 1=1 else tbsp_id in ($TBSPPicker) end\n  AND case when -1::int in ($FSPicker) then 1=1 else fs_id::int in ($FSPicker) end\nGROUP BY 1,fs_id\nORDER BY 1 ",
           "refId": "B",
           "select": [
             [
@@ -757,7 +757,7 @@
       }
     },
     {
-      "collapsed": false,
+      "collapsed": true,
       "datasource": null,
       "gridPos": {
         "h": 1,
@@ -766,207 +766,208 @@
         "y": 24
       },
       "id": 22,
-      "panels": [],
+      "panels": [
+        {
+          "datasource": "$DataSourceVariable",
+          "description": "",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {
+                "align": null,
+                "filterable": true
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "snapshot_time"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "dateTimeAsIso"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byRegexp",
+                  "options": "/fs.*size/"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "bytes"
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 13,
+            "w": 24,
+            "x": 0,
+            "y": 25
+          },
+          "id": 18,
+          "interval": "1m",
+          "links": [],
+          "options": {
+            "showHeader": true
+          },
+          "pluginVersion": "7.5.11",
+          "targets": [
+            {
+              "format": "table",
+              "group": [
+                {
+                  "params": [
+                    "$__interval",
+                    "none"
+                  ],
+                  "type": "time"
+                },
+                {
+                  "params": [
+                    "fs_id"
+                  ],
+                  "type": "column"
+                }
+              ],
+              "hide": false,
+              "metricColumn": "fs_id",
+              "rawQuery": true,
+              "rawSql": "SELECT\n$__timeGroupAlias(snapshot_time,$__interval),\n  *\nFROM spg_mon_db2.v_mon_get_container\nWHERE\n  $__timeFilter(snapshot_time) AND\n  display_name||member = '$datasource'\n   AND case when -1 in ($TBSPPicker) then 1=1 else tbsp_id in ($TBSPPicker) end\n  AND case when -1::int in ($FSPicker) then 1=1 else fs_id::int in ($FSPicker) end\n--GROUP BY 1,fs_id\nORDER BY 3 desc fetch first 500 row only",
+              "refId": "B",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "fs_used_size/fs_total_size"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "avg"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "fs_total_size"
+                    ],
+                    "type": "alias"
+                  }
+                ]
+              ],
+              "table": "spg_mon_db2.mon_get_container",
+              "timeColumn": "snapshot_time",
+              "timeColumnType": "timestamptz",
+              "where": [
+                {
+                  "name": "$__timeFilter",
+                  "params": [],
+                  "type": "macro"
+                },
+                {
+                  "name": "",
+                  "params": [
+                    "hostname||':'||inst_name||'/'||db_name",
+                    "=",
+                    "'$datasource' "
+                  ],
+                  "type": "expression"
+                }
+              ]
+            }
+          ],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Detail Table (fetch first 500 row only",
+          "transformations": [
+            {
+              "id": "organize",
+              "options": {
+                "excludeByName": {
+                  "db_name": true,
+                  "display_name": true,
+                  "hostname": true,
+                  "id": true,
+                  "inst_name": true,
+                  "port": true,
+                  "snapshot_time": false,
+                  "time": true
+                },
+                "indexByName": {
+                  "accessible": 32,
+                  "block_ios": 26,
+                  "container_id": 14,
+                  "container_name": 13,
+                  "container_type": 16,
+                  "db_name": 7,
+                  "db_storage_path_id": 34,
+                  "dbpartitionnum": 33,
+                  "direct_read_time": 20,
+                  "direct_reads": 18,
+                  "direct_write_time": 21,
+                  "direct_writes": 19,
+                  "display_name": 5,
+                  "fs_id": 8,
+                  "fs_total_size": 9,
+                  "fs_used_size": 10,
+                  "hostname": 3,
+                  "id": 1,
+                  "inst_name": 6,
+                  "member": 15,
+                  "pages_from_block_ios": 27,
+                  "pages_from_vectored_ios": 25,
+                  "pages_read": 22,
+                  "pages_written": 23,
+                  "pool_read_time": 28,
+                  "pool_write_time": 29,
+                  "port": 4,
+                  "snapshot_time": 2,
+                  "stripe_set": 17,
+                  "tbsp_id": 12,
+                  "tbsp_name": 11,
+                  "time": 0,
+                  "total_pages": 30,
+                  "usable_pages": 31,
+                  "vectored_ios": 24
+                },
+                "renameByName": {}
+              }
+            }
+          ],
+          "type": "table"
+        }
+      ],
       "title": "Detail Table",
       "type": "row"
-    },
-    {
-      "datasource": "$DataSourceVariable",
-      "description": "",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "custom": {
-            "align": null,
-            "filterable": true
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "snapshot_time"
-            },
-            "properties": [
-              {
-                "id": "unit",
-                "value": "dateTimeAsIso"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byRegexp",
-              "options": "/fs.*size/"
-            },
-            "properties": [
-              {
-                "id": "unit",
-                "value": "bytes"
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 13,
-        "w": 24,
-        "x": 0,
-        "y": 25
-      },
-      "id": 18,
-      "interval": "1m",
-      "links": [],
-      "options": {
-        "showHeader": true
-      },
-      "pluginVersion": "7.5.11",
-      "targets": [
-        {
-          "format": "table",
-          "group": [
-            {
-              "params": [
-                "$__interval",
-                "none"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "fs_id"
-              ],
-              "type": "column"
-            }
-          ],
-          "hide": false,
-          "metricColumn": "fs_id",
-          "rawQuery": true,
-          "rawSql": "SELECT\n$__timeGroupAlias(snapshot_time,$__interval),\n  *\nFROM spg_mon_db2.mon_get_container\nWHERE\n  $__timeFilter(snapshot_time) AND\n  display_name||member = '$datasource'\n   AND case when -1 in ($TBSPPicker) then 1=1 else tbsp_id in ($TBSPPicker) end\n  AND case when -1::int in ($FSPicker) then 1=1 else fs_id::int in ($FSPicker) end\n--GROUP BY 1,fs_id\nORDER BY 3 desc fetch first 500 row only",
-          "refId": "B",
-          "select": [
-            [
-              {
-                "params": [
-                  "fs_used_size/fs_total_size"
-                ],
-                "type": "column"
-              },
-              {
-                "params": [
-                  "avg"
-                ],
-                "type": "aggregate"
-              },
-              {
-                "params": [
-                  "fs_total_size"
-                ],
-                "type": "alias"
-              }
-            ]
-          ],
-          "table": "spg_mon_db2.mon_get_container",
-          "timeColumn": "snapshot_time",
-          "timeColumnType": "timestamptz",
-          "where": [
-            {
-              "name": "$__timeFilter",
-              "params": [],
-              "type": "macro"
-            },
-            {
-              "name": "",
-              "params": [
-                "hostname||':'||inst_name||'/'||db_name",
-                "=",
-                "'$datasource' "
-              ],
-              "type": "expression"
-            }
-          ]
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Detail Table (fetch first 500 row only",
-      "transformations": [
-        {
-          "id": "organize",
-          "options": {
-            "excludeByName": {
-              "db_name": true,
-              "display_name": true,
-              "hostname": true,
-              "id": true,
-              "inst_name": true,
-              "port": true,
-              "snapshot_time": false,
-              "time": true
-            },
-            "indexByName": {
-              "accessible": 32,
-              "block_ios": 26,
-              "container_id": 14,
-              "container_name": 13,
-              "container_type": 16,
-              "db_name": 7,
-              "db_storage_path_id": 34,
-              "dbpartitionnum": 33,
-              "direct_read_time": 20,
-              "direct_reads": 18,
-              "direct_write_time": 21,
-              "direct_writes": 19,
-              "display_name": 5,
-              "fs_id": 8,
-              "fs_total_size": 9,
-              "fs_used_size": 10,
-              "hostname": 3,
-              "id": 1,
-              "inst_name": 6,
-              "member": 15,
-              "pages_from_block_ios": 27,
-              "pages_from_vectored_ios": 25,
-              "pages_read": 22,
-              "pages_written": 23,
-              "pool_read_time": 28,
-              "pool_write_time": 29,
-              "port": 4,
-              "snapshot_time": 2,
-              "stripe_set": 17,
-              "tbsp_id": 12,
-              "tbsp_name": 11,
-              "time": 0,
-              "total_pages": 30,
-              "usable_pages": 31,
-              "vectored_ios": 24
-            },
-            "renameByName": {}
-          }
-        }
-      ],
-      "type": "table"
     }
   ],
   "refresh": "1m",
   "schemaVersion": 27,
-  "style": "dark",
+  "style": "",
   "tags": [
     "db2",
     "visible",
@@ -1035,7 +1036,7 @@
           ]
         },
         "datasource": "$DataSourceVariable",
-        "definition": "select distinct tbsp_id as \"__value\", tbsp_name as \"__text\" from spg_mon_db2.mon_get_tablespace where \n$__timeFilter(snapshot_time) and display_name||member = '$datasource'",
+        "definition": "select distinct tbsp_id as \"__value\", tbsp_name as \"__text\" from spg_mon_db2.v_mon_get_container where \n$__timeFilter(snapshot_time) and display_name||member = '$datasource'",
         "description": null,
         "error": null,
         "hide": 0,
@@ -1044,7 +1045,7 @@
         "multi": true,
         "name": "TBSPPicker",
         "options": [],
-        "query": "select distinct tbsp_id as \"__value\", tbsp_name as \"__text\" from spg_mon_db2.mon_get_tablespace where \n$__timeFilter(snapshot_time) and display_name||member = '$datasource'",
+        "query": "select distinct tbsp_id as \"__value\", tbsp_name as \"__text\" from spg_mon_db2.v_mon_get_container where \n$__timeFilter(snapshot_time) and display_name||member = '$datasource'",
         "refresh": 2,
         "regex": "",
         "skipUrlSync": false,
@@ -1067,7 +1068,7 @@
           ]
         },
         "datasource": "$DataSourceVariable",
-        "definition": "select fs_id as \"__value\", fs_id||substring(last(container_name,snapshot_time),1,100)  as \"__text\" from spg_mon_db2.mon_get_container where \n$__timeFilter(snapshot_time) and display_name||member = '$datasource' AND case when -1 in ($TBSPPicker) then 1=1 else tbsp_id in ($TBSPPicker) end\ngroup by fs_id",
+        "definition": "select fs_id as \"__value\", fs_id||substring(last(container_name,snapshot_time),1,100)  as \"__text\" from spg_mon_db2.v_mon_get_container where \n$__timeFilter(snapshot_time) and display_name||member = '$datasource' AND case when -1 in ($TBSPPicker) then 1=1 else tbsp_id in ($TBSPPicker) end\ngroup by fs_id",
         "description": "Picker shows uniq filesystem id and one path or file on that specific filesystem",
         "error": null,
         "hide": 0,
@@ -1076,7 +1077,7 @@
         "multi": true,
         "name": "FSPicker",
         "options": [],
-        "query": "select fs_id as \"__value\", fs_id||substring(last(container_name,snapshot_time),1,100)  as \"__text\" from spg_mon_db2.mon_get_container where \n$__timeFilter(snapshot_time) and display_name||member = '$datasource' AND case when -1 in ($TBSPPicker) then 1=1 else tbsp_id in ($TBSPPicker) end\ngroup by fs_id",
+        "query": "select fs_id as \"__value\", fs_id||substring(last(container_name,snapshot_time),1,100)  as \"__text\" from spg_mon_db2.v_mon_get_container where \n$__timeFilter(snapshot_time) and display_name||member = '$datasource' AND case when -1 in ($TBSPPicker) then 1=1 else tbsp_id in ($TBSPPicker) end\ngroup by fs_id",
         "refresh": 2,
         "regex": "",
         "skipUrlSync": false,
