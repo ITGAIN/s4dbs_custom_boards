@@ -1,4 +1,4 @@
-# Debug Collector Status
+# Collector Status
 ## Requirements
 - Version: minimum 1.0
 
