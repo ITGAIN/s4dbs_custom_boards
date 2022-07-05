@@ -1,0 +1,1124 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 1,
+  "iteration": 1657025991042,
+  "links": [
+    {
+      "icon": "external link",
+      "keepTime": true,
+      "tags": [
+        "s4dbsoverview"
+      ],
+      "type": "dashboards"
+    },
+    {
+      "asDropdown": true,
+      "icon": "external link",
+      "includeVars": true,
+      "keepTime": true,
+      "tags": [
+        "overview"
+      ],
+      "title": "Overview Dashboards",
+      "type": "dashboards"
+    },
+    {
+      "asDropdown": true,
+      "icon": "external link",
+      "includeVars": true,
+      "keepTime": true,
+      "tags": [
+        "db2",
+        "visible"
+      ],
+      "title": "Db2 Dashboards",
+      "type": "dashboards"
+    }
+  ],
+  "panels": [
+    {
+      "datasource": "$DataSourceVariable",
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "links": [],
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Rows Read"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Show SQL Details",
+                    "url": "d/zZiQyn1Zz/sql?orgId=1&${__url_time_range}&${__all_variables}"
+                  },
+                  {
+                    "title": "Show App List",
+                    "url": "d/F0CVKNJWz/application-list?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Rows Modified"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Show SQL Details",
+                    "url": "d/zZiQyn1Zz/sql?orgId=1&${__url_time_range}&${__all_variables}"
+                  },
+                  {
+                    "title": "Show App List",
+                    "url": "d/F0CVKNJWz/application-list?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Rows Selected"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Show SQL Details",
+                    "url": "d/zZiQyn1Zz/sql?orgId=1&${__url_time_range}&${__all_variables}"
+                  },
+                  {
+                    "title": "Show App List",
+                    "url": "d/F0CVKNJWz/application-list?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Logical Reads"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Show App List",
+                    "url": "d/F0CVKNJWz/application-list?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Physical Reads"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Show App List",
+                    "url": "d/F0CVKNJWz/application-list?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Writes"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Show App List",
+                    "url": "d/F0CVKNJWz/application-list?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "id": 15,
+      "interval": "1m",
+      "links": [],
+      "options": {
+        "displayMode": "basic",
+        "orientation": "horizontal",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "text": {}
+      },
+      "pluginVersion": "7.5.11",
+      "targets": [
+        {
+          "format": "time_series",
+          "group": [
+            {
+              "params": [
+                "$__interval",
+                "none"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "fs_id"
+              ],
+              "type": "column"
+            }
+          ],
+          "hide": false,
+          "metricColumn": "fs_id",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  current_timestamp as time,\n  fs_id||' '||substring(last(container_name,snapshot_time),1,100) AS metric,\n  last(fs_used_size,snapshot_time)::decimal  /\n  last(fs_total_size,snapshot_time)::decimal as fs_used_pct\nFROM spg_mon_db2.mon_get_container\nWHERE\n  $__timeFilter(snapshot_time) AND\n  display_name||member = '$datasource'\n   AND case when -1 in ($TBSPPicker) then 1=1 else tbsp_id in ($TBSPPicker) end\n  AND case when -1::int in ($FSPicker) then 1=1 else fs_id::int in ($FSPicker) end\nGROUP BY 1,fs_id\nORDER BY 3 desc",
+          "refId": "B",
+          "select": [
+            [
+              {
+                "params": [
+                  "fs_used_size/fs_total_size"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "avg"
+                ],
+                "type": "aggregate"
+              },
+              {
+                "params": [
+                  "fs_total_size"
+                ],
+                "type": "alias"
+              }
+            ]
+          ],
+          "table": "spg_mon_db2.mon_get_container",
+          "timeColumn": "snapshot_time",
+          "timeColumnType": "timestamptz",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            },
+            {
+              "name": "",
+              "params": [
+                "hostname||':'||inst_name||'/'||db_name",
+                "=",
+                "'$datasource' "
+              ],
+              "type": "expression"
+            }
+          ]
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Curent Filesystem Usage",
+      "type": "bargauge"
+    },
+    {
+      "aliasColors": {},
+      "bars": true,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "$DataSourceVariable",
+      "description": "",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 12,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "hiddenSeries": false,
+      "id": 17,
+      "interval": "1m",
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": false,
+        "total": false,
+        "values": false
+      },
+      "lines": false,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "7.5.11",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "format": "time_series",
+          "group": [
+            {
+              "params": [
+                "$__interval",
+                "none"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "fs_id"
+              ],
+              "type": "column"
+            }
+          ],
+          "hide": false,
+          "metricColumn": "fs_id",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  current_timestamp as time,\n  fs_id AS metric,\n  last(fs_total_size,snapshot_time)::decimal- last(fs_used_size,snapshot_time)::decimal  \n   as fs_free\nFROM spg_mon_db2.mon_get_container\nWHERE\n  $__timeFilter(snapshot_time) AND\n  display_name||member = '$datasource'\n   AND case when -1 in ($TBSPPicker) then 1=1 else tbsp_id in ($TBSPPicker) end\n  AND case when -1::int in ($FSPicker) then 1=1 else fs_id::int in ($FSPicker) end\nGROUP BY 1,fs_id\nORDER BY 3 asc",
+          "refId": "B",
+          "select": [
+            [
+              {
+                "params": [
+                  "fs_used_size/fs_total_size"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "avg"
+                ],
+                "type": "aggregate"
+              },
+              {
+                "params": [
+                  "fs_total_size"
+                ],
+                "type": "alias"
+              }
+            ]
+          ],
+          "table": "spg_mon_db2.mon_get_container",
+          "timeColumn": "snapshot_time",
+          "timeColumnType": "timestamptz",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            },
+            {
+              "name": "",
+              "params": [
+                "hostname||':'||inst_name||'/'||db_name",
+                "=",
+                "'$datasource' "
+              ],
+              "type": "expression"
+            }
+          ]
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Curent Filesystem Free Size",
+      "tooltip": {
+        "shared": false,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "series",
+        "name": null,
+        "show": true,
+        "values": [
+          "total"
+        ]
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:847",
+          "format": "bytes",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "$$hashKey": "object:848",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "$DataSourceVariable",
+      "description": "",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 12,
+        "w": 12,
+        "x": 0,
+        "y": 12
+      },
+      "hiddenSeries": false,
+      "id": 19,
+      "interval": "1m",
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 2,
+      "links": [],
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "7.5.11",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "format": "time_series",
+          "group": [
+            {
+              "params": [
+                "$__interval",
+                "none"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "fs_id"
+              ],
+              "type": "column"
+            }
+          ],
+          "hide": false,
+          "metricColumn": "fs_id",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  $__timeGroupAlias(snapshot_time,$__interval),\n  fs_id AS metric,\n  avg(fs_used_size)\n   as fs_used\nFROM spg_mon_db2.mon_get_container\nWHERE\n  $__timeFilter(snapshot_time) AND\n  display_name||member = '$datasource'\n   AND case when -1 in ($TBSPPicker) then 1=1 else tbsp_id in ($TBSPPicker) end\n  AND case when -1::int in ($FSPicker) then 1=1 else fs_id::int in ($FSPicker) end\nGROUP BY 1,fs_id\nORDER BY 1",
+          "refId": "B",
+          "select": [
+            [
+              {
+                "params": [
+                  "fs_used_size/fs_total_size"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "avg"
+                ],
+                "type": "aggregate"
+              },
+              {
+                "params": [
+                  "fs_total_size"
+                ],
+                "type": "alias"
+              }
+            ]
+          ],
+          "table": "spg_mon_db2.mon_get_container",
+          "timeColumn": "snapshot_time",
+          "timeColumnType": "timestamptz",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            },
+            {
+              "name": "",
+              "params": [
+                "hostname||':'||inst_name||'/'||db_name",
+                "=",
+                "'$datasource' "
+              ],
+              "type": "expression"
+            }
+          ]
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Filesystem Used Size",
+      "tooltip": {
+        "shared": true,
+        "sort": 2,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:847",
+          "format": "bytes",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "$$hashKey": "object:848",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "$DataSourceVariable",
+      "description": "",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 12,
+        "w": 12,
+        "x": 12,
+        "y": 12
+      },
+      "hiddenSeries": false,
+      "id": 20,
+      "interval": "1m",
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 2,
+      "links": [],
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "7.5.11",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "format": "time_series",
+          "group": [
+            {
+              "params": [
+                "$__interval",
+                "none"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "fs_id"
+              ],
+              "type": "column"
+            }
+          ],
+          "hide": false,
+          "metricColumn": "fs_id",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  $__timeGroupAlias(snapshot_time,$__interval),\n  fs_id AS metric,\n  --last(fs_total_size,snapshot_time)::decimal- last(fs_used_size,snapshot_time)::\n  avg(fs_total_size) - avg(fs_used_size)\n   as fs_free\nFROM spg_mon_db2.mon_get_container\nWHERE\n  $__timeFilter(snapshot_time) AND\n  display_name||member = '$datasource'\n   AND case when -1 in ($TBSPPicker) then 1=1 else tbsp_id in ($TBSPPicker) end\n  AND case when -1::int in ($FSPicker) then 1=1 else fs_id::int in ($FSPicker) end\nGROUP BY 1,fs_id\nORDER BY 1 ",
+          "refId": "B",
+          "select": [
+            [
+              {
+                "params": [
+                  "fs_used_size/fs_total_size"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "avg"
+                ],
+                "type": "aggregate"
+              },
+              {
+                "params": [
+                  "fs_total_size"
+                ],
+                "type": "alias"
+              }
+            ]
+          ],
+          "table": "spg_mon_db2.mon_get_container",
+          "timeColumn": "snapshot_time",
+          "timeColumnType": "timestamptz",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            },
+            {
+              "name": "",
+              "params": [
+                "hostname||':'||inst_name||'/'||db_name",
+                "=",
+                "'$datasource' "
+              ],
+              "type": "expression"
+            }
+          ]
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Filesystem Free Size",
+      "tooltip": {
+        "shared": true,
+        "sort": 2,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:847",
+          "format": "bytes",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "$$hashKey": "object:848",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "collapsed": false,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 24
+      },
+      "id": 22,
+      "panels": [],
+      "title": "Detail Table",
+      "type": "row"
+    },
+    {
+      "datasource": "$DataSourceVariable",
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": null,
+            "filterable": true
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "snapshot_time"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "dateTimeAsIso"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/fs.*size/"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "bytes"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 13,
+        "w": 24,
+        "x": 0,
+        "y": 25
+      },
+      "id": 18,
+      "interval": "1m",
+      "links": [],
+      "options": {
+        "showHeader": true
+      },
+      "pluginVersion": "7.5.11",
+      "targets": [
+        {
+          "format": "table",
+          "group": [
+            {
+              "params": [
+                "$__interval",
+                "none"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "fs_id"
+              ],
+              "type": "column"
+            }
+          ],
+          "hide": false,
+          "metricColumn": "fs_id",
+          "rawQuery": true,
+          "rawSql": "SELECT\n$__timeGroupAlias(snapshot_time,$__interval),\n  *\nFROM spg_mon_db2.mon_get_container\nWHERE\n  $__timeFilter(snapshot_time) AND\n  display_name||member = '$datasource'\n   AND case when -1 in ($TBSPPicker) then 1=1 else tbsp_id in ($TBSPPicker) end\n  AND case when -1::int in ($FSPicker) then 1=1 else fs_id::int in ($FSPicker) end\n--GROUP BY 1,fs_id\nORDER BY 3 desc fetch first 500 row only",
+          "refId": "B",
+          "select": [
+            [
+              {
+                "params": [
+                  "fs_used_size/fs_total_size"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "avg"
+                ],
+                "type": "aggregate"
+              },
+              {
+                "params": [
+                  "fs_total_size"
+                ],
+                "type": "alias"
+              }
+            ]
+          ],
+          "table": "spg_mon_db2.mon_get_container",
+          "timeColumn": "snapshot_time",
+          "timeColumnType": "timestamptz",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            },
+            {
+              "name": "",
+              "params": [
+                "hostname||':'||inst_name||'/'||db_name",
+                "=",
+                "'$datasource' "
+              ],
+              "type": "expression"
+            }
+          ]
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Detail Table (fetch first 500 row only",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "db_name": true,
+              "display_name": true,
+              "hostname": true,
+              "id": true,
+              "inst_name": true,
+              "port": true,
+              "snapshot_time": false,
+              "time": true
+            },
+            "indexByName": {
+              "accessible": 32,
+              "block_ios": 26,
+              "container_id": 14,
+              "container_name": 13,
+              "container_type": 16,
+              "db_name": 7,
+              "db_storage_path_id": 34,
+              "dbpartitionnum": 33,
+              "direct_read_time": 20,
+              "direct_reads": 18,
+              "direct_write_time": 21,
+              "direct_writes": 19,
+              "display_name": 5,
+              "fs_id": 8,
+              "fs_total_size": 9,
+              "fs_used_size": 10,
+              "hostname": 3,
+              "id": 1,
+              "inst_name": 6,
+              "member": 15,
+              "pages_from_block_ios": 27,
+              "pages_from_vectored_ios": 25,
+              "pages_read": 22,
+              "pages_written": 23,
+              "pool_read_time": 28,
+              "pool_write_time": 29,
+              "port": 4,
+              "snapshot_time": 2,
+              "stripe_set": 17,
+              "tbsp_id": 12,
+              "tbsp_name": 11,
+              "time": 0,
+              "total_pages": 30,
+              "usable_pages": 31,
+              "vectored_ios": 24
+            },
+            "renameByName": {}
+          }
+        }
+      ],
+      "type": "table"
+    }
+  ],
+  "refresh": "1m",
+  "schemaVersion": 27,
+  "style": "dark",
+  "tags": [
+    "db2",
+    "visible",
+    "custom"
+  ],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "selected": false,
+          "text": "pdb",
+          "value": "pdb"
+        },
+        "description": null,
+        "error": null,
+        "hide": 0,
+        "includeAll": false,
+        "label": "PDB",
+        "multi": false,
+        "name": "DataSourceVariable",
+        "options": [],
+        "query": "postgres",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "type": "datasource"
+      },
+      {
+        "allValue": null,
+        "current": {
+          "isNone": true,
+          "selected": false,
+          "text": "None",
+          "value": ""
+        },
+        "datasource": "$DataSourceVariable",
+        "definition": "select \ndisplay_name||member as __value,display_name||'('||member||')'  as __text\nfrom spg_mon_db2.v_v_display_name_member \nwhere bucket BETWEEN '${__from:date:YYYY-MM-DD}Z' and '${__to:date:YYYY-MM-DD}Z'\ngroup by display_name,member",
+        "description": null,
+        "error": null,
+        "hide": 1,
+        "includeAll": false,
+        "label": "datasource",
+        "multi": false,
+        "name": "datasource",
+        "options": [],
+        "query": "select \ndisplay_name||member as __value,display_name||'('||member||')'  as __text\nfrom spg_mon_db2.v_v_display_name_member \nwhere bucket BETWEEN '${__from:date:YYYY-MM-DD}Z' and '${__to:date:YYYY-MM-DD}Z'\ngroup by display_name,member",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": "-1",
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": "$DataSourceVariable",
+        "definition": "select distinct tbsp_id as \"__value\", tbsp_name as \"__text\" from spg_mon_db2.mon_get_tablespace where \n$__timeFilter(snapshot_time) and display_name||member = '$datasource'",
+        "description": null,
+        "error": null,
+        "hide": 0,
+        "includeAll": true,
+        "label": "Tablespace",
+        "multi": true,
+        "name": "TBSPPicker",
+        "options": [],
+        "query": "select distinct tbsp_id as \"__value\", tbsp_name as \"__text\" from spg_mon_db2.mon_get_tablespace where \n$__timeFilter(snapshot_time) and display_name||member = '$datasource'",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": "-1",
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": "$DataSourceVariable",
+        "definition": "select fs_id as \"__value\", fs_id||substring(last(container_name,snapshot_time),1,100)  as \"__text\" from spg_mon_db2.mon_get_container where \n$__timeFilter(snapshot_time) and display_name||member = '$datasource' AND case when -1 in ($TBSPPicker) then 1=1 else tbsp_id in ($TBSPPicker) end\ngroup by fs_id",
+        "description": "Picker shows uniq filesystem id and one path or file on that specific filesystem",
+        "error": null,
+        "hide": 0,
+        "includeAll": true,
+        "label": "Filesystem",
+        "multi": true,
+        "name": "FSPicker",
+        "options": [],
+        "query": "select fs_id as \"__value\", fs_id||substring(last(container_name,snapshot_time),1,100)  as \"__text\" from spg_mon_db2.mon_get_container where \n$__timeFilter(snapshot_time) and display_name||member = '$datasource' AND case when -1 in ($TBSPPicker) then 1=1 else tbsp_id in ($TBSPPicker) end\ngroup by fs_id",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      }
+    ]
+  },
+  "time": {
+    "from": "now-3h",
+    "to": "now"
+  },
+  "timepicker": {
+    "refresh_intervals": [
+      "10s",
+      "30s",
+      "1m",
+      "5m",
+      "15m",
+      "30m",
+      "1h",
+      "2h",
+      "1d"
+    ],
+    "time_options": [
+      "5m",
+      "15m",
+      "1h",
+      "6h",
+      "12h",
+      "24h",
+      "2d",
+      "7d",
+      "30d"
+    ]
+  },
+  "timezone": "",
+  "title": "Tablespace Filesystem Usage",
+  "uid": "pgCJ5Au7k",
+  "version": 2
+}
