@@ -1,7 +1,7 @@
 # s4dbs_custom_boards
 This repository stores custom dashboards for the monitoring solution speedgain for databases (speedgain.com)
 
-This boards can be imported / provisioned to a Grafana that is connected to a Speedgain for Databases Repository via mounting/copy files or folder to /s4dbs_custom/boards inside the grafana container (S4DBs >= V1.3.0). 
+This boards can be imported / provisioned to a Grafana that is connected to a Speedgain for Databases Repository via mounting/copy files or folder to /s4dbs_custom_boards inside the grafana container (S4DBs >= V1.3.0). 
 
 All dashboards seen here are subject to be integrated into the tooling itself once in a while (only with permission of the owner). 
 
