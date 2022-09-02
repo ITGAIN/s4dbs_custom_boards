@@ -1,0 +1,2209 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 1,
+  "id": 80,
+  "iteration": 1662111462230,
+  "links": [
+    {
+      "icon": "external link",
+      "keepTime": true,
+      "tags": [
+        "s4dbsoverview"
+      ],
+      "type": "dashboards"
+    },
+    {
+      "asDropdown": true,
+      "icon": "external link",
+      "includeVars": true,
+      "keepTime": true,
+      "tags": [
+        "overview"
+      ],
+      "title": "Overview Dashboards",
+      "type": "dashboards"
+    },
+    {
+      "asDropdown": true,
+      "icon": "external link",
+      "includeVars": true,
+      "keepTime": true,
+      "tags": [
+        "os",
+        "visible"
+      ],
+      "title": "OS Dashboards",
+      "type": "dashboards"
+    }
+  ],
+  "panels": [
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "${DataSourceVariable}",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 1,
+      "gridPos": {
+        "h": 13,
+        "w": 8,
+        "x": 0,
+        "y": 0
+      },
+      "hiddenSeries": false,
+      "id": 13,
+      "legend": {
+        "alignAsTable": true,
+        "avg": true,
+        "current": true,
+        "hideEmpty": true,
+        "hideZero": true,
+        "max": true,
+        "min": true,
+        "show": true,
+        "sort": "avg",
+        "sortDesc": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 2,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "7.5.11",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [
+        {
+          "$$hashKey": "object:322",
+          "alias": "/.*writes/",
+          "transform": "negative-Y"
+        }
+      ],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "format": "time_series",
+          "group": [
+            {
+              "params": [
+                "$__interval",
+                "none"
+              ],
+              "type": "time"
+            }
+          ],
+          "metricColumn": "display_name||' - '||device",
+          "rawQuery": false,
+          "rawSql": "SELECT\n  $__timeGroupAlias(snapshot_time,$__interval),\n  display_name||' - '||device AS metric,\n  (CASE WHEN avg(reads_total) >= lag(avg(reads_total)) OVER (PARTITION BY display_name||' - '||device ORDER BY $__timeGroup(snapshot_time,$__interval)) THEN avg(reads_total) - lag(avg(reads_total)) OVER (PARTITION BY display_name||' - '||device ORDER BY $__timeGroup(snapshot_time,$__interval)) WHEN lag(avg(reads_total)) OVER (PARTITION BY display_name||' - '||device ORDER BY $__timeGroup(snapshot_time,$__interval)) IS NULL THEN NULL ELSE avg(reads_total) END)/extract(epoch from min(snapshot_time) - lag(min(snapshot_time)) OVER (PARTITION BY display_name||' - '||device ORDER BY $__timeGroup(snapshot_time,$__interval))) AS \"reads\",\n  (CASE WHEN avg(writes_compl) >= lag(avg(writes_compl)) OVER (PARTITION BY display_name||' - '||device ORDER BY $__timeGroup(snapshot_time,$__interval)) THEN avg(writes_compl) - lag(avg(writes_compl)) OVER (PARTITION BY display_name||' - '||device ORDER BY $__timeGroup(snapshot_time,$__interval)) WHEN lag(avg(writes_compl)) OVER (PARTITION BY display_name||' - '||device ORDER BY $__timeGroup(snapshot_time,$__interval)) IS NULL THEN NULL ELSE avg(writes_compl) END)/extract(epoch from min(snapshot_time) - lag(min(snapshot_time)) OVER (PARTITION BY display_name||' - '||device ORDER BY $__timeGroup(snapshot_time,$__interval))) AS \"writes\"\nFROM spg_mon_os.v_proc_diskstats\nWHERE\n  $__timeFilter(snapshot_time) AND\n  display_name = '$HostPicker' AND\n  device LIKE '%$diskfilter%' AND\n  time_spent_doing_io_ms > 0 AND\n  $diskmap = 0\nGROUP BY 1,2\nORDER BY 1,2",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "reads_total"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "avg"
+                ],
+                "type": "aggregate"
+              },
+              {
+                "params": [
+                  "rate"
+                ],
+                "type": "window"
+              },
+              {
+                "params": [
+                  "reads"
+                ],
+                "type": "alias"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "writes_compl"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "avg"
+                ],
+                "type": "aggregate"
+              },
+              {
+                "params": [
+                  "rate"
+                ],
+                "type": "window"
+              },
+              {
+                "params": [
+                  "writes"
+                ],
+                "type": "alias"
+              }
+            ]
+          ],
+          "table": "spg_mon_os.v_proc_diskstats",
+          "timeColumn": "snapshot_time",
+          "timeColumnType": "timestamptz",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            },
+            {
+              "datatype": "varchar",
+              "name": "",
+              "params": [
+                "display_name",
+                "=",
+                "'$HostPicker'"
+              ],
+              "type": "expression"
+            },
+            {
+              "datatype": "varchar",
+              "name": "",
+              "params": [
+                "device",
+                "LIKE",
+                "'%$diskfilter%'"
+              ],
+              "type": "expression"
+            },
+            {
+              "datatype": "int8",
+              "name": "",
+              "params": [
+                "time_spent_doing_io_ms",
+                ">",
+                "0"
+              ],
+              "type": "expression"
+            },
+            {
+              "name": "",
+              "params": [
+                "$diskmap",
+                "=",
+                "0"
+              ],
+              "type": "expression"
+            }
+          ]
+        },
+        {
+          "format": "time_series",
+          "group": [
+            {
+              "params": [
+                "$__interval",
+                "none"
+              ],
+              "type": "time"
+            }
+          ],
+          "hide": false,
+          "metricColumn": "display_name||' - '||device",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  $__timeGroupAlias(snapshot_time,$__interval),\n  ds.display_name||' - '||device_display_name AS metric,\n  (CASE WHEN avg(reads_total) >= lag(avg(reads_total)) OVER (PARTITION BY ds.display_name||' - '||device_display_name ORDER BY $__timeGroup(snapshot_time,$__interval)) THEN avg(reads_total) - lag(avg(reads_total)) OVER (PARTITION BY ds.display_name||' - '||device_display_name ORDER BY $__timeGroup(snapshot_time,$__interval)) WHEN lag(avg(reads_total)) OVER (PARTITION BY ds.display_name||' - '||device_display_name ORDER BY $__timeGroup(snapshot_time,$__interval)) IS NULL THEN NULL ELSE avg(reads_total) END)/extract(epoch from min(snapshot_time) - lag(min(snapshot_time)) OVER (PARTITION BY ds.display_name||' - '||device_display_name ORDER BY $__timeGroup(snapshot_time,$__interval))) AS \"reads\",\n  (CASE WHEN avg(writes_compl) >= lag(avg(writes_compl)) OVER (PARTITION BY ds.display_name||' - '||device_display_name ORDER BY $__timeGroup(snapshot_time,$__interval)) THEN avg(writes_compl) - lag(avg(writes_compl)) OVER (PARTITION BY ds.display_name||' - '||device_display_name ORDER BY $__timeGroup(snapshot_time,$__interval)) WHEN lag(avg(writes_compl)) OVER (PARTITION BY ds.display_name||' - '||device_display_name ORDER BY $__timeGroup(snapshot_time,$__interval)) IS NULL THEN NULL ELSE avg(writes_compl) END)/extract(epoch from min(snapshot_time) - lag(min(snapshot_time)) OVER (PARTITION BY ds.display_name||' - '||device_display_name ORDER BY $__timeGroup(snapshot_time,$__interval))) AS \"writes\"\nFROM spg_mon_os.v_proc_diskstats ds, spg_mon_os.disk_map dm\nWHERE\n  $__timeFilter(snapshot_time) AND\n  ds.display_name = '$HostPicker' AND\n  device_display_name LIKE '%$diskfilter%' AND\n  time_spent_doing_io_ms > 0 AND\n  $diskmap = 1 AND\n  ds.display_name = dm.display_name AND\n  ds.device = dm.device AND\n  dm.visible is true\nGROUP BY 1,ds.display_name||' - '||device_display_name\nORDER BY 1,2",
+          "refId": "B",
+          "select": [
+            [
+              {
+                "params": [
+                  "reads_total"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "avg"
+                ],
+                "type": "aggregate"
+              },
+              {
+                "params": [
+                  "rate"
+                ],
+                "type": "window"
+              },
+              {
+                "params": [
+                  "reads"
+                ],
+                "type": "alias"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "writes_compl"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "avg"
+                ],
+                "type": "aggregate"
+              },
+              {
+                "params": [
+                  "rate"
+                ],
+                "type": "window"
+              },
+              {
+                "params": [
+                  "writes"
+                ],
+                "type": "alias"
+              }
+            ]
+          ],
+          "table": "spg_mon_os.v_proc_diskstats",
+          "timeColumn": "snapshot_time",
+          "timeColumnType": "timestamptz",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            },
+            {
+              "datatype": "varchar",
+              "name": "",
+              "params": [
+                "display_name",
+                "=",
+                "'$HostPicker'"
+              ],
+              "type": "expression"
+            },
+            {
+              "datatype": "varchar",
+              "name": "",
+              "params": [
+                "device",
+                "LIKE",
+                "'%$diskfilter%'"
+              ],
+              "type": "expression"
+            },
+            {
+              "datatype": "int8",
+              "name": "",
+              "params": [
+                "time_spent_doing_io_ms",
+                ">",
+                "0"
+              ],
+              "type": "expression"
+            },
+            {
+              "name": "",
+              "params": [
+                "$diskmap",
+                "=",
+                "1"
+              ],
+              "type": "expression"
+            }
+          ]
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "IOPS Read (+) | Write (-) per second per disk",
+      "tooltip": {
+        "shared": true,
+        "sort": 2,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:365",
+          "format": "iops",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "$$hashKey": "object:366",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "${DataSourceVariable}",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 1,
+      "gridPos": {
+        "h": 13,
+        "w": 8,
+        "x": 8,
+        "y": 0
+      },
+      "hiddenSeries": false,
+      "id": 16,
+      "legend": {
+        "alignAsTable": true,
+        "avg": true,
+        "current": true,
+        "hideEmpty": true,
+        "hideZero": true,
+        "max": true,
+        "min": true,
+        "show": true,
+        "sort": "avg",
+        "sortDesc": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 2,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "7.5.11",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [
+        {
+          "$$hashKey": "object:322",
+          "alias": "/.*writes/",
+          "transform": "negative-Y"
+        }
+      ],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "format": "time_series",
+          "group": [
+            {
+              "params": [
+                "$__interval",
+                "none"
+              ],
+              "type": "time"
+            }
+          ],
+          "metricColumn": "display_name||' - '||device",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  $__timeGroupAlias(snapshot_time,$__interval),\n  display_name||' - '||device AS metric,\n  (CASE WHEN avg(sectors_read) >= lag(avg(sectors_read)) OVER (PARTITION BY display_name||' - '||device ORDER BY $__timeGroup(snapshot_time,$__interval)) THEN avg(sectors_read) - lag(avg(sectors_read)) OVER (PARTITION BY display_name||' - '||device ORDER BY $__timeGroup(snapshot_time,$__interval)) WHEN lag(avg(sectors_read)) OVER (PARTITION BY display_name||' - '||device ORDER BY $__timeGroup(snapshot_time,$__interval)) IS NULL THEN NULL ELSE avg(sectors_read) END)/extract(epoch from min(snapshot_time) - lag(min(snapshot_time)) OVER (PARTITION BY display_name||' - '||device ORDER BY $__timeGroup(snapshot_time,$__interval))) AS \"reads\",\n  (CASE WHEN avg(sectors_wrt) >= lag(avg(sectors_wrt)) OVER (PARTITION BY display_name||' - '||device ORDER BY $__timeGroup(snapshot_time,$__interval)) THEN avg(sectors_wrt) - lag(avg(sectors_wrt)) OVER (PARTITION BY display_name||' - '||device ORDER BY $__timeGroup(snapshot_time,$__interval)) WHEN lag(avg(sectors_wrt)) OVER (PARTITION BY display_name||' - '||device ORDER BY $__timeGroup(snapshot_time,$__interval)) IS NULL THEN NULL ELSE avg(sectors_wrt) END)/extract(epoch from min(snapshot_time) - lag(min(snapshot_time)) OVER (PARTITION BY display_name||' - '||device ORDER BY $__timeGroup(snapshot_time,$__interval))) AS \"writes\"\nFROM spg_mon_os.v_proc_diskstats\nWHERE\n  $__timeFilter(snapshot_time) AND\n  display_name = '$HostPicker' AND\n  device LIKE '%$diskfilter%' AND\n  time_spent_doing_io_ms > 0 AND\n  $diskmap = 0\nGROUP BY 1,2\nORDER BY 1,2",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "sectors_read"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "avg"
+                ],
+                "type": "aggregate"
+              },
+              {
+                "params": [
+                  "rate"
+                ],
+                "type": "window"
+              },
+              {
+                "params": [
+                  "reads"
+                ],
+                "type": "alias"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "sectors_wrt"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "avg"
+                ],
+                "type": "aggregate"
+              },
+              {
+                "params": [
+                  "rate"
+                ],
+                "type": "window"
+              },
+              {
+                "params": [
+                  "writes"
+                ],
+                "type": "alias"
+              }
+            ]
+          ],
+          "table": "spg_mon_os.v_proc_diskstats",
+          "timeColumn": "snapshot_time",
+          "timeColumnType": "timestamptz",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            },
+            {
+              "datatype": "varchar",
+              "name": "",
+              "params": [
+                "display_name",
+                "=",
+                "'$HostPicker'"
+              ],
+              "type": "expression"
+            },
+            {
+              "datatype": "varchar",
+              "name": "",
+              "params": [
+                "device",
+                "LIKE",
+                "'%$diskfilter%'"
+              ],
+              "type": "expression"
+            },
+            {
+              "datatype": "int8",
+              "name": "",
+              "params": [
+                "time_spent_doing_io_ms",
+                ">",
+                "0"
+              ],
+              "type": "expression"
+            }
+          ]
+        },
+        {
+          "format": "time_series",
+          "group": [
+            {
+              "params": [
+                "$__interval",
+                "none"
+              ],
+              "type": "time"
+            }
+          ],
+          "hide": false,
+          "metricColumn": "display_name||' - '||device",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  $__timeGroupAlias(snapshot_time,$__interval),\n  ds.display_name||' - '||device_display_name AS metric,\n  (CASE WHEN avg(sectors_read) >= lag(avg(sectors_read)) OVER (PARTITION BY ds.display_name||' - '||device_display_name ORDER BY $__timeGroup(snapshot_time,$__interval)) THEN avg(sectors_read) - lag(avg(sectors_read)) OVER (PARTITION BY ds.display_name||' - '||device_display_name ORDER BY $__timeGroup(snapshot_time,$__interval)) WHEN lag(avg(sectors_read)) OVER (PARTITION BY ds.display_name||' - '||device_display_name ORDER BY $__timeGroup(snapshot_time,$__interval)) IS NULL THEN NULL ELSE avg(sectors_read) END)/extract(epoch from min(snapshot_time) - lag(min(snapshot_time)) OVER (PARTITION BY ds.display_name||' - '||device_display_name ORDER BY $__timeGroup(snapshot_time,$__interval))) AS \"reads\",\n  (CASE WHEN avg(sectors_wrt) >= lag(avg(sectors_wrt)) OVER (PARTITION BY ds.display_name||' - '||device_display_name ORDER BY $__timeGroup(snapshot_time,$__interval)) THEN avg(sectors_wrt) - lag(avg(sectors_wrt)) OVER (PARTITION BY ds.display_name||' - '||device_display_name ORDER BY $__timeGroup(snapshot_time,$__interval)) WHEN lag(avg(sectors_wrt)) OVER (PARTITION BY ds.display_name||' - '||device_display_name ORDER BY $__timeGroup(snapshot_time,$__interval)) IS NULL THEN NULL ELSE avg(sectors_wrt) END)/extract(epoch from min(snapshot_time) - lag(min(snapshot_time)) OVER (PARTITION BY ds.display_name||' - '||device_display_name ORDER BY $__timeGroup(snapshot_time,$__interval))) AS \"writes\"\nFROM spg_mon_os.v_proc_diskstats ds, spg_mon_os.disk_map dm\nWHERE\n  $__timeFilter(snapshot_time) AND\n  ds.display_name = '$HostPicker' AND\n  device_display_name LIKE '%$diskfilter%' AND\n  time_spent_doing_io_ms > 0 AND\n  $diskmap = 1 AND\n  ds.display_name = dm.display_name AND\n  ds.device = dm.device AND\n  dm.visible is true\nGROUP BY 1,2\nORDER BY 1,2",
+          "refId": "B",
+          "select": [
+            [
+              {
+                "params": [
+                  "sectors_read"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "avg"
+                ],
+                "type": "aggregate"
+              },
+              {
+                "params": [
+                  "rate"
+                ],
+                "type": "window"
+              },
+              {
+                "params": [
+                  "reads"
+                ],
+                "type": "alias"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "sectors_wrt"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "avg"
+                ],
+                "type": "aggregate"
+              },
+              {
+                "params": [
+                  "rate"
+                ],
+                "type": "window"
+              },
+              {
+                "params": [
+                  "writes"
+                ],
+                "type": "alias"
+              }
+            ]
+          ],
+          "table": "spg_mon_os.v_proc_diskstats",
+          "timeColumn": "snapshot_time",
+          "timeColumnType": "timestamptz",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            },
+            {
+              "datatype": "varchar",
+              "name": "",
+              "params": [
+                "display_name",
+                "=",
+                "'$HostPicker'"
+              ],
+              "type": "expression"
+            },
+            {
+              "datatype": "varchar",
+              "name": "",
+              "params": [
+                "device",
+                "LIKE",
+                "'%$diskfilter%'"
+              ],
+              "type": "expression"
+            },
+            {
+              "datatype": "int8",
+              "name": "",
+              "params": [
+                "time_spent_doing_io_ms",
+                ">",
+                "0"
+              ],
+              "type": "expression"
+            }
+          ]
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Sectors Read (+) | Write (-) per second per disk",
+      "tooltip": {
+        "shared": true,
+        "sort": 2,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:365",
+          "format": "iops",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "$$hashKey": "object:366",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "${DataSourceVariable}",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 1,
+      "gridPos": {
+        "h": 13,
+        "w": 8,
+        "x": 16,
+        "y": 0
+      },
+      "hiddenSeries": false,
+      "id": 18,
+      "legend": {
+        "alignAsTable": true,
+        "avg": true,
+        "current": true,
+        "hideEmpty": true,
+        "hideZero": true,
+        "max": true,
+        "min": true,
+        "show": true,
+        "sort": "avg",
+        "sortDesc": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 2,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "7.5.11",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [
+        {
+          "$$hashKey": "object:322",
+          "alias": "/.*writes_merged/",
+          "transform": "negative-Y"
+        }
+      ],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "format": "time_series",
+          "group": [
+            {
+              "params": [
+                "$__interval",
+                "none"
+              ],
+              "type": "time"
+            }
+          ],
+          "metricColumn": "display_name||' - '||device",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  $__timeGroupAlias(snapshot_time,$__interval),\n  display_name||' - '||device AS metric,\n  (CASE WHEN avg(reads_merged) >= lag(avg(reads_merged)) OVER (PARTITION BY display_name||' - '||device ORDER BY $__timeGroup(snapshot_time,$__interval)) THEN avg(reads_merged) - lag(avg(reads_merged)) OVER (PARTITION BY display_name||' - '||device ORDER BY $__timeGroup(snapshot_time,$__interval)) WHEN lag(avg(reads_merged)) OVER (PARTITION BY display_name||' - '||device ORDER BY $__timeGroup(snapshot_time,$__interval)) IS NULL THEN NULL ELSE avg(reads_merged) END)/extract(epoch from min(snapshot_time) - lag(min(snapshot_time)) OVER (PARTITION BY display_name||' - '||device ORDER BY $__timeGroup(snapshot_time,$__interval))) AS \"reads_merged\",\n  (CASE WHEN avg(writes_merged) >= lag(avg(writes_merged)) OVER (PARTITION BY display_name||' - '||device ORDER BY $__timeGroup(snapshot_time,$__interval)) THEN avg(writes_merged) - lag(avg(writes_merged)) OVER (PARTITION BY display_name||' - '||device ORDER BY $__timeGroup(snapshot_time,$__interval)) WHEN lag(avg(writes_merged)) OVER (PARTITION BY display_name||' - '||device ORDER BY $__timeGroup(snapshot_time,$__interval)) IS NULL THEN NULL ELSE avg(writes_merged) END)/extract(epoch from min(snapshot_time) - lag(min(snapshot_time)) OVER (PARTITION BY display_name||' - '||device ORDER BY $__timeGroup(snapshot_time,$__interval))) AS \"writes_merged\"\nFROM spg_mon_os.v_proc_diskstats\nWHERE\n  $__timeFilter(snapshot_time) AND\n  display_name = '$HostPicker' AND\n  device LIKE '%$diskfilter%' AND\n  time_spent_doing_io_ms > 0 AND\n  $diskmap = 0\nGROUP BY 1,2\nORDER BY 1,2",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "reads_merged"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "avg"
+                ],
+                "type": "aggregate"
+              },
+              {
+                "params": [
+                  "rate"
+                ],
+                "type": "window"
+              },
+              {
+                "params": [
+                  "reads_merged"
+                ],
+                "type": "alias"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "writes_merged"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "avg"
+                ],
+                "type": "aggregate"
+              },
+              {
+                "params": [
+                  "rate"
+                ],
+                "type": "window"
+              },
+              {
+                "params": [
+                  "writes_merged"
+                ],
+                "type": "alias"
+              }
+            ]
+          ],
+          "table": "spg_mon_os.v_proc_diskstats",
+          "timeColumn": "snapshot_time",
+          "timeColumnType": "timestamptz",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            },
+            {
+              "datatype": "varchar",
+              "name": "",
+              "params": [
+                "display_name",
+                "=",
+                "'$HostPicker'"
+              ],
+              "type": "expression"
+            },
+            {
+              "datatype": "varchar",
+              "name": "",
+              "params": [
+                "device",
+                "LIKE",
+                "'%$diskfilter%'"
+              ],
+              "type": "expression"
+            },
+            {
+              "datatype": "int8",
+              "name": "",
+              "params": [
+                "time_spent_doing_io_ms",
+                ">",
+                "0"
+              ],
+              "type": "expression"
+            }
+          ]
+        },
+        {
+          "format": "time_series",
+          "group": [
+            {
+              "params": [
+                "$__interval",
+                "none"
+              ],
+              "type": "time"
+            }
+          ],
+          "hide": false,
+          "metricColumn": "display_name||' - '||device",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  $__timeGroupAlias(snapshot_time,$__interval),\n  ds.display_name||' - '||device_display_name AS metric,\n  (CASE WHEN avg(reads_merged) >= lag(avg(reads_merged)) OVER (PARTITION BY ds.display_name||' - '||device_display_name ORDER BY $__timeGroup(snapshot_time,$__interval)) THEN avg(reads_merged) - lag(avg(reads_merged)) OVER (PARTITION BY ds.display_name||' - '||device_display_name ORDER BY $__timeGroup(snapshot_time,$__interval)) WHEN lag(avg(reads_merged)) OVER (PARTITION BY ds.display_name||' - '||device_display_name ORDER BY $__timeGroup(snapshot_time,$__interval)) IS NULL THEN NULL ELSE avg(reads_merged) END)/extract(epoch from min(snapshot_time) - lag(min(snapshot_time)) OVER (PARTITION BY ds.display_name||' - '||device_display_name ORDER BY $__timeGroup(snapshot_time,$__interval))) AS \"reads_merged\",\n  (CASE WHEN avg(writes_merged) >= lag(avg(writes_merged)) OVER (PARTITION BY ds.display_name||' - '||device_display_name ORDER BY $__timeGroup(snapshot_time,$__interval)) THEN avg(writes_merged) - lag(avg(writes_merged)) OVER (PARTITION BY ds.display_name||' - '||device_display_name ORDER BY $__timeGroup(snapshot_time,$__interval)) WHEN lag(avg(writes_merged)) OVER (PARTITION BY ds.display_name||' - '||device_display_name ORDER BY $__timeGroup(snapshot_time,$__interval)) IS NULL THEN NULL ELSE avg(writes_merged) END)/extract(epoch from min(snapshot_time) - lag(min(snapshot_time)) OVER (PARTITION BY ds.display_name||' - '||device_display_name ORDER BY $__timeGroup(snapshot_time,$__interval))) AS \"writes_merged\"\nFROM spg_mon_os.v_proc_diskstats ds, spg_mon_os.disk_map dm\nWHERE\n  $__timeFilter(snapshot_time) AND\n  ds.display_name = '$HostPicker' AND\n  device_display_name LIKE '%$diskfilter%' AND\n  time_spent_doing_io_ms > 0 AND\n  $diskmap = 1 AND\n  ds.display_name = dm.display_name AND\n  ds.device = dm.device AND\n  dm.visible is true\nGROUP BY 1,2\nORDER BY 1,2",
+          "refId": "B",
+          "select": [
+            [
+              {
+                "params": [
+                  "reads_merged"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "avg"
+                ],
+                "type": "aggregate"
+              },
+              {
+                "params": [
+                  "rate"
+                ],
+                "type": "window"
+              },
+              {
+                "params": [
+                  "reads_merged"
+                ],
+                "type": "alias"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "writes_merged"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "avg"
+                ],
+                "type": "aggregate"
+              },
+              {
+                "params": [
+                  "rate"
+                ],
+                "type": "window"
+              },
+              {
+                "params": [
+                  "writes_merged"
+                ],
+                "type": "alias"
+              }
+            ]
+          ],
+          "table": "spg_mon_os.v_proc_diskstats",
+          "timeColumn": "snapshot_time",
+          "timeColumnType": "timestamptz",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            },
+            {
+              "datatype": "varchar",
+              "name": "",
+              "params": [
+                "display_name",
+                "=",
+                "'$HostPicker'"
+              ],
+              "type": "expression"
+            },
+            {
+              "datatype": "varchar",
+              "name": "",
+              "params": [
+                "device",
+                "LIKE",
+                "'%$diskfilter%'"
+              ],
+              "type": "expression"
+            },
+            {
+              "datatype": "int8",
+              "name": "",
+              "params": [
+                "time_spent_doing_io_ms",
+                ">",
+                "0"
+              ],
+              "type": "expression"
+            }
+          ]
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Merged Reads (+) | Writes (-) per second per disk",
+      "tooltip": {
+        "shared": true,
+        "sort": 2,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:365",
+          "format": "iops",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "$$hashKey": "object:366",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "${DataSourceVariable}",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 1,
+      "gridPos": {
+        "h": 13,
+        "w": 8,
+        "x": 0,
+        "y": 13
+      },
+      "hiddenSeries": false,
+      "id": 17,
+      "legend": {
+        "alignAsTable": true,
+        "avg": true,
+        "current": true,
+        "hideEmpty": true,
+        "hideZero": true,
+        "max": true,
+        "min": true,
+        "show": true,
+        "sort": "avg",
+        "sortDesc": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 2,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "7.5.11",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [
+        {
+          "$$hashKey": "object:322",
+          "alias": "/.*per_write/",
+          "transform": "negative-Y"
+        }
+      ],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "format": "time_series",
+          "group": [
+            {
+              "params": [
+                "$__interval",
+                "none"
+              ],
+              "type": "time"
+            }
+          ],
+          "metricColumn": "display_name||' - '||device",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  $__timeGroupAlias(snapshot_time,$__interval),\n  display_name||' - '||device AS metric,\n  ((CASE WHEN avg(time_spent_reading_ms) >= lag(avg(time_spent_reading_ms)) OVER (PARTITION BY display_name||' - '||device ORDER BY $__timeGroup(snapshot_time,$__interval)) THEN avg(time_spent_reading_ms) - lag(avg(time_spent_reading_ms)) OVER (PARTITION BY display_name||' - '||device ORDER BY $__timeGroup(snapshot_time,$__interval)) WHEN lag(avg(time_spent_reading_ms)) OVER (PARTITION BY display_name||' - '||device ORDER BY $__timeGroup(snapshot_time,$__interval)) IS NULL THEN NULL ELSE avg(time_spent_reading_ms) END)/extract(epoch from min(snapshot_time) - lag(min(snapshot_time)) OVER (PARTITION BY display_name||' - '||device ORDER BY $__timeGroup(snapshot_time,$__interval)))) --AS \"time_spent_reading_ms\",\n  /\n  ((CASE WHEN avg(reads_total) > lag(avg(reads_total)) OVER (PARTITION BY display_name||' - '||device ORDER BY $__timeGroup(snapshot_time,$__interval)) THEN avg(reads_total) - lag(avg(reads_total)) OVER (PARTITION BY display_name||' - '||device ORDER BY $__timeGroup(snapshot_time,$__interval)) WHEN lag(avg(reads_total)) OVER (PARTITION BY display_name||' - '||device ORDER BY $__timeGroup(snapshot_time,$__interval)) IS NULL THEN NULL ELSE NULL END)/extract(epoch from min(snapshot_time) - lag(min(snapshot_time)) OVER (PARTITION BY display_name||' - '||device ORDER BY $__timeGroup(snapshot_time,$__interval)))) --AS \"reads_total\",\n  as time_per_read,\n  ((CASE WHEN avg(time_spent_writing_ms) >= lag(avg(time_spent_writing_ms)) OVER (PARTITION BY display_name||' - '||device ORDER BY $__timeGroup(snapshot_time,$__interval)) THEN avg(time_spent_writing_ms) - lag(avg(time_spent_writing_ms)) OVER (PARTITION BY display_name||' - '||device ORDER BY $__timeGroup(snapshot_time,$__interval)) WHEN lag(avg(time_spent_writing_ms)) OVER (PARTITION BY display_name||' - '||device ORDER BY $__timeGroup(snapshot_time,$__interval)) IS NULL THEN NULL ELSE avg(time_spent_writing_ms) END)/extract(epoch from min(snapshot_time) - lag(min(snapshot_time)) OVER (PARTITION BY display_name||' - '||device ORDER BY $__timeGroup(snapshot_time,$__interval)))) --AS \"time_spent_writing_ms\",\n  /\n  ((CASE WHEN avg(writes_compl) > lag(avg(writes_compl)) OVER (PARTITION BY display_name||' - '||device ORDER BY $__timeGroup(snapshot_time,$__interval)) THEN avg(writes_compl) - lag(avg(writes_compl)) OVER (PARTITION BY display_name||' - '||device ORDER BY $__timeGroup(snapshot_time,$__interval)) WHEN lag(avg(writes_compl)) OVER (PARTITION BY display_name||' - '||device ORDER BY $__timeGroup(snapshot_time,$__interval)) IS NULL THEN NULL ELSE NULL END)/extract(epoch from min(snapshot_time) - lag(min(snapshot_time)) OVER (PARTITION BY display_name||' - '||device ORDER BY $__timeGroup(snapshot_time,$__interval)))) --AS \"writes_compl\"\n  as time_per_write\nFROM spg_mon_os.v_proc_diskstats\nWHERE\n  $__timeFilter(snapshot_time) AND\n  display_name = '$HostPicker'\n  AND device like '%$diskfilter%'\n  and time_spent_doing_io_ms > 0 AND\n  $diskmap = 0\nGROUP BY 1,2\nORDER BY 1,2",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "time_spent_reading_ms"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "avg"
+                ],
+                "type": "aggregate"
+              },
+              {
+                "params": [
+                  "rate"
+                ],
+                "type": "window"
+              },
+              {
+                "params": [
+                  "time_spent_reading_ms"
+                ],
+                "type": "alias"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "reads_total"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "avg"
+                ],
+                "type": "aggregate"
+              },
+              {
+                "params": [
+                  "rate"
+                ],
+                "type": "window"
+              },
+              {
+                "params": [
+                  "reads_total"
+                ],
+                "type": "alias"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "time_spent_writing_ms"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "avg"
+                ],
+                "type": "aggregate"
+              },
+              {
+                "params": [
+                  "rate"
+                ],
+                "type": "window"
+              },
+              {
+                "params": [
+                  "time_spent_writing_ms"
+                ],
+                "type": "alias"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "writes_compl"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "avg"
+                ],
+                "type": "aggregate"
+              },
+              {
+                "params": [
+                  "rate"
+                ],
+                "type": "window"
+              },
+              {
+                "params": [
+                  "writes_compl"
+                ],
+                "type": "alias"
+              }
+            ]
+          ],
+          "table": "spg_mon_os.v_proc_diskstats",
+          "timeColumn": "snapshot_time",
+          "timeColumnType": "timestamptz",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            },
+            {
+              "datatype": "varchar",
+              "name": "",
+              "params": [
+                "display_name",
+                "=",
+                "'$HostPicker'"
+              ],
+              "type": "expression"
+            }
+          ]
+        },
+        {
+          "format": "time_series",
+          "group": [
+            {
+              "params": [
+                "$__interval",
+                "none"
+              ],
+              "type": "time"
+            }
+          ],
+          "hide": false,
+          "metricColumn": "display_name||' - '||device",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  $__timeGroupAlias(snapshot_time,$__interval),\n  ds.display_name||' - '||device_display_name AS metric,\n  ((CASE WHEN avg(time_spent_reading_ms) >= lag(avg(time_spent_reading_ms)) OVER (PARTITION BY ds.display_name||' - '||device_display_name ORDER BY $__timeGroup(snapshot_time,$__interval)) THEN avg(time_spent_reading_ms) - lag(avg(time_spent_reading_ms)) OVER (PARTITION BY ds.display_name||' - '||device_display_name ORDER BY $__timeGroup(snapshot_time,$__interval)) WHEN lag(avg(time_spent_reading_ms)) OVER (PARTITION BY ds.display_name||' - '||device_display_name ORDER BY $__timeGroup(snapshot_time,$__interval)) IS NULL THEN NULL ELSE avg(time_spent_reading_ms) END)/extract(epoch from min(snapshot_time) - lag(min(snapshot_time)) OVER (PARTITION BY ds.display_name||' - '||device_display_name ORDER BY $__timeGroup(snapshot_time,$__interval)))) --AS \"time_spent_reading_ms\",\n  /\n  ((CASE WHEN avg(reads_total) > lag(avg(reads_total)) OVER (PARTITION BY ds.display_name||' - '||device_display_name ORDER BY $__timeGroup(snapshot_time,$__interval)) THEN avg(reads_total) - lag(avg(reads_total)) OVER (PARTITION BY ds.display_name||' - '||device_display_name ORDER BY $__timeGroup(snapshot_time,$__interval)) WHEN lag(avg(reads_total)) OVER (PARTITION BY ds.display_name||' - '||device_display_name ORDER BY $__timeGroup(snapshot_time,$__interval)) IS NULL THEN NULL ELSE NULL END)/extract(epoch from min(snapshot_time) - lag(min(snapshot_time)) OVER (PARTITION BY ds.display_name||' - '||device_display_name ORDER BY $__timeGroup(snapshot_time,$__interval)))) --AS \"reads_total\",\n  as time_per_read,\n  ((CASE WHEN avg(time_spent_writing_ms) >= lag(avg(time_spent_writing_ms)) OVER (PARTITION BY ds.display_name||' - '||device_display_name ORDER BY $__timeGroup(snapshot_time,$__interval)) THEN avg(time_spent_writing_ms) - lag(avg(time_spent_writing_ms)) OVER (PARTITION BY ds.display_name||' - '||device_display_name ORDER BY $__timeGroup(snapshot_time,$__interval)) WHEN lag(avg(time_spent_writing_ms)) OVER (PARTITION BY ds.display_name||' - '||device_display_name ORDER BY $__timeGroup(snapshot_time,$__interval)) IS NULL THEN NULL ELSE avg(time_spent_writing_ms) END)/extract(epoch from min(snapshot_time) - lag(min(snapshot_time)) OVER (PARTITION BY ds.display_name||' - '||device_display_name ORDER BY $__timeGroup(snapshot_time,$__interval)))) --AS \"time_spent_writing_ms\",\n  /\n  ((CASE WHEN avg(writes_compl) > lag(avg(writes_compl)) OVER (PARTITION BY ds.display_name||' - '||device_display_name ORDER BY $__timeGroup(snapshot_time,$__interval)) THEN avg(writes_compl) - lag(avg(writes_compl)) OVER (PARTITION BY ds.display_name||' - '||device_display_name ORDER BY $__timeGroup(snapshot_time,$__interval)) WHEN lag(avg(writes_compl)) OVER (PARTITION BY ds.display_name||' - '||device_display_name ORDER BY $__timeGroup(snapshot_time,$__interval)) IS NULL THEN NULL ELSE NULL END)/extract(epoch from min(snapshot_time) - lag(min(snapshot_time)) OVER (PARTITION BY ds.display_name||' - '||device_display_name ORDER BY $__timeGroup(snapshot_time,$__interval)))) --AS \"writes_compl\"\n  as time_per_write\nFROM spg_mon_os.v_proc_diskstats ds, spg_mon_os.disk_map dm\nWHERE\n  $__timeFilter(snapshot_time) AND\n  ds.display_name = '$HostPicker'\n  AND device_display_name like '%$diskfilter%'\n  and time_spent_doing_io_ms > 0 AND\n  $diskmap = 1 AND\n  ds.display_name = dm.display_name AND\n  ds.device = dm.device AND\n  dm.visible is true\nGROUP BY 1,2\nORDER BY 1,2",
+          "refId": "B",
+          "select": [
+            [
+              {
+                "params": [
+                  "time_spent_reading_ms"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "avg"
+                ],
+                "type": "aggregate"
+              },
+              {
+                "params": [
+                  "rate"
+                ],
+                "type": "window"
+              },
+              {
+                "params": [
+                  "time_spent_reading_ms"
+                ],
+                "type": "alias"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "reads_total"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "avg"
+                ],
+                "type": "aggregate"
+              },
+              {
+                "params": [
+                  "rate"
+                ],
+                "type": "window"
+              },
+              {
+                "params": [
+                  "reads_total"
+                ],
+                "type": "alias"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "time_spent_writing_ms"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "avg"
+                ],
+                "type": "aggregate"
+              },
+              {
+                "params": [
+                  "rate"
+                ],
+                "type": "window"
+              },
+              {
+                "params": [
+                  "time_spent_writing_ms"
+                ],
+                "type": "alias"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "writes_compl"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "avg"
+                ],
+                "type": "aggregate"
+              },
+              {
+                "params": [
+                  "rate"
+                ],
+                "type": "window"
+              },
+              {
+                "params": [
+                  "writes_compl"
+                ],
+                "type": "alias"
+              }
+            ]
+          ],
+          "table": "spg_mon_os.v_proc_diskstats",
+          "timeColumn": "snapshot_time",
+          "timeColumnType": "timestamptz",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            },
+            {
+              "datatype": "varchar",
+              "name": "",
+              "params": [
+                "display_name",
+                "=",
+                "'$HostPicker'"
+              ],
+              "type": "expression"
+            }
+          ]
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Time per Read (+) | Write (-) per disk",
+      "tooltip": {
+        "shared": true,
+        "sort": 2,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:365",
+          "format": "ms",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "$$hashKey": "object:366",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "${DataSourceVariable}",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 1,
+      "gridPos": {
+        "h": 13,
+        "w": 8,
+        "x": 8,
+        "y": 13
+      },
+      "hiddenSeries": false,
+      "id": 14,
+      "legend": {
+        "alignAsTable": true,
+        "avg": true,
+        "current": true,
+        "hideEmpty": true,
+        "hideZero": true,
+        "max": true,
+        "min": true,
+        "show": true,
+        "sort": "avg",
+        "sortDesc": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 2,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "7.5.11",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [
+        {
+          "$$hashKey": "object:322",
+          "alias": "/.*writes/",
+          "transform": "negative-Y"
+        }
+      ],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "format": "time_series",
+          "group": [
+            {
+              "params": [
+                "$__interval",
+                "none"
+              ],
+              "type": "time"
+            }
+          ],
+          "metricColumn": "display_name||' - '||device",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  $__timeGroupAlias(snapshot_time,$__interval),\n  display_name||' - '||device AS metric,\n  (CASE WHEN avg(time_spent_reading_ms) >= lag(avg(time_spent_reading_ms)) OVER (PARTITION BY display_name||' - '||device ORDER BY $__timeGroup(snapshot_time,$__interval)) THEN avg(time_spent_reading_ms) - lag(avg(time_spent_reading_ms)) OVER (PARTITION BY display_name||' - '||device ORDER BY $__timeGroup(snapshot_time,$__interval)) WHEN lag(avg(time_spent_reading_ms)) OVER (PARTITION BY display_name||' - '||device ORDER BY $__timeGroup(snapshot_time,$__interval)) IS NULL THEN NULL ELSE avg(time_spent_reading_ms) END)/extract(epoch from min(snapshot_time) - lag(min(snapshot_time)) OVER (PARTITION BY display_name||' - '||device ORDER BY $__timeGroup(snapshot_time,$__interval))) AS \"reads\",\n  (CASE WHEN avg(time_spent_writing_ms) >= lag(avg(time_spent_writing_ms)) OVER (PARTITION BY display_name||' - '||device ORDER BY $__timeGroup(snapshot_time,$__interval)) THEN avg(time_spent_writing_ms) - lag(avg(time_spent_writing_ms)) OVER (PARTITION BY display_name||' - '||device ORDER BY $__timeGroup(snapshot_time,$__interval)) WHEN lag(avg(time_spent_writing_ms)) OVER (PARTITION BY display_name||' - '||device ORDER BY $__timeGroup(snapshot_time,$__interval)) IS NULL THEN NULL ELSE avg(time_spent_writing_ms) END)/extract(epoch from min(snapshot_time) - lag(min(snapshot_time)) OVER (PARTITION BY display_name||' - '||device ORDER BY $__timeGroup(snapshot_time,$__interval))) AS \"writes\"\nFROM spg_mon_os.v_proc_diskstats\nWHERE\n  $__timeFilter(snapshot_time) AND\n  display_name = '$HostPicker' AND\n  device LIKE '%$diskfilter%' AND\n  time_spent_doing_io_ms > 0 AND\n  $diskmap = 0\nGROUP BY 1,2\nORDER BY 1,2",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "time_spent_reading_ms"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "avg"
+                ],
+                "type": "aggregate"
+              },
+              {
+                "params": [
+                  "rate"
+                ],
+                "type": "window"
+              },
+              {
+                "params": [
+                  "reads"
+                ],
+                "type": "alias"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "time_spent_writing_ms"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "avg"
+                ],
+                "type": "aggregate"
+              },
+              {
+                "params": [
+                  "rate"
+                ],
+                "type": "window"
+              },
+              {
+                "params": [
+                  "writes"
+                ],
+                "type": "alias"
+              }
+            ]
+          ],
+          "table": "spg_mon_os.v_proc_diskstats",
+          "timeColumn": "snapshot_time",
+          "timeColumnType": "timestamptz",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            },
+            {
+              "datatype": "varchar",
+              "name": "",
+              "params": [
+                "display_name",
+                "=",
+                "'$HostPicker'"
+              ],
+              "type": "expression"
+            },
+            {
+              "datatype": "varchar",
+              "name": "",
+              "params": [
+                "device",
+                "LIKE",
+                "'%$diskfilter%'"
+              ],
+              "type": "expression"
+            },
+            {
+              "datatype": "int8",
+              "name": "",
+              "params": [
+                "time_spent_doing_io_ms",
+                ">",
+                "0"
+              ],
+              "type": "expression"
+            }
+          ]
+        },
+        {
+          "format": "time_series",
+          "group": [
+            {
+              "params": [
+                "$__interval",
+                "none"
+              ],
+              "type": "time"
+            }
+          ],
+          "hide": false,
+          "metricColumn": "display_name||' - '||device",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  $__timeGroupAlias(snapshot_time,$__interval),\n  ds.display_name||' - '||device_display_name AS metric,\n  (CASE WHEN avg(time_spent_reading_ms) >= lag(avg(time_spent_reading_ms)) OVER (PARTITION BY ds.display_name||' - '||device_display_name ORDER BY $__timeGroup(snapshot_time,$__interval)) THEN avg(time_spent_reading_ms) - lag(avg(time_spent_reading_ms)) OVER (PARTITION BY ds.display_name||' - '||device_display_name ORDER BY $__timeGroup(snapshot_time,$__interval)) WHEN lag(avg(time_spent_reading_ms)) OVER (PARTITION BY ds.display_name||' - '||device_display_name ORDER BY $__timeGroup(snapshot_time,$__interval)) IS NULL THEN NULL ELSE avg(time_spent_reading_ms) END)/extract(epoch from min(snapshot_time) - lag(min(snapshot_time)) OVER (PARTITION BY ds.display_name||' - '||device_display_name ORDER BY $__timeGroup(snapshot_time,$__interval))) AS \"reads\",\n  (CASE WHEN avg(time_spent_writing_ms) >= lag(avg(time_spent_writing_ms)) OVER (PARTITION BY ds.display_name||' - '||device_display_name ORDER BY $__timeGroup(snapshot_time,$__interval)) THEN avg(time_spent_writing_ms) - lag(avg(time_spent_writing_ms)) OVER (PARTITION BY ds.display_name||' - '||device_display_name ORDER BY $__timeGroup(snapshot_time,$__interval)) WHEN lag(avg(time_spent_writing_ms)) OVER (PARTITION BY ds.display_name||' - '||device_display_name ORDER BY $__timeGroup(snapshot_time,$__interval)) IS NULL THEN NULL ELSE avg(time_spent_writing_ms) END)/extract(epoch from min(snapshot_time) - lag(min(snapshot_time)) OVER (PARTITION BY ds.display_name||' - '||device_display_name ORDER BY $__timeGroup(snapshot_time,$__interval))) AS \"writes\"\nFROM spg_mon_os.v_proc_diskstats ds, spg_mon_os.disk_map dm\nWHERE\n  $__timeFilter(snapshot_time) AND\n  ds.display_name = '$HostPicker' AND\n  device_display_name LIKE '%$diskfilter%' AND\n  time_spent_doing_io_ms > 0 AND\n  $diskmap = 1 AND\n  ds.display_name = dm.display_name AND\n  ds.device = dm.device AND\n  dm.visible is true\nGROUP BY 1,2\nORDER BY 1,2",
+          "refId": "B",
+          "select": [
+            [
+              {
+                "params": [
+                  "time_spent_reading_ms"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "avg"
+                ],
+                "type": "aggregate"
+              },
+              {
+                "params": [
+                  "rate"
+                ],
+                "type": "window"
+              },
+              {
+                "params": [
+                  "reads"
+                ],
+                "type": "alias"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "time_spent_writing_ms"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "avg"
+                ],
+                "type": "aggregate"
+              },
+              {
+                "params": [
+                  "rate"
+                ],
+                "type": "window"
+              },
+              {
+                "params": [
+                  "writes"
+                ],
+                "type": "alias"
+              }
+            ]
+          ],
+          "table": "spg_mon_os.v_proc_diskstats",
+          "timeColumn": "snapshot_time",
+          "timeColumnType": "timestamptz",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            },
+            {
+              "datatype": "varchar",
+              "name": "",
+              "params": [
+                "display_name",
+                "=",
+                "'$HostPicker'"
+              ],
+              "type": "expression"
+            },
+            {
+              "datatype": "varchar",
+              "name": "",
+              "params": [
+                "device",
+                "LIKE",
+                "'%$diskfilter%'"
+              ],
+              "type": "expression"
+            },
+            {
+              "datatype": "int8",
+              "name": "",
+              "params": [
+                "time_spent_doing_io_ms",
+                ">",
+                "0"
+              ],
+              "type": "expression"
+            }
+          ]
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Time Spent doing Read (+) | Write (-) per second per disk",
+      "tooltip": {
+        "shared": true,
+        "sort": 2,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:365",
+          "format": "ms",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "$$hashKey": "object:366",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "${DataSourceVariable}",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 1,
+      "gridPos": {
+        "h": 13,
+        "w": 8,
+        "x": 16,
+        "y": 13
+      },
+      "hiddenSeries": false,
+      "id": 19,
+      "legend": {
+        "alignAsTable": true,
+        "avg": true,
+        "current": true,
+        "hideEmpty": true,
+        "hideZero": true,
+        "max": true,
+        "min": true,
+        "show": true,
+        "sort": "avg",
+        "sortDesc": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 2,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "7.5.11",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [
+        {
+          "$$hashKey": "object:3757",
+          "alias": "/.*weighted.*/",
+          "transform": "negative-Y"
+        }
+      ],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "format": "time_series",
+          "group": [
+            {
+              "params": [
+                "$__interval",
+                "none"
+              ],
+              "type": "time"
+            }
+          ],
+          "metricColumn": "display_name||' - '||device",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  $__timeGroupAlias(snapshot_time,$__interval),\n  display_name||' - '||device AS metric,\n  (CASE WHEN avg(time_spent_doing_io_ms) >= lag(avg(time_spent_doing_io_ms)) OVER (PARTITION BY display_name||' - '||device ORDER BY $__timeGroup(snapshot_time,$__interval)) THEN avg(time_spent_doing_io_ms) - lag(avg(time_spent_doing_io_ms)) OVER (PARTITION BY display_name||' - '||device ORDER BY $__timeGroup(snapshot_time,$__interval)) WHEN lag(avg(time_spent_doing_io_ms)) OVER (PARTITION BY display_name||' - '||device ORDER BY $__timeGroup(snapshot_time,$__interval)) IS NULL THEN NULL ELSE avg(time_spent_doing_io_ms) END)/extract(epoch from min(snapshot_time) - lag(min(snapshot_time)) OVER (PARTITION BY display_name||' - '||device ORDER BY $__timeGroup(snapshot_time,$__interval))) AS \"time_spent_doing_io_ms\",\n  (CASE WHEN avg(weighted_time_spent_doing_io_ms) >= lag(avg(weighted_time_spent_doing_io_ms)) OVER (PARTITION BY display_name||' - '||device ORDER BY $__timeGroup(snapshot_time,$__interval)) THEN avg(weighted_time_spent_doing_io_ms) - lag(avg(weighted_time_spent_doing_io_ms)) OVER (PARTITION BY display_name||' - '||device ORDER BY $__timeGroup(snapshot_time,$__interval)) WHEN lag(avg(weighted_time_spent_doing_io_ms)) OVER (PARTITION BY display_name||' - '||device ORDER BY $__timeGroup(snapshot_time,$__interval)) IS NULL THEN NULL ELSE avg(weighted_time_spent_doing_io_ms) END)/extract(epoch from min(snapshot_time) - lag(min(snapshot_time)) OVER (PARTITION BY display_name||' - '||device ORDER BY $__timeGroup(snapshot_time,$__interval))) AS \"weighted_time_spent_doing_io_ms\"\nFROM spg_mon_os.v_proc_diskstats\nWHERE\n  $__timeFilter(snapshot_time) AND\n  display_name = '$HostPicker' AND\n  device LIKE '%$diskfilter%' AND\n  time_spent_doing_io_ms > 0 AND\n  $diskmap = 0\nGROUP BY 1,2\nORDER BY 1,2",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "time_spent_doing_io_ms"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "avg"
+                ],
+                "type": "aggregate"
+              },
+              {
+                "params": [
+                  "rate"
+                ],
+                "type": "window"
+              },
+              {
+                "params": [
+                  "time_spent_doing_io_ms"
+                ],
+                "type": "alias"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "weighted_time_spent_doing_io_ms"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "avg"
+                ],
+                "type": "aggregate"
+              },
+              {
+                "params": [
+                  "rate"
+                ],
+                "type": "window"
+              },
+              {
+                "params": [
+                  "weighted_time_spent_doing_io_ms"
+                ],
+                "type": "alias"
+              }
+            ]
+          ],
+          "table": "spg_mon_os.v_proc_diskstats",
+          "timeColumn": "snapshot_time",
+          "timeColumnType": "timestamptz",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            },
+            {
+              "datatype": "varchar",
+              "name": "",
+              "params": [
+                "display_name",
+                "=",
+                "'$HostPicker'"
+              ],
+              "type": "expression"
+            },
+            {
+              "datatype": "varchar",
+              "name": "",
+              "params": [
+                "device",
+                "LIKE",
+                "'%$diskfilter%'"
+              ],
+              "type": "expression"
+            },
+            {
+              "datatype": "int8",
+              "name": "",
+              "params": [
+                "time_spent_doing_io_ms",
+                ">",
+                "0"
+              ],
+              "type": "expression"
+            }
+          ]
+        },
+        {
+          "format": "time_series",
+          "group": [
+            {
+              "params": [
+                "$__interval",
+                "none"
+              ],
+              "type": "time"
+            }
+          ],
+          "hide": false,
+          "metricColumn": "display_name||' - '||device",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  $__timeGroupAlias(snapshot_time,$__interval),\n  ds.display_name||' - '||device_display_name AS metric,\n  (CASE WHEN avg(time_spent_doing_io_ms) >= lag(avg(time_spent_doing_io_ms)) OVER (PARTITION BY ds.display_name||' - '||device_display_name ORDER BY $__timeGroup(snapshot_time,$__interval)) THEN avg(time_spent_doing_io_ms) - lag(avg(time_spent_doing_io_ms)) OVER (PARTITION BY ds.display_name||' - '||device_display_name ORDER BY $__timeGroup(snapshot_time,$__interval)) WHEN lag(avg(time_spent_doing_io_ms)) OVER (PARTITION BY ds.display_name||' - '||device_display_name ORDER BY $__timeGroup(snapshot_time,$__interval)) IS NULL THEN NULL ELSE avg(time_spent_doing_io_ms) END)/extract(epoch from min(snapshot_time) - lag(min(snapshot_time)) OVER (PARTITION BY ds.display_name||' - '||device_display_name ORDER BY $__timeGroup(snapshot_time,$__interval))) AS \"time_spent_doing_io_ms\",\n  (CASE WHEN avg(weighted_time_spent_doing_io_ms) >= lag(avg(weighted_time_spent_doing_io_ms)) OVER (PARTITION BY ds.display_name||' - '||device_display_name ORDER BY $__timeGroup(snapshot_time,$__interval)) THEN avg(weighted_time_spent_doing_io_ms) - lag(avg(weighted_time_spent_doing_io_ms)) OVER (PARTITION BY ds.display_name||' - '||device_display_name ORDER BY $__timeGroup(snapshot_time,$__interval)) WHEN lag(avg(weighted_time_spent_doing_io_ms)) OVER (PARTITION BY ds.display_name||' - '||device_display_name ORDER BY $__timeGroup(snapshot_time,$__interval)) IS NULL THEN NULL ELSE avg(weighted_time_spent_doing_io_ms) END)/extract(epoch from min(snapshot_time) - lag(min(snapshot_time)) OVER (PARTITION BY ds.display_name||' - '||device_display_name ORDER BY $__timeGroup(snapshot_time,$__interval))) AS \"weighted_time_spent_doing_io_ms\"\nFROM spg_mon_os.v_proc_diskstats ds, spg_mon_os.disk_map dm\nWHERE\n  $__timeFilter(snapshot_time) AND\n  ds.display_name = '$HostPicker' AND\n  device_display_name LIKE '%$diskfilter%' AND\n  time_spent_doing_io_ms > 0 AND\n  $diskmap = 1 AND\n  ds.display_name = dm.display_name AND\n  ds.device = dm.device AND\n  dm.visible is true\nGROUP BY 1,2\nORDER BY 1,2",
+          "refId": "B",
+          "select": [
+            [
+              {
+                "params": [
+                  "time_spent_doing_io_ms"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "avg"
+                ],
+                "type": "aggregate"
+              },
+              {
+                "params": [
+                  "rate"
+                ],
+                "type": "window"
+              },
+              {
+                "params": [
+                  "time_spent_doing_io_ms"
+                ],
+                "type": "alias"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "weighted_time_spent_doing_io_ms"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "avg"
+                ],
+                "type": "aggregate"
+              },
+              {
+                "params": [
+                  "rate"
+                ],
+                "type": "window"
+              },
+              {
+                "params": [
+                  "weighted_time_spent_doing_io_ms"
+                ],
+                "type": "alias"
+              }
+            ]
+          ],
+          "table": "spg_mon_os.v_proc_diskstats",
+          "timeColumn": "snapshot_time",
+          "timeColumnType": "timestamptz",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            },
+            {
+              "datatype": "varchar",
+              "name": "",
+              "params": [
+                "display_name",
+                "=",
+                "'$HostPicker'"
+              ],
+              "type": "expression"
+            },
+            {
+              "datatype": "varchar",
+              "name": "",
+              "params": [
+                "device",
+                "LIKE",
+                "'%$diskfilter%'"
+              ],
+              "type": "expression"
+            },
+            {
+              "datatype": "int8",
+              "name": "",
+              "params": [
+                "time_spent_doing_io_ms",
+                ">",
+                "0"
+              ],
+              "type": "expression"
+            }
+          ]
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Time Spent(+) | Weighted Time Spent (-) doing IO per second per disk",
+      "tooltip": {
+        "shared": true,
+        "sort": 2,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:365",
+          "format": "ms",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "$$hashKey": "object:366",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    }
+  ],
+  "refresh": "1m",
+  "schemaVersion": 27,
+  "style": "dark",
+  "tags": [
+    "os",
+    "visible",
+    "custom"
+  ],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "selected": false,
+          "text": "pdb",
+          "value": "pdb"
+        },
+        "description": null,
+        "error": null,
+        "hide": 0,
+        "includeAll": false,
+        "label": "PDB",
+        "multi": false,
+        "name": "DataSourceVariable",
+        "options": [],
+        "query": "postgres",
+        "queryValue": "",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "type": "datasource"
+      },
+      {
+        "allValue": null,
+        "current": {
+          "selected": false,
+          "text": "s4dbs_postgres",
+          "value": "s4dbs_postgres"
+        },
+        "datasource": "$DataSourceVariable",
+        "definition": "select display_name from spg_mon_os.v_v_display_name where bucket BETWEEN '${__from:date:YYYY-MM-DD}Z' and '${__to:date:YYYY-MM-DD}Z'\ngroup by display_name",
+        "description": null,
+        "error": null,
+        "hide": 0,
+        "includeAll": false,
+        "label": "Display Name",
+        "multi": false,
+        "name": "HostPicker",
+        "options": [],
+        "query": "select display_name from spg_mon_os.v_v_display_name where bucket BETWEEN '${__from:date:YYYY-MM-DD}Z' and '${__to:date:YYYY-MM-DD}Z'\ngroup by display_name",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "",
+          "value": ""
+        },
+        "description": null,
+        "error": null,
+        "hide": 0,
+        "label": "Disk Filter",
+        "name": "diskfilter",
+        "options": [
+          {
+            "selected": true,
+            "text": "",
+            "value": ""
+          }
+        ],
+        "query": "",
+        "skipUrlSync": false,
+        "type": "textbox"
+      },
+      {
+        "allValue": null,
+        "current": {
+          "selected": true,
+          "text": "Yes",
+          "value": "1"
+        },
+        "description": "if activated table spg_mon_os.disk_map will be used to map disk names to human readable names",
+        "error": null,
+        "hide": 0,
+        "includeAll": false,
+        "label": "Use Diskmapping",
+        "multi": false,
+        "name": "diskmap",
+        "options": [
+          {
+            "selected": true,
+            "text": "Yes",
+            "value": "1"
+          },
+          {
+            "selected": false,
+            "text": "No",
+            "value": "0"
+          }
+        ],
+        "query": "Yes : 1 , No : 0",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-3h",
+    "to": "now"
+  },
+  "timepicker": {
+    "refresh_intervals": [
+      "10s",
+      "30s",
+      "1m",
+      "5m",
+      "15m",
+      "30m",
+      "1h",
+      "2h",
+      "1d"
+    ],
+    "time_options": [
+      "5m",
+      "15m",
+      "1h",
+      "6h",
+      "12h",
+      "24h",
+      "2d",
+      "7d",
+      "30d"
+    ]
+  },
+  "timezone": "",
+  "title": "Disk Throughput Disk Map",
+  "uid": "RFbI1zG4k",
+  "version": 9
+}
