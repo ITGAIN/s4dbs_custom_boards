@@ -21,3 +21,11 @@ Following rules apply:
 - alert + custom -> alerts on this dashboards will be shown on S4DBs Overview in S4DBs Custom Alerts Box
 
 Do always specifiy custom tag on custom boards.
+
+# Currently available boards on this repository
+- Db2
+    - Tablespace Filesystem Usage
+- Linux
+    - Disk Throughput Disk Map
+- Speedgain System
+    - Collector Status 
