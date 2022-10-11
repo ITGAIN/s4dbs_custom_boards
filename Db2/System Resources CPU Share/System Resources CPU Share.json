@@ -1,0 +1,3680 @@
+{
+  "__inputs": [],
+  "__requires": [
+    {
+      "type": "grafana",
+      "id": "grafana",
+      "name": "Grafana",
+      "version": "7.5.11"
+    },
+    {
+      "type": "panel",
+      "id": "grafana-piechart-panel",
+      "name": "Pie Chart",
+      "version": "1.6.2"
+    },
+    {
+      "type": "panel",
+      "id": "graph",
+      "name": "Graph",
+      "version": ""
+    },
+    {
+      "type": "datasource",
+      "id": "postgres",
+      "name": "PostgreSQL",
+      "version": "1.0.0"
+    },
+    {
+      "type": "panel",
+      "id": "table",
+      "name": "Table",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "text",
+      "name": "Text",
+      "version": ""
+    }
+  ],
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 1,
+  "id": null,
+  "iteration": 1665481028841,
+  "links": [
+    {
+      "icon": "external link",
+      "keepTime": true,
+      "tags": [
+        "s4dbsoverview"
+      ],
+      "type": "dashboards"
+    },
+    {
+      "asDropdown": true,
+      "icon": "external link",
+      "includeVars": true,
+      "keepTime": true,
+      "tags": [
+        "overview"
+      ],
+      "title": "Overview Dashboards",
+      "type": "dashboards"
+    },
+    {
+      "asDropdown": true,
+      "icon": "external link",
+      "includeVars": true,
+      "keepTime": true,
+      "tags": [
+        "db2",
+        "visible"
+      ],
+      "title": "Db2 Dashboards",
+      "type": "dashboards"
+    }
+  ],
+  "panels": [
+    {
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 6,
+        "x": 0,
+        "y": 0
+      },
+      "id": 28,
+      "options": {
+        "content": "# Info\nAll values are averages based on a minimum interval of $inter. The minimum interval can be selected in dropdown box \"Minimum Interval\".\n\nCPU Utilization and System Load are based on metrics collected from the database selected in the dropdown field. Origin is env_get_system_resources.\n\nCPU Time per second panels are based on every database that shares the same hostname in the speedgain configuration with the database selected. Origin is mon_get_database.",
+        "mode": "markdown"
+      },
+      "pluginVersion": "7.5.11",
+      "targets": [
+        {
+          "format": "time_series",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": false,
+          "rawSql": "SELECT\n  $__time(time_column),\n  value1\nFROM\n  metric_table\nWHERE\n  $__timeFilter(time_column)\n",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "type": "text"
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "$DataSourceVariable",
+      "decimals": 2,
+      "description": "Server/Machine CPU Usage by all running procs",
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 2,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 10,
+        "w": 9,
+        "x": 6,
+        "y": 0
+      },
+      "hiddenSeries": false,
+      "id": 17,
+      "interval": "$inter",
+      "legend": {
+        "alignAsTable": true,
+        "avg": true,
+        "current": true,
+        "hideEmpty": false,
+        "hideZero": false,
+        "max": true,
+        "min": true,
+        "rightSide": false,
+        "show": true,
+        "sort": "avg",
+        "sortDesc": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "7.5.11",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [
+        {
+          "$$hashKey": "object:1556",
+          "alias": "Total",
+          "dashes": true,
+          "fill": 0,
+          "linewidth": 2,
+          "stack": false
+        }
+      ],
+      "spaceLength": 10,
+      "stack": true,
+      "steppedLine": false,
+      "targets": [
+        {
+          "format": "time_series",
+          "group": [
+            {
+              "params": [
+                "$__interval",
+                "none"
+              ],
+              "type": "time"
+            }
+          ],
+          "hide": false,
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "select time,\ncpu_user / (cpu_user+cpu_idle+cpu_iowait+cpu_system) as cpu_user,\ncpu_iowait / (cpu_user+cpu_idle+cpu_iowait+cpu_system) as cpu_iowait,\ncpu_system / (cpu_user+cpu_idle+cpu_iowait+cpu_system) as cpu_system\nfrom (SELECT\n  $__timeGroupAlias(snapshot_time,$__interval),\n  (CASE WHEN avg(cpu_user) >= lag(avg(cpu_user)) OVER (ORDER BY $__timeGroup(snapshot_time,$__interval)) THEN avg(cpu_user) - lag(avg(cpu_user)) OVER (ORDER BY $__timeGroup(snapshot_time,$__interval)) WHEN lag(avg(cpu_user)) OVER (ORDER BY $__timeGroup(snapshot_time,$__interval)) IS NULL THEN NULL ELSE avg(cpu_user) END)/extract(epoch from min(snapshot_time) - lag(min(snapshot_time)) OVER (ORDER BY $__timeGroup(snapshot_time,$__interval))) AS \"cpu_user\",\n  (CASE WHEN avg(cpu_idle) >= lag(avg(cpu_idle)) OVER (ORDER BY $__timeGroup(snapshot_time,$__interval)) THEN avg(cpu_idle) - lag(avg(cpu_idle)) OVER (ORDER BY $__timeGroup(snapshot_time,$__interval)) WHEN lag(avg(cpu_idle)) OVER (ORDER BY $__timeGroup(snapshot_time,$__interval)) IS NULL THEN NULL ELSE avg(cpu_idle) END)/extract(epoch from min(snapshot_time) - lag(min(snapshot_time)) OVER (ORDER BY $__timeGroup(snapshot_time,$__interval))) AS \"cpu_idle\",\n  (CASE WHEN avg(cpu_iowait) >= lag(avg(cpu_iowait)) OVER (ORDER BY $__timeGroup(snapshot_time,$__interval)) THEN avg(cpu_iowait) - lag(avg(cpu_iowait)) OVER (ORDER BY $__timeGroup(snapshot_time,$__interval)) WHEN lag(avg(cpu_iowait)) OVER (ORDER BY $__timeGroup(snapshot_time,$__interval)) IS NULL THEN NULL ELSE avg(cpu_iowait) END)/extract(epoch from min(snapshot_time) - lag(min(snapshot_time)) OVER (ORDER BY $__timeGroup(snapshot_time,$__interval))) AS \"cpu_iowait\",\n  (CASE WHEN avg(cpu_system) >= lag(avg(cpu_system)) OVER (ORDER BY $__timeGroup(snapshot_time,$__interval)) THEN avg(cpu_system) - lag(avg(cpu_system)) OVER (ORDER BY $__timeGroup(snapshot_time,$__interval)) WHEN lag(avg(cpu_system)) OVER (ORDER BY $__timeGroup(snapshot_time,$__interval)) IS NULL THEN NULL ELSE avg(cpu_system) END)/extract(epoch from min(snapshot_time) - lag(min(snapshot_time)) OVER (ORDER BY $__timeGroup(snapshot_time,$__interval))) AS \"cpu_system\"\nFROM spg_mon_db2.v_env_get_system_resources\nWHERE\n  $__timeFilter(snapshot_time) AND\n  display_name||member = '$datasource'\nGROUP BY 1) as t\nORDER BY 1",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "cpu_user"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "avg"
+                ],
+                "type": "aggregate"
+              },
+              {
+                "params": [
+                  "rate"
+                ],
+                "type": "window"
+              },
+              {
+                "params": [
+                  "cpu_user"
+                ],
+                "type": "alias"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "cpu_idle"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "avg"
+                ],
+                "type": "aggregate"
+              },
+              {
+                "params": [
+                  "rate"
+                ],
+                "type": "window"
+              },
+              {
+                "params": [
+                  "cpu_idle"
+                ],
+                "type": "alias"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "cpu_iowait"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "avg"
+                ],
+                "type": "aggregate"
+              },
+              {
+                "params": [
+                  "rate"
+                ],
+                "type": "window"
+              },
+              {
+                "params": [
+                  "cpu_iowait"
+                ],
+                "type": "alias"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "cpu_system"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "avg"
+                ],
+                "type": "aggregate"
+              },
+              {
+                "params": [
+                  "rate"
+                ],
+                "type": "window"
+              },
+              {
+                "params": [
+                  "cpu_system"
+                ],
+                "type": "alias"
+              }
+            ]
+          ],
+          "table": "spg_mon_db2.v_env_get_system_resources",
+          "timeColumn": "snapshot_time",
+          "timeColumnType": "timestamptz",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            },
+            {
+              "datatype": "text",
+              "name": "",
+              "params": [
+                "display_name||member",
+                "=",
+                "'$datasource'"
+              ],
+              "type": "expression"
+            }
+          ]
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "CPU Utilization",
+      "tooltip": {
+        "shared": true,
+        "sort": 2,
+        "value_type": "individual"
+      },
+      "transformations": [
+        {
+          "id": "calculateField",
+          "options": {}
+        }
+      ],
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:434",
+          "format": "percentunit",
+          "label": "",
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "$$hashKey": "object:435",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "$DataSourceVariable",
+      "decimals": 2,
+      "description": "system load averages; short->1min, mid->5min, long->15min\nRed dotted line is number of cores",
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": []
+      },
+      "fill": 2,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 10,
+        "w": 9,
+        "x": 15,
+        "y": 0
+      },
+      "hiddenSeries": false,
+      "id": 18,
+      "interval": "$inter",
+      "legend": {
+        "alignAsTable": true,
+        "avg": true,
+        "current": true,
+        "hideEmpty": false,
+        "hideZero": false,
+        "max": true,
+        "min": true,
+        "rightSide": false,
+        "show": true,
+        "sort": "avg",
+        "sortDesc": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 2,
+      "links": [],
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "7.5.11",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [
+        {
+          "$$hashKey": "object:1556",
+          "alias": "num cores",
+          "color": "#E02F44",
+          "dashes": true,
+          "fill": 0,
+          "linewidth": 2,
+          "stack": false
+        }
+      ],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "format": "time_series",
+          "group": [
+            {
+              "params": [
+                "$__interval",
+                "none"
+              ],
+              "type": "time"
+            }
+          ],
+          "hide": false,
+          "metricColumn": "none",
+          "rawQuery": false,
+          "rawSql": "SELECT\n  $__timeGroupAlias(snapshot_time,$__interval),\n  avg(cpu_load_short) AS \"load short\",\n  avg(cpu_load_medium) AS \"load mid\",\n  avg(cpu_load_long) AS \"load long\",\n  avg(cpu_total) AS \"num cores\"\nFROM spg_mon_db2.v_env_get_system_resources\nWHERE\n  $__timeFilter(snapshot_time) AND\n  display_name||member = '$datasource'\nGROUP BY 1\nORDER BY 1",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "cpu_load_short"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "avg"
+                ],
+                "type": "aggregate"
+              },
+              {
+                "params": [
+                  "load short"
+                ],
+                "type": "alias"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "cpu_load_medium"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "avg"
+                ],
+                "type": "aggregate"
+              },
+              {
+                "params": [
+                  "load mid"
+                ],
+                "type": "alias"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "cpu_load_long"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "avg"
+                ],
+                "type": "aggregate"
+              },
+              {
+                "params": [
+                  "load long"
+                ],
+                "type": "alias"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "cpu_total"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "avg"
+                ],
+                "type": "aggregate"
+              },
+              {
+                "params": [
+                  "num cores"
+                ],
+                "type": "alias"
+              }
+            ]
+          ],
+          "table": "spg_mon_db2.v_env_get_system_resources",
+          "timeColumn": "snapshot_time",
+          "timeColumnType": "timestamptz",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            },
+            {
+              "datatype": "text",
+              "name": "",
+              "params": [
+                "display_name||member",
+                "=",
+                "'$datasource'"
+              ],
+              "type": "expression"
+            }
+          ]
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "System Load",
+      "tooltip": {
+        "shared": true,
+        "sort": 2,
+        "value_type": "individual"
+      },
+      "transformations": [],
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:434",
+          "format": "short",
+          "label": "",
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "$$hashKey": "object:435",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "datasource": "$DataSourceVariable",
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": null,
+            "filterable": false
+          },
+          "links": [],
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 20,
+        "w": 6,
+        "x": 0,
+        "y": 10
+      },
+      "id": 23,
+      "interval": "1m",
+      "links": [],
+      "options": {
+        "showHeader": true
+      },
+      "pluginVersion": "7.5.11",
+      "targets": [
+        {
+          "format": "table",
+          "group": [],
+          "hide": false,
+          "metricColumn": "none",
+          "rawQuery": false,
+          "rawSql": "SELECT\n  snapshot_time AS \"time\",\n  *\nFROM spg_mon_db2.v_env_get_system_resources\nWHERE\n  $__timeFilter(snapshot_time) AND\n  display_name||member = '$datasource'\nORDER BY 1",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "*"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "table": "spg_mon_db2.v_env_get_system_resources",
+          "timeColumn": "snapshot_time",
+          "timeColumnType": "timestamptz",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            },
+            {
+              "datatype": "text",
+              "name": "",
+              "params": [
+                "display_name||member",
+                "=",
+                "'$datasource'"
+              ],
+              "type": "expression"
+            }
+          ]
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "System Info based on $datasource",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "cpu_idle": true,
+              "cpu_iowait": true,
+              "cpu_load_long": true,
+              "cpu_load_medium": true,
+              "cpu_load_short": true,
+              "cpu_system": true,
+              "cpu_usage_total": true,
+              "cpu_user": true,
+              "db_name": true,
+              "display_name": true,
+              "hostname": true,
+              "id": true,
+              "inst_name": true,
+              "member": true,
+              "memory_free": true,
+              "memory_swap_free": true,
+              "memory_swap_total": true,
+              "memory_total": true,
+              "port": true,
+              "snapshot_time": true,
+              "swap_page_size": true,
+              "swap_pages_in": true,
+              "swap_pages_out": true,
+              "time": true,
+              "virtual_mem_free": true,
+              "virtual_mem_reserved": true,
+              "virtual_mem_total": true
+            },
+            "indexByName": {},
+            "renameByName": {}
+          }
+        },
+        {
+          "id": "reduce",
+          "options": {
+            "includeTimeField": false,
+            "mode": "seriesToRows",
+            "reducers": [
+              "last"
+            ]
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "$DataSourceVariable",
+      "decimals": 2,
+      "description": "Series with only 0 or null are hidden",
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Lock Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Application Group for Lock Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}"
+                  },
+                  {
+                    "title": "TOP 25 SQL Statements for Lock Wait Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=lock_wait_time&var-topn=25"
+                  },
+                  {
+                    "title": "Lockwait Inflight",
+                    "url": "d/wuaW5oJWz/lockwait?orgId=1&${__url_time_range}&${__all_variables}"
+                  },
+                  {
+                    "title": "Lock Events",
+                    "url": "d/Q-uBlwE7z/lock-events?orgId=1&${__url_time_range}&${__all_variables}"
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              },
+              {
+                "id": "unit",
+                "value": "ms"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Log Disk Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Transaction Log Details",
+                    "url": "d/ztS0vnxZz/log-overview?orgId=1&${__url_time_range}&${__all_variables}"
+                  },
+                  {
+                    "title": "TOP 25 SQL Statements for Log Disk Wait Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=log_disk_wait_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for Log Disk Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}"
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              },
+              {
+                "id": "unit",
+                "value": "ms"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Total Cpu Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "TOP 25 SQL Statements for CPU Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=total_cpu_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for CPU Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}"
+                  },
+                  {
+                    "title": "WLM CPU Velocity",
+                    "url": "d/NxJHCGf7Z/wlm-cpu-velocity?orgId=1&${__url_time_range}&${__all_variables}"
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              },
+              {
+                "id": "unit",
+                "value": "ms"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "IO Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "TOP 25 SQL Statements for IO",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=pool_read_time%2Bpool_write_time%2Bdirect_read_time%2Bdirect_write_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for IO Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=pool_read_time%2Bpool_write_time%2Bdirect_read_time%2Bdirect_write_time"
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              },
+              {
+                "id": "unit",
+                "value": "ms"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Total Section Sort Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "TOP 25 SQL Statements for Section Sort Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=total_section_sort_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for Section Sort Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=total_section_sort_time"
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Extended Latch Wait"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Latch Wait Details",
+                    "url": "d/izlPgOW7k/latchwait?orgId=1&${__url_time_range}&${__all_variables}"
+                  },
+                  {
+                    "title": "TOP 25 SQL Statements for Latch Wait Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=total_extended_latch_wait_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for Extended Latch Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=total_extended_latch_wait_time"
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "WLM Queue Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "TOP 25 SQL Statements for WLM Queue Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=wlm_queue_time_total&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for WLM Queue Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=wlm_queue_time_total"
+                  },
+                  {
+                    "title": "WLM CPU Velocity",
+                    "url": "d/NxJHCGf7Z/wlm-cpu-velocity?orgId=1&${__url_time_range}&${__all_variables}"
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Log Buffer Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Transction Log Details",
+                    "url": "d/ztS0vnxZz/log-overview?orgId=1&${__url_time_range}&${__all_variables}"
+                  },
+                  {
+                    "title": "TOP 25 SQL Statements for Log Buffer Wait Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=log_buffer_wait_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for Log Buffer Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}"
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Event Monitor Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "TOP 25 SQL Statements for Event Monitor Wait Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=evmon_wait_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for Event Monitor Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=evmon_wait_time"
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Prefetch Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "TOP 25 SQL Statements for Prefetch Wait Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=prefetch_wait_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for Prefetch Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=prefetch_wait_time"
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Communication Exit Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "TOP 25 SQL Statements for Communication Exit Wait Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=comm_exit_wait_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for Communication Exit Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=comm_exit_wait_time"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Total Request Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "TOP 25 SQL Statements for Request Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=total_act_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for Total Request Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=total_rqst_time "
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Agent Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Application Group for Agent Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=agent_wait_time"
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "TCPIP Recv Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Application Group for TCP Receive Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=tcpip_recv_wait_time"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "TCPIP Send Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Application Group for TCP IP Send Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Dispatcher Run Queue Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "TOP 25 SQL Statements for Dispatcher Run Queue Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=total_disp_run_queue_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for Dispatcher Run Queue Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=total_disp_run_queue_time "
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "IPC Recv Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Application Group for IPC Recv Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=ipc_recv_wait_time "
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "IPC Send Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Application Group for IPC Send Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=ipc_send_wait_time "
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "FCM Send Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "TOP 25 SQL Statements for FCM Send Wait Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=fcm_send_wait_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for FCM Send Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=fcm_send_wait_time "
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "FCM Recv Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "TOP 25 SQL Statements for FCM Recv Wait Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=fcm_recv_wait_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for FCM Recv Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=fcm_recv_wait_time "
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Audit Subsystem Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "TOP 25 SQL Statements for Audit Subsystem Wait Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=audit_subsystem_wait_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for Audit Subsystem Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=audit_subsystem_wait_time "
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Audit File Write Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "TOP 25 SQL Statements for Audit File Write Wait Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=audit_file_write_wait_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for Audit File Write Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=audit_file_write_wait_time "
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Diaglog Write Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "TOP 25 SQL Statements for Diaglog Write Wait Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=diaglog_write_wait_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for Diaglog Write Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=diaglog_write_wait_time"
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "IDA Send Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "TOP 25 SQL Statements for IDA Send Wait Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=ida_send_wait_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for IDA Send Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=ida_send_wait_time"
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "IDA Recv Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "TOP 25 SQL Statements for IDA Recv Wait Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=ida_recv_wait_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for IDA Recv Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=ida_recv_wait_time"
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "CF Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "TOP 25 SQL Statements for CF Wait Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=cf_wait_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for Dispatcher CF Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=cf_wait_time"
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Reclaim Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "TOP 25 SQL Statements for Reclaim Wait Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=reclaim_wait_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for Reclaim Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=reclaim_wait_time"
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Spacemap Reclaim Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "TOP 25 SQL Statements for Spacemap Reclaim Wait Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=spacemappage_reclaim_wait_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for Spacemap Reclaim Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=spacemappage_reclaim_wait_time"
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "External Table Recv Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "TOP 25 SQL Statements for External Table Recv Wait Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=ext_table_recv_wait_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for External Table Recv Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=ext_table_recv_wait_time"
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "External Table Send Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "TOP 25 SQL Statements for External Table Send Wait Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=ext_table_send_wait_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for External Table Send Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=ext_table_send_wait_time"
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 10,
+        "w": 9,
+        "x": 6,
+        "y": 10
+      },
+      "hiddenSeries": false,
+      "id": 25,
+      "interval": "$inter",
+      "legend": {
+        "alignAsTable": false,
+        "avg": false,
+        "current": false,
+        "hideEmpty": false,
+        "hideZero": false,
+        "max": false,
+        "min": false,
+        "rightSide": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "7.5.11",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [
+        {
+          "$$hashKey": "object:744",
+          "alias": "Total Request Time",
+          "dashes": true,
+          "fill": 0,
+          "linewidth": 2,
+          "stack": false
+        }
+      ],
+      "spaceLength": 10,
+      "stack": true,
+      "steppedLine": false,
+      "targets": [
+        {
+          "format": "time_series",
+          "group": [
+            {
+              "params": [
+                "$__interval",
+                "0"
+              ],
+              "type": "time"
+            }
+          ],
+          "hide": false,
+          "metricColumn": "display_name",
+          "rawQuery": false,
+          "rawSql": "SELECT\n  $__timeGroupAlias(snapshot_time,$__interval,0),\n  display_name AS metric,\n  (CASE WHEN avg(total_cpu_time/1000) >= lag(avg(total_cpu_time/1000)) OVER (PARTITION BY display_name ORDER BY $__timeGroup(snapshot_time,$__interval,0)) THEN avg(total_cpu_time/1000) - lag(avg(total_cpu_time/1000)) OVER (PARTITION BY display_name ORDER BY $__timeGroup(snapshot_time,$__interval,0)) WHEN lag(avg(total_cpu_time/1000)) OVER (PARTITION BY display_name ORDER BY $__timeGroup(snapshot_time,$__interval,0)) IS NULL THEN NULL ELSE avg(total_cpu_time/1000) END)/extract(epoch from min(snapshot_time) - lag(min(snapshot_time)) OVER (PARTITION BY display_name ORDER BY $__timeGroup(snapshot_time,$__interval,0))) AS \"Total Cpu Time\"\nFROM spg_mon_db2.v_mon_get_database\nWHERE\n  $__timeFilter(snapshot_time) AND\n  hostname = (select distinct hostname from spg_mon_db2.v_mon_get_database where $__timeFilter(snapshot_time) and display_name||member='$datasource' fetch first 1 row only)\nGROUP BY 1,2\nORDER BY 1,2",
+          "refId": "B",
+          "select": [
+            [
+              {
+                "params": [
+                  "total_cpu_time/1000"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "avg"
+                ],
+                "type": "aggregate"
+              },
+              {
+                "params": [
+                  "rate"
+                ],
+                "type": "window"
+              },
+              {
+                "params": [
+                  "Total Cpu Time"
+                ],
+                "type": "alias"
+              }
+            ]
+          ],
+          "table": "spg_mon_db2.v_mon_get_database",
+          "timeColumn": "snapshot_time",
+          "timeColumnType": "timestamptz",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            },
+            {
+              "datatype": "varchar",
+              "name": "",
+              "params": [
+                "hostname",
+                "=",
+                "(select distinct hostname from spg_mon_db2.v_mon_get_database where $__timeFilter(snapshot_time) and display_name||member='$datasource' fetch first 1 row only)"
+              ],
+              "type": "expression"
+            }
+          ]
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "CPU Time per second (stacked)",
+      "tooltip": {
+        "shared": true,
+        "sort": 2,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:434",
+          "format": "ms",
+          "label": "",
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "$$hashKey": "object:435",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": true,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "-- Dashboard --",
+      "decimals": 2,
+      "description": "Series with only 0 or null are hidden",
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Lock Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Application Group for Lock Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}"
+                  },
+                  {
+                    "title": "TOP 25 SQL Statements for Lock Wait Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=lock_wait_time&var-topn=25"
+                  },
+                  {
+                    "title": "Lockwait Inflight",
+                    "url": "d/wuaW5oJWz/lockwait?orgId=1&${__url_time_range}&${__all_variables}"
+                  },
+                  {
+                    "title": "Lock Events",
+                    "url": "d/Q-uBlwE7z/lock-events?orgId=1&${__url_time_range}&${__all_variables}"
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              },
+              {
+                "id": "unit",
+                "value": "ms"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Log Disk Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Transaction Log Details",
+                    "url": "d/ztS0vnxZz/log-overview?orgId=1&${__url_time_range}&${__all_variables}"
+                  },
+                  {
+                    "title": "TOP 25 SQL Statements for Log Disk Wait Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=log_disk_wait_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for Log Disk Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}"
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              },
+              {
+                "id": "unit",
+                "value": "ms"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Total Cpu Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "TOP 25 SQL Statements for CPU Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=total_cpu_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for CPU Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}"
+                  },
+                  {
+                    "title": "WLM CPU Velocity",
+                    "url": "d/NxJHCGf7Z/wlm-cpu-velocity?orgId=1&${__url_time_range}&${__all_variables}"
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              },
+              {
+                "id": "unit",
+                "value": "ms"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "IO Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "TOP 25 SQL Statements for IO",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=pool_read_time%2Bpool_write_time%2Bdirect_read_time%2Bdirect_write_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for IO Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=pool_read_time%2Bpool_write_time%2Bdirect_read_time%2Bdirect_write_time"
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              },
+              {
+                "id": "unit",
+                "value": "ms"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Total Section Sort Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "TOP 25 SQL Statements for Section Sort Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=total_section_sort_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for Section Sort Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=total_section_sort_time"
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Extended Latch Wait"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Latch Wait Details",
+                    "url": "d/izlPgOW7k/latchwait?orgId=1&${__url_time_range}&${__all_variables}"
+                  },
+                  {
+                    "title": "TOP 25 SQL Statements for Latch Wait Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=total_extended_latch_wait_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for Extended Latch Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=total_extended_latch_wait_time"
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "WLM Queue Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "TOP 25 SQL Statements for WLM Queue Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=wlm_queue_time_total&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for WLM Queue Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=wlm_queue_time_total"
+                  },
+                  {
+                    "title": "WLM CPU Velocity",
+                    "url": "d/NxJHCGf7Z/wlm-cpu-velocity?orgId=1&${__url_time_range}&${__all_variables}"
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Log Buffer Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Transction Log Details",
+                    "url": "d/ztS0vnxZz/log-overview?orgId=1&${__url_time_range}&${__all_variables}"
+                  },
+                  {
+                    "title": "TOP 25 SQL Statements for Log Buffer Wait Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=log_buffer_wait_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for Log Buffer Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}"
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Event Monitor Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "TOP 25 SQL Statements for Event Monitor Wait Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=evmon_wait_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for Event Monitor Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=evmon_wait_time"
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Prefetch Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "TOP 25 SQL Statements for Prefetch Wait Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=prefetch_wait_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for Prefetch Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=prefetch_wait_time"
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Communication Exit Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "TOP 25 SQL Statements for Communication Exit Wait Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=comm_exit_wait_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for Communication Exit Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=comm_exit_wait_time"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Total Request Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "TOP 25 SQL Statements for Request Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=total_act_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for Total Request Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=total_rqst_time "
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Agent Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Application Group for Agent Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=agent_wait_time"
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "TCPIP Recv Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Application Group for TCP Receive Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=tcpip_recv_wait_time"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "TCPIP Send Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Application Group for TCP IP Send Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Dispatcher Run Queue Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "TOP 25 SQL Statements for Dispatcher Run Queue Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=total_disp_run_queue_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for Dispatcher Run Queue Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=total_disp_run_queue_time "
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "IPC Recv Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Application Group for IPC Recv Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=ipc_recv_wait_time "
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "IPC Send Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Application Group for IPC Send Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=ipc_send_wait_time "
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "FCM Send Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "TOP 25 SQL Statements for FCM Send Wait Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=fcm_send_wait_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for FCM Send Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=fcm_send_wait_time "
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "FCM Recv Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "TOP 25 SQL Statements for FCM Recv Wait Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=fcm_recv_wait_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for FCM Recv Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=fcm_recv_wait_time "
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Audit Subsystem Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "TOP 25 SQL Statements for Audit Subsystem Wait Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=audit_subsystem_wait_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for Audit Subsystem Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=audit_subsystem_wait_time "
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Audit File Write Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "TOP 25 SQL Statements for Audit File Write Wait Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=audit_file_write_wait_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for Audit File Write Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=audit_file_write_wait_time "
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Diaglog Write Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "TOP 25 SQL Statements for Diaglog Write Wait Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=diaglog_write_wait_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for Diaglog Write Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=diaglog_write_wait_time"
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "IDA Send Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "TOP 25 SQL Statements for IDA Send Wait Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=ida_send_wait_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for IDA Send Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=ida_send_wait_time"
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "IDA Recv Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "TOP 25 SQL Statements for IDA Recv Wait Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=ida_recv_wait_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for IDA Recv Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=ida_recv_wait_time"
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "CF Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "TOP 25 SQL Statements for CF Wait Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=cf_wait_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for Dispatcher CF Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=cf_wait_time"
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Reclaim Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "TOP 25 SQL Statements for Reclaim Wait Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=reclaim_wait_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for Reclaim Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=reclaim_wait_time"
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Spacemap Reclaim Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "TOP 25 SQL Statements for Spacemap Reclaim Wait Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=spacemappage_reclaim_wait_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for Spacemap Reclaim Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=spacemappage_reclaim_wait_time"
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "External Table Recv Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "TOP 25 SQL Statements for External Table Recv Wait Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=ext_table_recv_wait_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for External Table Recv Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=ext_table_recv_wait_time"
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "External Table Send Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "TOP 25 SQL Statements for External Table Send Wait Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=ext_table_send_wait_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for External Table Send Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=ext_table_send_wait_time"
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "fill": 1,
+      "fillGradient": 2,
+      "gridPos": {
+        "h": 10,
+        "w": 9,
+        "x": 15,
+        "y": 10
+      },
+      "hiddenSeries": false,
+      "id": 29,
+      "interval": "$inter",
+      "legend": {
+        "alignAsTable": false,
+        "avg": false,
+        "current": false,
+        "hideEmpty": true,
+        "hideZero": true,
+        "max": false,
+        "min": false,
+        "rightSide": false,
+        "show": true,
+        "sort": "avg",
+        "sortDesc": true,
+        "total": false,
+        "values": false
+      },
+      "lines": false,
+      "linewidth": 2,
+      "links": [],
+      "maxDataPoints": null,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "7.5.11",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [
+        {
+          "$$hashKey": "object:744",
+          "alias": "Total Request Time",
+          "dashes": true,
+          "fill": 0,
+          "linewidth": 2,
+          "stack": false
+        }
+      ],
+      "spaceLength": 10,
+      "stack": true,
+      "steppedLine": false,
+      "targets": [
+        {
+          "panelId": 25,
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "CPU Time per second (stacked bars)",
+      "tooltip": {
+        "shared": true,
+        "sort": 2,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:434",
+          "format": "ms",
+          "label": "",
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "$$hashKey": "object:435",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "-- Dashboard --",
+      "decimals": 2,
+      "description": "Series with only 0 or null are hidden",
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Lock Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Application Group for Lock Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}"
+                  },
+                  {
+                    "title": "TOP 25 SQL Statements for Lock Wait Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=lock_wait_time&var-topn=25"
+                  },
+                  {
+                    "title": "Lockwait Inflight",
+                    "url": "d/wuaW5oJWz/lockwait?orgId=1&${__url_time_range}&${__all_variables}"
+                  },
+                  {
+                    "title": "Lock Events",
+                    "url": "d/Q-uBlwE7z/lock-events?orgId=1&${__url_time_range}&${__all_variables}"
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              },
+              {
+                "id": "unit",
+                "value": "ms"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Log Disk Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Transaction Log Details",
+                    "url": "d/ztS0vnxZz/log-overview?orgId=1&${__url_time_range}&${__all_variables}"
+                  },
+                  {
+                    "title": "TOP 25 SQL Statements for Log Disk Wait Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=log_disk_wait_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for Log Disk Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}"
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              },
+              {
+                "id": "unit",
+                "value": "ms"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Total Cpu Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "TOP 25 SQL Statements for CPU Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=total_cpu_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for CPU Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}"
+                  },
+                  {
+                    "title": "WLM CPU Velocity",
+                    "url": "d/NxJHCGf7Z/wlm-cpu-velocity?orgId=1&${__url_time_range}&${__all_variables}"
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              },
+              {
+                "id": "unit",
+                "value": "ms"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "IO Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "TOP 25 SQL Statements for IO",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=pool_read_time%2Bpool_write_time%2Bdirect_read_time%2Bdirect_write_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for IO Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=pool_read_time%2Bpool_write_time%2Bdirect_read_time%2Bdirect_write_time"
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              },
+              {
+                "id": "unit",
+                "value": "ms"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Total Section Sort Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "TOP 25 SQL Statements for Section Sort Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=total_section_sort_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for Section Sort Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=total_section_sort_time"
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Extended Latch Wait"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Latch Wait Details",
+                    "url": "d/izlPgOW7k/latchwait?orgId=1&${__url_time_range}&${__all_variables}"
+                  },
+                  {
+                    "title": "TOP 25 SQL Statements for Latch Wait Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=total_extended_latch_wait_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for Extended Latch Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=total_extended_latch_wait_time"
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "WLM Queue Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "TOP 25 SQL Statements for WLM Queue Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=wlm_queue_time_total&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for WLM Queue Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=wlm_queue_time_total"
+                  },
+                  {
+                    "title": "WLM CPU Velocity",
+                    "url": "d/NxJHCGf7Z/wlm-cpu-velocity?orgId=1&${__url_time_range}&${__all_variables}"
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Log Buffer Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Transction Log Details",
+                    "url": "d/ztS0vnxZz/log-overview?orgId=1&${__url_time_range}&${__all_variables}"
+                  },
+                  {
+                    "title": "TOP 25 SQL Statements for Log Buffer Wait Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=log_buffer_wait_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for Log Buffer Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}"
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Event Monitor Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "TOP 25 SQL Statements for Event Monitor Wait Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=evmon_wait_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for Event Monitor Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=evmon_wait_time"
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Prefetch Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "TOP 25 SQL Statements for Prefetch Wait Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=prefetch_wait_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for Prefetch Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=prefetch_wait_time"
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Communication Exit Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "TOP 25 SQL Statements for Communication Exit Wait Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=comm_exit_wait_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for Communication Exit Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=comm_exit_wait_time"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Total Request Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "TOP 25 SQL Statements for Request Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=total_act_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for Total Request Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=total_rqst_time "
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Agent Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Application Group for Agent Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=agent_wait_time"
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "TCPIP Recv Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Application Group for TCP Receive Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=tcpip_recv_wait_time"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "TCPIP Send Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Application Group for TCP IP Send Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Dispatcher Run Queue Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "TOP 25 SQL Statements for Dispatcher Run Queue Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=total_disp_run_queue_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for Dispatcher Run Queue Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=total_disp_run_queue_time "
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "IPC Recv Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Application Group for IPC Recv Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=ipc_recv_wait_time "
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "IPC Send Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Application Group for IPC Send Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=ipc_send_wait_time "
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "FCM Send Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "TOP 25 SQL Statements for FCM Send Wait Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=fcm_send_wait_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for FCM Send Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=fcm_send_wait_time "
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "FCM Recv Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "TOP 25 SQL Statements for FCM Recv Wait Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=fcm_recv_wait_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for FCM Recv Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=fcm_recv_wait_time "
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Audit Subsystem Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "TOP 25 SQL Statements for Audit Subsystem Wait Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=audit_subsystem_wait_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for Audit Subsystem Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=audit_subsystem_wait_time "
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Audit File Write Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "TOP 25 SQL Statements for Audit File Write Wait Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=audit_file_write_wait_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for Audit File Write Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=audit_file_write_wait_time "
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Diaglog Write Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "TOP 25 SQL Statements for Diaglog Write Wait Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=diaglog_write_wait_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for Diaglog Write Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=diaglog_write_wait_time"
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "IDA Send Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "TOP 25 SQL Statements for IDA Send Wait Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=ida_send_wait_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for IDA Send Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=ida_send_wait_time"
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "IDA Recv Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "TOP 25 SQL Statements for IDA Recv Wait Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=ida_recv_wait_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for IDA Recv Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=ida_recv_wait_time"
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "CF Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "TOP 25 SQL Statements for CF Wait Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=cf_wait_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for Dispatcher CF Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=cf_wait_time"
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Reclaim Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "TOP 25 SQL Statements for Reclaim Wait Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=reclaim_wait_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for Reclaim Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=reclaim_wait_time"
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Spacemap Reclaim Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "TOP 25 SQL Statements for Spacemap Reclaim Wait Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=spacemappage_reclaim_wait_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for Spacemap Reclaim Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=spacemappage_reclaim_wait_time"
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "External Table Recv Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "TOP 25 SQL Statements for External Table Recv Wait Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=ext_table_recv_wait_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for External Table Recv Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=ext_table_recv_wait_time"
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "External Table Send Wait Time"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "TOP 25 SQL Statements for External Table Send Wait Time",
+                    "url": "d/6Y6ZkEo7k/sql-statement-analysis?viewPanel=32&orgId=1&${__url_time_range}&${__all_variables}&var-colu=ext_table_send_wait_time&var-topn=25"
+                  },
+                  {
+                    "title": "Application Group for External Table Send Wait Time",
+                    "url": "d/td3ocyS7z/application-group-list?orgId=1&${__url_time_range}&${__all_variables}&var-colu=ext_table_send_wait_time"
+                  },
+                  {
+                    "title": "WLM Workload",
+                    "url": "d/BUrXt0s7z/wlm-workload?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "fill": 1,
+      "fillGradient": 1,
+      "gridPos": {
+        "h": 10,
+        "w": 9,
+        "x": 6,
+        "y": 20
+      },
+      "hiddenSeries": false,
+      "id": 26,
+      "interval": "$inter",
+      "legend": {
+        "alignAsTable": false,
+        "avg": false,
+        "current": false,
+        "hideEmpty": true,
+        "hideZero": true,
+        "max": false,
+        "min": false,
+        "rightSide": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 2,
+      "links": [],
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "7.5.11",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [
+        {
+          "$$hashKey": "object:744",
+          "alias": "Total Request Time",
+          "dashes": true,
+          "fill": 0,
+          "linewidth": 2,
+          "stack": false
+        }
+      ],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "panelId": 25,
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "CPU Time per second (not stacked)",
+      "tooltip": {
+        "shared": true,
+        "sort": 2,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:434",
+          "format": "ms",
+          "label": "",
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "$$hashKey": "object:435",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "breakPoint": "50%",
+      "cacheTimeout": null,
+      "combine": {
+        "label": "Others",
+        "threshold": "0.05"
+      },
+      "datasource": "-- Dashboard --",
+      "decimals": 2,
+      "description": "Series with only 0 or null are hidden - Series with less than 5% are combined to others",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "fontSize": "80%",
+      "format": "ms",
+      "gridPos": {
+        "h": 10,
+        "w": 9,
+        "x": 15,
+        "y": 20
+      },
+      "id": 30,
+      "interval": "$inter",
+      "legend": {
+        "header": "",
+        "percentage": true,
+        "percentageDecimals": 2,
+        "show": true,
+        "sort": "avg",
+        "sortDesc": true,
+        "values": true
+      },
+      "legendType": "Right side",
+      "links": [],
+      "maxDataPoints": null,
+      "nullPointMode": "connected",
+      "pieType": "donut",
+      "pluginVersion": "7.5.11",
+      "strokeWidth": 1,
+      "targets": [
+        {
+          "panelId": 25,
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Average CPU Time per second",
+      "type": "grafana-piechart-panel",
+      "valueName": "avg"
+    }
+  ],
+  "refresh": "1m",
+  "schemaVersion": 27,
+  "style": "",
+  "tags": [
+    "db2",
+    "visible",
+    "system",
+    "custom",
+    "cpu"
+  ],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "selected": false,
+          "text": "pdb",
+          "value": "pdb"
+        },
+        "description": null,
+        "error": null,
+        "hide": 0,
+        "includeAll": false,
+        "label": "PDB",
+        "multi": false,
+        "name": "DataSourceVariable",
+        "options": [],
+        "query": "postgres",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "type": "datasource"
+      },
+      {
+        "allValue": null,
+        "current": {},
+        "datasource": "$DataSourceVariable",
+        "definition": "select \ndisplay_name||member as __value,display_name||'('||member||')'  as __text\nfrom spg_mon_db2.v_v_display_name_member \nwhere bucket BETWEEN '${__from:date:YYYY-MM-DD}Z' and '${__to:date:YYYY-MM-DD}Z'\ngroup by display_name,member",
+        "description": null,
+        "error": null,
+        "hide": 1,
+        "includeAll": false,
+        "label": "datasource",
+        "multi": false,
+        "name": "datasource",
+        "options": [],
+        "query": "select \ndisplay_name||member as __value,display_name||'('||member||')'  as __text\nfrom spg_mon_db2.v_v_display_name_member \nwhere bucket BETWEEN '${__from:date:YYYY-MM-DD}Z' and '${__to:date:YYYY-MM-DD}Z'\ngroup by display_name,member",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "auto": true,
+        "auto_count": 200,
+        "auto_min": "1m",
+        "current": {
+          "selected": false,
+          "text": "auto",
+          "value": "$__auto_interval_inter"
+        },
+        "description": null,
+        "error": null,
+        "hide": 0,
+        "label": "Minimum Interval",
+        "name": "inter",
+        "options": [
+          {
+            "selected": true,
+            "text": "auto",
+            "value": "$__auto_interval_inter"
+          },
+          {
+            "selected": false,
+            "text": "1m",
+            "value": "1m"
+          },
+          {
+            "selected": false,
+            "text": "10m",
+            "value": "10m"
+          },
+          {
+            "selected": false,
+            "text": "30m",
+            "value": "30m"
+          },
+          {
+            "selected": false,
+            "text": "1h",
+            "value": "1h"
+          },
+          {
+            "selected": false,
+            "text": "6h",
+            "value": "6h"
+          },
+          {
+            "selected": false,
+            "text": "12h",
+            "value": "12h"
+          },
+          {
+            "selected": false,
+            "text": "1d",
+            "value": "1d"
+          },
+          {
+            "selected": false,
+            "text": "7d",
+            "value": "7d"
+          },
+          {
+            "selected": false,
+            "text": "14d",
+            "value": "14d"
+          },
+          {
+            "selected": false,
+            "text": "30d",
+            "value": "30d"
+          }
+        ],
+        "query": "1m,10m,30m,1h,6h,12h,1d,7d,14d,30d",
+        "queryValue": "",
+        "refresh": 2,
+        "skipUrlSync": false,
+        "type": "interval"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-3h",
+    "to": "now"
+  },
+  "timepicker": {
+    "refresh_intervals": [
+      "10s",
+      "30s",
+      "1m",
+      "5m",
+      "15m",
+      "30m",
+      "1h",
+      "2h",
+      "1d"
+    ],
+    "time_options": [
+      "5m",
+      "15m",
+      "1h",
+      "6h",
+      "12h",
+      "24h",
+      "2d",
+      "7d",
+      "30d"
+    ]
+  },
+  "timezone": "",
+  "title": "System Resources CPU Share",
+  "uid": "es_h97IVk",
+  "version": 19
+}
