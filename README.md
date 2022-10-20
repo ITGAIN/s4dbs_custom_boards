@@ -1,6 +1,8 @@
 # s4dbs_custom_boards
 This repository stores custom dashboards for the monitoring solution speedgain for databases (speedgain.com)
 
+Support on these are limited and only been given through github. please create an issue if you are having problems.
+
 This boards can be imported / provisioned to a Grafana that is connected to a Speedgain for Databases Repository via mounting/copy files or folder to /s4dbs_custom_boards inside the grafana container (S4DBs >= V1.3.0). 
 
 All dashboards seen here are subject to be integrated into the tooling itself once in a while (only with permission of the owner). 
@@ -25,6 +27,7 @@ Do always specifiy custom tag on custom boards.
 # Currently available boards on this repository
 - Db2
     - Tablespace Filesystem Usage
+    - System Resources CPU Share
 - Linux
     - Disk Throughput Disk Map
 - Speedgain System
