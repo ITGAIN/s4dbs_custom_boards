@@ -1,43 +1,4 @@
 {
-  "__inputs": [],
-  "__requires": [
-    {
-      "type": "grafana",
-      "id": "grafana",
-      "name": "Grafana",
-      "version": "7.5.11"
-    },
-    {
-      "type": "panel",
-      "id": "grafana-piechart-panel",
-      "name": "Pie Chart",
-      "version": "1.6.2"
-    },
-    {
-      "type": "panel",
-      "id": "graph",
-      "name": "Graph",
-      "version": ""
-    },
-    {
-      "type": "datasource",
-      "id": "postgres",
-      "name": "PostgreSQL",
-      "version": "1.0.0"
-    },
-    {
-      "type": "panel",
-      "id": "table",
-      "name": "Table",
-      "version": ""
-    },
-    {
-      "type": "panel",
-      "id": "text",
-      "name": "Text",
-      "version": ""
-    }
-  ],
   "annotations": {
     "list": [
       {
@@ -54,8 +15,7 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 1,
-  "id": null,
-  "iteration": 1665481028841,
+  "iteration": 1666272490463,
   "links": [
     {
       "icon": "external link",
@@ -104,7 +64,7 @@
       },
       "id": 28,
       "options": {
-        "content": "# Info\nAll values are averages based on a minimum interval of $inter. The minimum interval can be selected in dropdown box \"Minimum Interval\".\n\nCPU Utilization and System Load are based on metrics collected from the database selected in the dropdown field. Origin is env_get_system_resources.\n\nCPU Time per second panels are based on every database that shares the same hostname in the speedgain configuration with the database selected. Origin is mon_get_database.",
+        "content": "# Info\nAll values are averages based on a minimum interval of $inter. The minimum interval can be selected in dropdown box \"Minimum Interval\".\n\nCPU Utilization and System Load are based on metrics collected from the database selected in the dropdown field. Origin is env_get_system_resources.\n\nCPU Time per second panels are based on every database that shares the same hostname in the speedgain configuration with the database selected. Origin is mon_get_database.\n\nLogical hostname is based on the configuration in speedgain, physical hostname is the hostname of the underlying operating system.",
         "mode": "markdown"
       },
       "pluginVersion": "7.5.11",
@@ -732,7 +692,7 @@
               "cpu_user": true,
               "db_name": true,
               "display_name": true,
-              "hostname": true,
+              "hostname": false,
               "id": true,
               "inst_name": true,
               "member": true,
@@ -750,8 +710,56 @@
               "virtual_mem_reserved": true,
               "virtual_mem_total": true
             },
-            "indexByName": {},
-            "renameByName": {}
+            "indexByName": {
+              "cpu_configured": 17,
+              "cpu_cores_per_socket": 21,
+              "cpu_hmt_degree": 20,
+              "cpu_idle": 34,
+              "cpu_iowait": 35,
+              "cpu_load_long": 31,
+              "cpu_load_medium": 30,
+              "cpu_load_short": 29,
+              "cpu_online": 16,
+              "cpu_speed": 18,
+              "cpu_system": 36,
+              "cpu_timebase": 19,
+              "cpu_total": 15,
+              "cpu_usage_total": 32,
+              "cpu_user": 33,
+              "db_name": 7,
+              "display_name": 5,
+              "host_name": 9,
+              "hostname": 3,
+              "id": 1,
+              "inst_name": 6,
+              "machine_identification": 13,
+              "member": 8,
+              "memory_free": 23,
+              "memory_swap_free": 25,
+              "memory_swap_total": 24,
+              "memory_total": 22,
+              "os_arch_type": 42,
+              "os_full_version": 40,
+              "os_kernel_version": 41,
+              "os_level": 14,
+              "os_name": 10,
+              "os_release": 12,
+              "os_version": 11,
+              "port": 4,
+              "snapshot_time": 2,
+              "swap_page_size": 37,
+              "swap_pages_in": 38,
+              "swap_pages_out": 39,
+              "time": 0,
+              "virtual_mem_free": 28,
+              "virtual_mem_reserved": 27,
+              "virtual_mem_total": 26
+            },
+            "renameByName": {
+              "host_name": "physical hostname",
+              "hostname": "logical hostname",
+              "os_name": ""
+            }
           }
         },
         {
@@ -1608,8 +1616,8 @@
           "hide": false,
           "metricColumn": "display_name",
           "rawQuery": false,
-          "rawSql": "SELECT\n  $__timeGroupAlias(snapshot_time,$__interval,0),\n  display_name AS metric,\n  (CASE WHEN avg(total_cpu_time/1000) >= lag(avg(total_cpu_time/1000)) OVER (PARTITION BY display_name ORDER BY $__timeGroup(snapshot_time,$__interval,0)) THEN avg(total_cpu_time/1000) - lag(avg(total_cpu_time/1000)) OVER (PARTITION BY display_name ORDER BY $__timeGroup(snapshot_time,$__interval,0)) WHEN lag(avg(total_cpu_time/1000)) OVER (PARTITION BY display_name ORDER BY $__timeGroup(snapshot_time,$__interval,0)) IS NULL THEN NULL ELSE avg(total_cpu_time/1000) END)/extract(epoch from min(snapshot_time) - lag(min(snapshot_time)) OVER (PARTITION BY display_name ORDER BY $__timeGroup(snapshot_time,$__interval,0))) AS \"Total Cpu Time\"\nFROM spg_mon_db2.v_mon_get_database\nWHERE\n  $__timeFilter(snapshot_time) AND\n  hostname = (select distinct hostname from spg_mon_db2.v_mon_get_database where $__timeFilter(snapshot_time) and display_name||member='$datasource' fetch first 1 row only)\nGROUP BY 1,2\nORDER BY 1,2",
-          "refId": "B",
+          "rawSql": "SELECT\n  $__timeGroupAlias(snapshot_time,$__interval,0),\n  display_name AS metric,\n  (CASE WHEN avg(total_cpu_time/1000) >= lag(avg(total_cpu_time/1000)) OVER (PARTITION BY display_name ORDER BY $__timeGroup(snapshot_time,$__interval,0)) THEN avg(total_cpu_time/1000) - lag(avg(total_cpu_time/1000)) OVER (PARTITION BY display_name ORDER BY $__timeGroup(snapshot_time,$__interval,0)) WHEN lag(avg(total_cpu_time/1000)) OVER (PARTITION BY display_name ORDER BY $__timeGroup(snapshot_time,$__interval,0)) IS NULL THEN NULL ELSE avg(total_cpu_time/1000) END)/extract(epoch from min(snapshot_time) - lag(min(snapshot_time)) OVER (PARTITION BY display_name ORDER BY $__timeGroup(snapshot_time,$__interval,0))) AS \"Total Cpu Time\"\nFROM spg_mon_db2.v_mon_get_database\nWHERE\n  $__timeFilter(snapshot_time) AND\n  hostname = (select distinct hostname from spg_mon_db2.v_mon_get_database where $__timeFilter(snapshot_time) and display_name||member='$datasource' fetch first 1 row only) AND\n  0 = $logphysname\nGROUP BY 1,2\nORDER BY 1,2",
+          "refId": "logical hostname",
           "select": [
             [
               {
@@ -1654,6 +1662,89 @@
                 "hostname",
                 "=",
                 "(select distinct hostname from spg_mon_db2.v_mon_get_database where $__timeFilter(snapshot_time) and display_name||member='$datasource' fetch first 1 row only)"
+              ],
+              "type": "expression"
+            },
+            {
+              "name": "",
+              "params": [
+                "0",
+                "=",
+                "$logphysname"
+              ],
+              "type": "expression"
+            }
+          ]
+        },
+        {
+          "format": "time_series",
+          "group": [
+            {
+              "params": [
+                "$__interval",
+                "0"
+              ],
+              "type": "time"
+            }
+          ],
+          "hide": false,
+          "metricColumn": "display_name",
+          "rawQuery": false,
+          "rawSql": "SELECT\n  $__timeGroupAlias(snapshot_time,$__interval,0),\n  display_name AS metric,\n  (CASE WHEN avg(total_cpu_time/1000) >= lag(avg(total_cpu_time/1000)) OVER (PARTITION BY display_name ORDER BY $__timeGroup(snapshot_time,$__interval,0)) THEN avg(total_cpu_time/1000) - lag(avg(total_cpu_time/1000)) OVER (PARTITION BY display_name ORDER BY $__timeGroup(snapshot_time,$__interval,0)) WHEN lag(avg(total_cpu_time/1000)) OVER (PARTITION BY display_name ORDER BY $__timeGroup(snapshot_time,$__interval,0)) IS NULL THEN NULL ELSE avg(total_cpu_time/1000) END)/extract(epoch from min(snapshot_time) - lag(min(snapshot_time)) OVER (PARTITION BY display_name ORDER BY $__timeGroup(snapshot_time,$__interval,0))) AS \"Total Cpu Time\"\nFROM spg_mon_db2.v_mon_get_database\nWHERE\n  $__timeFilter(snapshot_time) AND\n  display_name IN (select \t\tdistinct display_name \tfrom \t\tspg_mon_db2.v_env_get_system_resources \twhere \t\t$__timeFilter(snapshot_time) \t\tand host_name=(select distinct host_name from spg_mon_db2.v_env_get_system_resources where $__timeFilter(snapshot_time) and display_name || member = '$datasource' ) \t\t) AND\n  1 = $logphysname\nGROUP BY 1,2\nORDER BY 1,2",
+          "refId": "physical hostname",
+          "select": [
+            [
+              {
+                "params": [
+                  "total_cpu_time/1000"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "avg"
+                ],
+                "type": "aggregate"
+              },
+              {
+                "params": [
+                  "rate"
+                ],
+                "type": "window"
+              },
+              {
+                "params": [
+                  "Total Cpu Time"
+                ],
+                "type": "alias"
+              }
+            ]
+          ],
+          "table": "spg_mon_db2.v_mon_get_database",
+          "timeColumn": "snapshot_time",
+          "timeColumnType": "timestamptz",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            },
+            {
+              "datatype": "text",
+              "name": "",
+              "params": [
+                "display_name",
+                "IN",
+                "(select \t\tdistinct display_name \tfrom \t\tspg_mon_db2.v_env_get_system_resources \twhere \t\t$__timeFilter(snapshot_time) \t\tand host_name=(select distinct host_name from spg_mon_db2.v_env_get_system_resources where $__timeFilter(snapshot_time) and display_name || member = '$datasource' ) \t\t)"
+              ],
+              "type": "expression"
+            },
+            {
+              "name": "",
+              "params": [
+                "1",
+                "=",
+                "$logphysname"
               ],
               "type": "expression"
             }
@@ -3544,7 +3635,11 @@
       },
       {
         "allValue": null,
-        "current": {},
+        "current": {
+          "selected": false,
+          "text": "spgwebtest_ssl_sample(0)",
+          "value": "spgwebtest_ssl_sample0"
+        },
         "datasource": "$DataSourceVariable",
         "definition": "select \ndisplay_name||member as __value,display_name||'('||member||')'  as __text\nfrom spg_mon_db2.v_v_display_name_member \nwhere bucket BETWEEN '${__from:date:YYYY-MM-DD}Z' and '${__to:date:YYYY-MM-DD}Z'\ngroup by display_name,member",
         "description": null,
@@ -3642,6 +3737,37 @@
         "refresh": 2,
         "skipUrlSync": false,
         "type": "interval"
+      },
+      {
+        "allValue": null,
+        "current": {
+          "selected": true,
+          "text": "logical hostname",
+          "value": "0"
+        },
+        "description": "Select to join via logical or physical hostname",
+        "error": null,
+        "hide": 0,
+        "includeAll": false,
+        "label": "Logical or Physical Hostname",
+        "multi": false,
+        "name": "logphysname",
+        "options": [
+          {
+            "selected": true,
+            "text": "logical hostname",
+            "value": "0"
+          },
+          {
+            "selected": false,
+            "text": "physical hostname",
+            "value": "1"
+          }
+        ],
+        "query": "logical hostname : 0,  physical hostname : 1",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
       }
     ]
   },
@@ -3676,5 +3802,5 @@
   "timezone": "",
   "title": "System Resources CPU Share",
   "uid": "es_h97IVk",
-  "version": 19
+  "version": 20
 }
