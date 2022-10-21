@@ -1,0 +1,1934 @@
+{
+  "__inputs": [
+    {
+      "name": "DS_PDB",
+      "label": "pdb",
+      "description": "",
+      "type": "datasource",
+      "pluginId": "postgres",
+      "pluginName": "PostgreSQL"
+    }
+  ],
+  "__requires": [
+    {
+      "type": "grafana",
+      "id": "grafana",
+      "name": "Grafana",
+      "version": "7.5.11"
+    },
+    {
+      "type": "panel",
+      "id": "grafana-piechart-panel",
+      "name": "Pie Chart",
+      "version": "1.6.2"
+    },
+    {
+      "type": "panel",
+      "id": "graph",
+      "name": "Graph",
+      "version": ""
+    },
+    {
+      "type": "datasource",
+      "id": "postgres",
+      "name": "PostgreSQL",
+      "version": "1.0.0"
+    },
+    {
+      "type": "panel",
+      "id": "table",
+      "name": "Table",
+      "version": ""
+    }
+  ],
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 1,
+  "id": null,
+  "iteration": 1666338283801,
+  "links": [
+    {
+      "icon": "external link",
+      "keepTime": true,
+      "tags": [
+        "s4dbsoverview"
+      ],
+      "type": "dashboards"
+    },
+    {
+      "asDropdown": true,
+      "icon": "external link",
+      "includeVars": true,
+      "keepTime": true,
+      "tags": [
+        "overview"
+      ],
+      "title": "Overview Dashboards",
+      "type": "dashboards"
+    },
+    {
+      "asDropdown": true,
+      "icon": "external link",
+      "includeVars": true,
+      "keepTime": true,
+      "tags": [
+        "os",
+        "visible"
+      ],
+      "title": "OS Dashboards",
+      "type": "dashboards"
+    }
+  ],
+  "panels": [
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "$DataSourceVariable",
+      "description": "Total CPU Usage. Stacked Trendchart. 100% means 100% overall all cores available",
+      "fieldConfig": {
+        "defaults": {
+          "links": []
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Show CPU Details",
+                    "url": "d/ThSCyDbWz/cpu?orgId=1&${__url_time_range}&${__all_variables}"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "fill": 2,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "hiddenSeries": false,
+      "id": 2,
+      "interval": "1m",
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "rightSide": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [
+        {
+          "title": "Show CPU Details",
+          "url": "d/ThSCyDbWz/cpu?orgId=1&${__url_time_range}&${__all_variables}"
+        }
+      ],
+      "nullPointMode": "null as zero",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "7.5.11",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [
+        {
+          "$$hashKey": "object:185",
+          "alias": "/.*cpu[0-9]{1,2}.*/i",
+          "stack": true
+        },
+        {
+          "$$hashKey": "object:186",
+          "alias": "cpu idle",
+          "hiddenSeries": true
+        }
+      ],
+      "spaceLength": 10,
+      "stack": true,
+      "steppedLine": false,
+      "targets": [
+        {
+          "format": "time_series",
+          "group": [
+            {
+              "params": [
+                "$__interval",
+                "none"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "entity"
+              ],
+              "type": "column"
+            }
+          ],
+          "metricColumn": "entity",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  $__timeGroupAlias(snapshot_time,$__interval),\n  entity AS metric,\n  cast(CASE WHEN max(val1) >= lag(max(val1)) OVER (PARTITION BY entity ORDER BY $__timeGroup(snapshot_time,$__interval)) THEN max(val1) - lag(max(val1)) OVER (PARTITION BY entity ORDER BY $__timeGroup(snapshot_time,$__interval)) WHEN lag(max(val1)) OVER (PARTITION BY entity ORDER BY $__timeGroup(snapshot_time,$__interval)) IS NULL THEN NULL ELSE max(val1) END as decimal)/cast (\n    CASE\n      WHEN max(val1 + val2 + val3 + val4 + val5 + val6 + val7) >= lag(max(val1 + val2 + val3 + val4 + val5 + val6 + val7)) OVER (\n        PARTITION BY entity\n        ORDER BY\n          $__timeGroup(snapshot_time,$__interval)\n      ) THEN max(val1 + val2 + val3 + val4 + val5 + val6 + val7) - lag(max(val1 + val2 + val3 + val4 + val5 + val6 + val7)) OVER (\n        PARTITION BY entity\n        ORDER BY\n          $__timeGroup(snapshot_time,$__interval)\n      )\n      WHEN lag(max(val1 + val2 + val3 + val4 + val5 + val6 + val7)) OVER (\n        PARTITION BY entity\n        ORDER BY\n          $__timeGroup(snapshot_time,$__interval)\n      ) IS NULL THEN NULL\n      ELSE max(val1 + val2 + val3 + val4 + val5 + val6 + val7)\n    END\n  as decimal ) *100 AS \"user\",\n  (CASE WHEN max(val2) >= lag(max(val2)) OVER (PARTITION BY entity ORDER BY $__timeGroup(snapshot_time,$__interval)) THEN max(val2) - lag(max(val2)) OVER (PARTITION BY entity ORDER BY $__timeGroup(snapshot_time,$__interval)) WHEN lag(max(val2)) OVER (PARTITION BY entity ORDER BY $__timeGroup(snapshot_time,$__interval)) IS NULL THEN NULL ELSE max(val2) END)/cast (\n    CASE\n      WHEN max(val1 + val2 + val3 + val4 + val5 + val6 + val7) >= lag(max(val1 + val2 + val3 + val4 + val5 + val6 + val7)) OVER (\n        PARTITION BY entity\n        ORDER BY\n          $__timeGroup(snapshot_time,$__interval)\n      ) THEN max(val1 + val2 + val3 + val4 + val5 + val6 + val7) - lag(max(val1 + val2 + val3 + val4 + val5 + val6 + val7)) OVER (\n        PARTITION BY entity\n        ORDER BY\n          $__timeGroup(snapshot_time,$__interval)\n      )\n      WHEN lag(max(val1 + val2 + val3 + val4 + val5 + val6 + val7)) OVER (\n        PARTITION BY entity\n        ORDER BY\n          $__timeGroup(snapshot_time,$__interval)\n      ) IS NULL THEN NULL\n      ELSE max(val1 + val2 + val3 + val4 + val5 + val6 + val7)\n    END\n  as decimal ) *100 AS \"nice\",\n  (CASE WHEN max(val3) >= lag(max(val3)) OVER (PARTITION BY entity ORDER BY $__timeGroup(snapshot_time,$__interval)) THEN max(val3) - lag(max(val3)) OVER (PARTITION BY entity ORDER BY $__timeGroup(snapshot_time,$__interval)) WHEN lag(max(val3)) OVER (PARTITION BY entity ORDER BY $__timeGroup(snapshot_time,$__interval)) IS NULL THEN NULL ELSE max(val3) END)/cast (\n    CASE\n      WHEN max(val1 + val2 + val3 + val4 + val5 + val6 + val7) >= lag(max(val1 + val2 + val3 + val4 + val5 + val6 + val7)) OVER (\n        PARTITION BY entity\n        ORDER BY\n          $__timeGroup(snapshot_time,$__interval)\n      ) THEN max(val1 + val2 + val3 + val4 + val5 + val6 + val7) - lag(max(val1 + val2 + val3 + val4 + val5 + val6 + val7)) OVER (\n        PARTITION BY entity\n        ORDER BY\n          $__timeGroup(snapshot_time,$__interval)\n      )\n      WHEN lag(max(val1 + val2 + val3 + val4 + val5 + val6 + val7)) OVER (\n        PARTITION BY entity\n        ORDER BY\n          $__timeGroup(snapshot_time,$__interval)\n      ) IS NULL THEN NULL\n      ELSE max(val1 + val2 + val3 + val4 + val5 + val6 + val7)\n    END\n  as decimal ) *100 AS \"system\",\n  /*\n  (CASE WHEN max(val4) >= lag(max(val4)) OVER (PARTITION BY entity ORDER BY $__timeGroup(snapshot_time,$__interval)) THEN max(val4) - lag(max(val4)) OVER (PARTITION BY entity ORDER BY $__timeGroup(snapshot_time,$__interval)) WHEN lag(max(val4)) OVER (PARTITION BY entity ORDER BY $__timeGroup(snapshot_time,$__interval)) IS NULL THEN NULL ELSE max(val4) END)/cast (\n    CASE\n      WHEN max(val1 + val2 + val3 + val4 + val5 + val6 + val7) >= lag(max(val1 + val2 + val3 + val4 + val5 + val6 + val7)) OVER (\n        PARTITION BY entity\n        ORDER BY\n          $__timeGroup(snapshot_time,$__interval)\n      ) THEN max(val1 + val2 + val3 + val4 + val5 + val6 + val7) - lag(max(val1 + val2 + val3 + val4 + val5 + val6 + val7)) OVER (\n        PARTITION BY entity\n        ORDER BY\n          $__timeGroup(snapshot_time,$__interval)\n      )\n      WHEN lag(max(val1 + val2 + val3 + val4 + val5 + val6 + val7)) OVER (\n        PARTITION BY entity\n        ORDER BY\n          $__timeGroup(snapshot_time,$__interval)\n      ) IS NULL THEN NULL\n      ELSE max(val1 + val2 + val3 + val4 + val5 + val6 + val7)\n    END\n  as decimal ) *100 AS \"idle\",*/\n  (CASE WHEN max(val5) >= lag(max(val5)) OVER (PARTITION BY entity ORDER BY $__timeGroup(snapshot_time,$__interval)) THEN max(val5) - lag(max(val5)) OVER (PARTITION BY entity ORDER BY $__timeGroup(snapshot_time,$__interval)) WHEN lag(max(val5)) OVER (PARTITION BY entity ORDER BY $__timeGroup(snapshot_time,$__interval)) IS NULL THEN NULL ELSE max(val5) END)/cast (\n    CASE\n      WHEN max(val1 + val2 + val3 + val4 + val5 + val6 + val7) >= lag(max(val1 + val2 + val3 + val4 + val5 + val6 + val7)) OVER (\n        PARTITION BY entity\n        ORDER BY\n          $__timeGroup(snapshot_time,$__interval)\n      ) THEN max(val1 + val2 + val3 + val4 + val5 + val6 + val7) - lag(max(val1 + val2 + val3 + val4 + val5 + val6 + val7)) OVER (\n        PARTITION BY entity\n        ORDER BY\n          $__timeGroup(snapshot_time,$__interval)\n      )\n      WHEN lag(max(val1 + val2 + val3 + val4 + val5 + val6 + val7)) OVER (\n        PARTITION BY entity\n        ORDER BY\n          $__timeGroup(snapshot_time,$__interval)\n      ) IS NULL THEN NULL\n      ELSE max(val1 + val2 + val3 + val4 + val5 + val6 + val7)\n    END\n  as decimal ) *100 AS \"io_wait\",\n  (CASE WHEN max(val6) >= lag(max(val6)) OVER (PARTITION BY entity ORDER BY $__timeGroup(snapshot_time,$__interval)) THEN max(val6) - lag(max(val6)) OVER (PARTITION BY entity ORDER BY $__timeGroup(snapshot_time,$__interval)) WHEN lag(max(val6)) OVER (PARTITION BY entity ORDER BY $__timeGroup(snapshot_time,$__interval)) IS NULL THEN NULL ELSE max(val6) END)/cast (\n    CASE\n      WHEN max(val1 + val2 + val3 + val4 + val5 + val6 + val7) >= lag(max(val1 + val2 + val3 + val4 + val5 + val6 + val7)) OVER (\n        PARTITION BY entity\n        ORDER BY\n          $__timeGroup(snapshot_time,$__interval)\n      ) THEN max(val1 + val2 + val3 + val4 + val5 + val6 + val7) - lag(max(val1 + val2 + val3 + val4 + val5 + val6 + val7)) OVER (\n        PARTITION BY entity\n        ORDER BY\n          $__timeGroup(snapshot_time,$__interval)\n      )\n      WHEN lag(max(val1 + val2 + val3 + val4 + val5 + val6 + val7)) OVER (\n        PARTITION BY entity\n        ORDER BY\n          $__timeGroup(snapshot_time,$__interval)\n      ) IS NULL THEN NULL\n      ELSE max(val1 + val2 + val3 + val4 + val5 + val6 + val7)\n    END\n  as decimal ) *100 AS \"irq\",\n  (CASE WHEN max(val7) >= lag(max(val7)) OVER (PARTITION BY entity ORDER BY $__timeGroup(snapshot_time,$__interval)) THEN max(val7) - lag(max(val7)) OVER (PARTITION BY entity ORDER BY $__timeGroup(snapshot_time,$__interval)) WHEN lag(max(val7)) OVER (PARTITION BY entity ORDER BY $__timeGroup(snapshot_time,$__interval)) IS NULL THEN NULL ELSE max(val7) END)/cast (\n    CASE\n      WHEN max(val1 + val2 + val3 + val4 + val5 + val6 + val7) >= lag(max(val1 + val2 + val3 + val4 + val5 + val6 + val7)) OVER (\n        PARTITION BY entity\n        ORDER BY\n          $__timeGroup(snapshot_time,$__interval)\n      ) THEN max(val1 + val2 + val3 + val4 + val5 + val6 + val7) - lag(max(val1 + val2 + val3 + val4 + val5 + val6 + val7)) OVER (\n        PARTITION BY entity\n        ORDER BY\n          $__timeGroup(snapshot_time,$__interval)\n      )\n      WHEN lag(max(val1 + val2 + val3 + val4 + val5 + val6 + val7)) OVER (\n        PARTITION BY entity\n        ORDER BY\n          $__timeGroup(snapshot_time,$__interval)\n      ) IS NULL THEN NULL\n      ELSE max(val1 + val2 + val3 + val4 + val5 + val6 + val7)\n    END\n  as decimal ) *100 AS \"soft_irq\"\nFROM spg_mon_os.v_proc_stat\nWHERE\n  $__timeFilter(snapshot_time) AND\n  display_name = '$HostPicker' AND\n  entity LIKE 'cpu'\nGROUP BY 1, entity,2\nORDER BY 1,2",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "val1"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "max"
+                ],
+                "type": "aggregate"
+              },
+              {
+                "params": [
+                  "rate"
+                ],
+                "type": "window"
+              },
+              {
+                "params": [
+                  "user"
+                ],
+                "type": "alias"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "val2"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "max"
+                ],
+                "type": "aggregate"
+              },
+              {
+                "params": [
+                  "rate"
+                ],
+                "type": "window"
+              },
+              {
+                "params": [
+                  "nice"
+                ],
+                "type": "alias"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "val3"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "max"
+                ],
+                "type": "aggregate"
+              },
+              {
+                "params": [
+                  "rate"
+                ],
+                "type": "window"
+              },
+              {
+                "params": [
+                  "system"
+                ],
+                "type": "alias"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "val4"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "max"
+                ],
+                "type": "aggregate"
+              },
+              {
+                "params": [
+                  "rate"
+                ],
+                "type": "window"
+              },
+              {
+                "params": [
+                  "idle"
+                ],
+                "type": "alias"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "val5"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "max"
+                ],
+                "type": "aggregate"
+              },
+              {
+                "params": [
+                  "rate"
+                ],
+                "type": "window"
+              },
+              {
+                "params": [
+                  "io_wait"
+                ],
+                "type": "alias"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "val6"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "max"
+                ],
+                "type": "aggregate"
+              },
+              {
+                "params": [
+                  "rate"
+                ],
+                "type": "window"
+              },
+              {
+                "params": [
+                  "irq"
+                ],
+                "type": "alias"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "val7"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "max"
+                ],
+                "type": "aggregate"
+              },
+              {
+                "params": [
+                  "rate"
+                ],
+                "type": "window"
+              },
+              {
+                "params": [
+                  "soft_irq"
+                ],
+                "type": "alias"
+              }
+            ]
+          ],
+          "table": "spg_mon_os.v_proc_stat",
+          "timeColumn": "snapshot_time",
+          "timeColumnType": "timestamptz",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            },
+            {
+              "datatype": "text",
+              "name": "",
+              "params": [
+                "display_name",
+                "IN",
+                "($HostPicker)"
+              ],
+              "type": "expression"
+            },
+            {
+              "datatype": "varchar",
+              "name": "",
+              "params": [
+                "entity",
+                "LIKE",
+                "'cpu'"
+              ],
+              "type": "expression"
+            }
+          ]
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "CPU Usage Overall",
+      "tooltip": {
+        "shared": true,
+        "sort": 2,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:143",
+          "decimals": null,
+          "format": "percent",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "$$hashKey": "object:144",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {
+        "num_cores": "red"
+      },
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "$DataSourceVariable",
+      "description": "system load averages; short->1min, mid->5min, long->15min\nRed dotted line is number of cores",
+      "fieldConfig": {
+        "defaults": {
+          "links": [
+            {
+              "title": "Show CPU Details",
+              "url": "d/ThSCyDbWz/cpu?orgId=1&${__url_time_range}&${__all_variables}"
+            }
+          ]
+        },
+        "overrides": []
+      },
+      "fill": 2,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "hiddenSeries": false,
+      "id": 7,
+      "interval": "1m",
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "rightSide": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 2,
+      "links": [
+        {
+          "title": "Show CPU Details",
+          "url": "d/ThSCyDbWz/cpu?orgId=1&${__url_time_range}&${__all_variables}"
+        }
+      ],
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": true,
+      "pluginVersion": "7.5.11",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [
+        {
+          "$$hashKey": "object:521",
+          "alias": "num_cores",
+          "dashes": true,
+          "fill": 0,
+          "linewidth": 2,
+          "yaxis": 1
+        }
+      ],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "format": "time_series",
+          "group": [
+            {
+              "params": [
+                "$__interval",
+                "none"
+              ],
+              "type": "time"
+            }
+          ],
+          "metricColumn": "none",
+          "rawQuery": false,
+          "rawSql": "SELECT\n  $__timeGroupAlias(snapshot_time,$__interval),\n  max(load1) AS \"load short\",\n  max(load5) AS \"load mid\",\n  max(load15) AS \"load long\"\nFROM spg_mon_os.v_proc_loadavg\nWHERE\n  $__timeFilter(snapshot_time) AND\n  display_name = '$HostPicker'\nGROUP BY 1\nORDER BY 1",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "load1"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "max"
+                ],
+                "type": "aggregate"
+              },
+              {
+                "params": [
+                  "load short"
+                ],
+                "type": "alias"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "load5"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "max"
+                ],
+                "type": "aggregate"
+              },
+              {
+                "params": [
+                  "load mid"
+                ],
+                "type": "alias"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "load15"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "max"
+                ],
+                "type": "aggregate"
+              },
+              {
+                "params": [
+                  "load long"
+                ],
+                "type": "alias"
+              }
+            ]
+          ],
+          "table": "spg_mon_os.v_proc_loadavg",
+          "timeColumn": "snapshot_time",
+          "timeColumnType": "timestamptz",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            },
+            {
+              "datatype": "varchar",
+              "name": "",
+              "params": [
+                "display_name",
+                "=",
+                "'$HostPicker'"
+              ],
+              "type": "expression"
+            }
+          ]
+        },
+        {
+          "format": "time_series",
+          "group": [],
+          "hide": false,
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "with cpu_delta as (\nselect  snapshot_time as time,display_name,count(entity) as num_cores from spg_mon_os.v_proc_stat WHERE\n  $__timeFilter(snapshot_time)  and entity like 'cpu_%' and display_name = '$HostPicker' GROUP BY 1, 2\n)\nselect $__timeGroupAlias(time,$__interval),max(num_cores) as num_cores from cpu_delta group by 1 order by 1",
+          "refId": "B",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Systemload",
+      "tooltip": {
+        "shared": true,
+        "sort": 2,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:363",
+          "decimals": null,
+          "format": "short",
+          "label": "",
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "$$hashKey": "object:364",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "$DataSourceVariable",
+      "fieldConfig": {
+        "defaults": {
+          "links": [
+            {
+              "title": "Show RAM Details",
+              "url": "d/feHQUPbZk/ram?orgId=1&${__url_time_range}&${__all_variables}"
+            }
+          ]
+        },
+        "overrides": []
+      },
+      "fill": 2,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 0,
+        "y": 7
+      },
+      "hiddenSeries": false,
+      "id": 9,
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "rightSide": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [
+        {
+          "title": "Show RAM Details",
+          "url": "d/feHQUPbZk/ram?orgId=1&${__url_time_range}&${__all_variables}"
+        }
+      ],
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "7.5.11",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "format": "time_series",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "with memTotal as (select snapshot_time, display_name, value from spg_mon_os.v_proc_meminfo where $__timeFilter(snapshot_time) and display_name = '$HostPicker' and entity = 'MemTotal'),\nmemFree as (select snapshot_time, display_name, value from spg_mon_os.v_proc_meminfo where $__timeFilter(snapshot_time) and display_name = '$HostPicker' and entity = 'MemFree')\nselect $__timeGroupAlias(t.snapshot_time,$__interval), avg((t.value - f.value) * 100 / t.value) as \"ram_used\"\nfrom memTotal t\ninner join memFree f on t.snapshot_time = f.snapshot_time and t.display_name = f.display_name\nWHERE\n  $__timeFilter(t.snapshot_time) and t.display_name = '$HostPicker'\ngroup BY 1\nORDER BY 1",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "alias"
+              }
+            ]
+          ],
+          "table": "spg_mon_os.v_proc_meminfo",
+          "timeColumn": "snapshot_time",
+          "timeColumnType": "timestamptz",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "RAM Utilization",
+      "tooltip": {
+        "shared": true,
+        "sort": 2,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:585",
+          "decimals": null,
+          "format": "percent",
+          "label": "",
+          "logBase": 1,
+          "max": "100",
+          "min": "0",
+          "show": true
+        },
+        {
+          "$$hashKey": "object:586",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "$DataSourceVariable",
+      "fieldConfig": {
+        "defaults": {
+          "links": [
+            {
+              "title": "Show RAM Details",
+              "url": "d/feHQUPbZk/ram?orgId=1&${__url_time_range}&${__all_variables}"
+            }
+          ]
+        },
+        "overrides": []
+      },
+      "fill": 2,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 12,
+        "y": 7
+      },
+      "hiddenSeries": false,
+      "id": 11,
+      "interval": "1m",
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "rightSide": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 2,
+      "links": [
+        {
+          "title": "Show RAM Details",
+          "url": "d/feHQUPbZk/ram?orgId=1&${__url_time_range}&${__all_variables}"
+        }
+      ],
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": true,
+      "pluginVersion": "7.5.11",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "format": "time_series",
+          "group": [
+            {
+              "params": [
+                "$__interval",
+                "none"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "load1"
+              ],
+              "type": "column"
+            },
+            {
+              "params": [
+                "load5"
+              ],
+              "type": "column"
+            },
+            {
+              "params": [
+                "load15"
+              ],
+              "type": "column"
+            }
+          ],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "with memTotal as (select snapshot_time, display_name, value from spg_mon_os.v_proc_meminfo where $__timeFilter(snapshot_time) and display_name = '$HostPicker' and entity = 'MemTotal'),\nmemFree as (select snapshot_time, display_name, value from spg_mon_os.v_proc_meminfo where $__timeFilter(snapshot_time) and display_name = '$HostPicker' and entity = 'MemFree')\nselect $__timeGroupAlias(t.snapshot_time,$__interval), avg(t.value) as \"ram_total\", avg(t.value - f.value) as \"ram_used\"\nfrom memTotal t\ninner join memFree f on t.snapshot_time = f.snapshot_time and t.display_name = f.display_name\nWHERE\n  $__timeFilter(t.snapshot_time) and t.display_name = '$HostPicker'\nGROUP BY 1\nORDER BY 1",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "load1"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "delta"
+                ],
+                "type": "window"
+              },
+              {
+                "params": [
+                  "load short"
+                ],
+                "type": "alias"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "load5"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "delta"
+                ],
+                "type": "window"
+              },
+              {
+                "params": [
+                  "load mid"
+                ],
+                "type": "alias"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "load15"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "delta"
+                ],
+                "type": "window"
+              },
+              {
+                "params": [
+                  "load long"
+                ],
+                "type": "alias"
+              }
+            ]
+          ],
+          "table": "spg_mon_os.v_proc_loadavg",
+          "timeColumn": "snapshot_time",
+          "timeColumnType": "timestamptz",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            },
+            {
+              "datatype": "text",
+              "name": "",
+              "params": [
+                "display_name",
+                "IN",
+                "($HostPicker)"
+              ],
+              "type": "expression"
+            }
+          ]
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "RAM Usage",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:665",
+          "decimals": null,
+          "format": "deckbytes",
+          "label": "",
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "$$hashKey": "object:666",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "collapsed": false,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 14
+      },
+      "id": 20,
+      "panels": [],
+      "title": "CPU Time Distribution per monitored Database/Instance ",
+      "type": "row"
+    },
+    {
+      "datasource": "$DataSourceVariable",
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": null,
+            "filterable": true
+          },
+          "links": [],
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Display Name"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Show Db2 Workload Details  for ${__data.fields.Display Name}",
+                    "url": "d/4aGkQx1Wk/workload?orgId=1&${__url_time_range}﻿﻿﻿&﻿﻿﻿${__all_variables}﻿﻿﻿&var-datasource=﻿${__data.fields[Display Name]}﻿(0)"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 4,
+        "x": 0,
+        "y": 15
+      },
+      "id": 12,
+      "interval": "1m",
+      "links": [],
+      "options": {
+        "showHeader": true
+      },
+      "pluginVersion": "7.5.11",
+      "targets": [
+        {
+          "format": "table",
+          "group": [],
+          "hide": false,
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "select source_display_name  from spg_mon.spgdb_source ss where host=(select host from spg_mon.spgdb_source ss where source_display_name='$HostPicker') and policy_type_spec in ('DB2')",
+          "refId": "B",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Db2 Databases monitored on this node",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "indexByName": {},
+            "renameByName": {
+              "policy_type_spec": "Type",
+              "source_display_name": "Display Name"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "aliasColors": {},
+      "breakPoint": "50%",
+      "cacheTimeout": null,
+      "combine": {
+        "label": "Others",
+        "threshold": 0
+      },
+      "datasource": "-- Dashboard --",
+      "decimals": 2,
+      "description": "Series with only 0 or null are hidden",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "fontSize": "80%",
+      "format": "ms",
+      "gridPos": {
+        "h": 7,
+        "w": 8,
+        "x": 4,
+        "y": 15
+      },
+      "id": 21,
+      "interval": "1m",
+      "legend": {
+        "percentage": true,
+        "percentageDecimals": 2,
+        "show": true,
+        "sort": "avg",
+        "sortDesc": true,
+        "values": true
+      },
+      "legendType": "Right side",
+      "links": [],
+      "nullPointMode": "connected",
+      "pieType": "donut",
+      "pluginVersion": "7.5.11",
+      "strokeWidth": 1,
+      "targets": [
+        {
+          "panelId": 14,
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "AVG Db2 Database CPU Time distribution per second",
+      "type": "grafana-piechart-panel",
+      "valueName": "avg"
+    },
+    {
+      "aliasColors": {},
+      "bars": true,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "$DataSourceVariable",
+      "decimals": 2,
+      "description": "Series with only 0 or null are hidden",
+      "fieldConfig": {
+        "defaults": {
+          "links": [
+            {
+              "title": "Show Db2 Workload for ${__series.name}",
+              "url": "d/4aGkQx1Wk/workload?orgId=1&${__url_time_range}﻿﻿﻿﻿﻿&﻿﻿﻿﻿﻿${__all_variables}﻿﻿﻿﻿﻿&var-datasource=${__series.name}"
+            }
+          ]
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 12,
+        "y": 15
+      },
+      "hiddenSeries": false,
+      "id": 14,
+      "interval": "1m",
+      "legend": {
+        "alignAsTable": true,
+        "avg": true,
+        "current": true,
+        "hideEmpty": true,
+        "hideZero": true,
+        "max": true,
+        "min": true,
+        "rightSide": true,
+        "show": true,
+        "sort": "avg",
+        "sortDesc": true,
+        "total": false,
+        "values": true
+      },
+      "lines": false,
+      "linewidth": 1,
+      "links": [],
+      "maxDataPoints": null,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "7.5.11",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [
+        {
+          "$$hashKey": "object:744",
+          "alias": "Total Request Time",
+          "dashes": true,
+          "fill": 0,
+          "linewidth": 2,
+          "stack": false
+        }
+      ],
+      "spaceLength": 10,
+      "stack": true,
+      "steppedLine": false,
+      "targets": [
+        {
+          "format": "time_series",
+          "group": [
+            {
+              "params": [
+                "$__interval",
+                "0"
+              ],
+              "type": "time"
+            }
+          ],
+          "hide": false,
+          "metricColumn": "display_name||'('||member||')'",
+          "rawQuery": false,
+          "rawSql": "SELECT\n  $__timeGroupAlias(snapshot_time,$__interval,0),\n  display_name||'('||member||')' AS metric,\n  (CASE WHEN avg(total_cpu_time/1000) >= lag(avg(total_cpu_time/1000)) OVER (PARTITION BY display_name||'('||member||')' ORDER BY $__timeGroup(snapshot_time,$__interval,0)) THEN avg(total_cpu_time/1000) - lag(avg(total_cpu_time/1000)) OVER (PARTITION BY display_name||'('||member||')' ORDER BY $__timeGroup(snapshot_time,$__interval,0)) WHEN lag(avg(total_cpu_time/1000)) OVER (PARTITION BY display_name||'('||member||')' ORDER BY $__timeGroup(snapshot_time,$__interval,0)) IS NULL THEN NULL ELSE avg(total_cpu_time/1000) END)/extract(epoch from min(snapshot_time) - lag(min(snapshot_time)) OVER (PARTITION BY display_name||'('||member||')' ORDER BY $__timeGroup(snapshot_time,$__interval,0))) AS \"Total Cpu Time\"\nFROM spg_mon_db2.v_mon_get_database\nWHERE\n  $__timeFilter(snapshot_time) AND\n  display_name IN (select source_display_name  from spg_mon.spgdb_source ss where host=(select host from spg_mon.spgdb_source ss where source_display_name='$HostPicker') and policy_type_spec in ('DB2'))\nGROUP BY 1,2\nORDER BY 1,2",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "total_cpu_time/1000"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "avg"
+                ],
+                "type": "aggregate"
+              },
+              {
+                "params": [
+                  "rate"
+                ],
+                "type": "window"
+              },
+              {
+                "params": [
+                  "Total Cpu Time"
+                ],
+                "type": "alias"
+              }
+            ]
+          ],
+          "table": "spg_mon_db2.v_mon_get_database",
+          "timeColumn": "snapshot_time",
+          "timeColumnType": "timestamptz",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            },
+            {
+              "datatype": "text",
+              "name": "",
+              "params": [
+                "display_name",
+                "IN",
+                "(select source_display_name  from spg_mon.spgdb_source ss where host=(select host from spg_mon.spgdb_source ss where source_display_name='$HostPicker') and policy_type_spec in ('DB2'))"
+              ],
+              "type": "expression"
+            }
+          ]
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Db2 Database CPU Time distribution per second",
+      "tooltip": {
+        "shared": true,
+        "sort": 2,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:434",
+          "format": "ms",
+          "label": "",
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "$$hashKey": "object:435",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": false
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "datasource": "$DataSourceVariable",
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": null,
+            "filterable": true
+          },
+          "links": [],
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Display Name"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Show Server Activity Dashboard for ${__data.fields.Display Name}",
+                    "url": "d/-n6nqEL7z/server-activity-overview?orgId=1&${__all_variables}&var-inst=${__data.fields.Display Name}&${__url_time_range}"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 4,
+        "x": 0,
+        "y": 22
+      },
+      "id": 16,
+      "interval": "1m",
+      "links": [],
+      "options": {
+        "showHeader": true
+      },
+      "pluginVersion": "7.5.11",
+      "targets": [
+        {
+          "format": "table",
+          "group": [],
+          "hide": false,
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "select source_display_name  from spg_mon.spgdb_source ss where host=(select host from spg_mon.spgdb_source ss where source_display_name='$HostPicker') and policy_type_spec in ('SQLSERVER')",
+          "refId": "B",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "SQL Server Instances monitored on this node",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "indexByName": {},
+            "renameByName": {
+              "policy_type_spec": "Type",
+              "source_display_name": "Display Name"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "aliasColors": {},
+      "breakPoint": "50%",
+      "cacheTimeout": null,
+      "combine": {
+        "label": "Others",
+        "threshold": 0
+      },
+      "datasource": "-- Dashboard --",
+      "decimals": 2,
+      "description": "Shows total CPU usage of SQL Server process.\nValues are collected from Event \"SystemHealth\" in \"RING_BUFFER_SCHEDULER_MONITOR\"",
+      "fieldConfig": {
+        "defaults": {},
+        "overrides": []
+      },
+      "fontSize": "80%",
+      "format": "percent",
+      "gridPos": {
+        "h": 7,
+        "w": 8,
+        "x": 4,
+        "y": 22
+      },
+      "id": 22,
+      "interval": null,
+      "legend": {
+        "percentage": true,
+        "show": true,
+        "sort": "avg",
+        "sortDesc": true,
+        "values": true
+      },
+      "legendType": "Right side",
+      "links": [],
+      "nullPointMode": "connected",
+      "pieType": "donut",
+      "pluginVersion": "7.5.11",
+      "strokeWidth": 1,
+      "targets": [
+        {
+          "panelId": 18,
+          "queryType": "randomWalk",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "AVG SQL Server Instance CPU Usage distribution",
+      "type": "grafana-piechart-panel",
+      "valueName": "avg"
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "${DS_PDB}",
+      "description": "Shows total CPU usage of SQL Server process.\nValues are collected from Event \"SystemHealth\" in \"RING_BUFFER_SCHEDULER_MONITOR\"",
+      "fieldConfig": {
+        "defaults": {
+          "links": [
+            {
+              "title": "Show Server Activity Dashboard for ${__series.name}",
+              "url": "d/-n6nqEL7z/server-activity-overview?orgId=1&${__all_variables}&var-inst=${__series.name}&${__url_time_range}"
+            }
+          ]
+        },
+        "overrides": []
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 12,
+        "y": 22
+      },
+      "hiddenSeries": false,
+      "id": 18,
+      "legend": {
+        "alignAsTable": true,
+        "avg": true,
+        "current": true,
+        "max": true,
+        "min": true,
+        "rightSide": true,
+        "show": true,
+        "sort": "avg",
+        "sortDesc": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "7.5.11",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": true,
+      "steppedLine": false,
+      "targets": [
+        {
+          "format": "time_series",
+          "group": [
+            {
+              "params": [
+                "$__interval",
+                "none"
+              ],
+              "type": "time"
+            }
+          ],
+          "metricColumn": "display_name",
+          "rawQuery": false,
+          "rawSql": "SELECT\n  $__timeGroupAlias(sample_time,$__interval),\n  display_name AS metric,\n  avg(processutilization) AS \"SQL Server process\"\nFROM spg_mon_sqlserver.ring_buffer_scheduler_monitor\nWHERE\n  $__timeFilter(sample_time) AND\n  display_name IN (select source_display_name  from spg_mon.spgdb_source ss where host=(select host from spg_mon.spgdb_source ss where source_display_name='$HostPicker') and policy_type_spec in ('SQLSERVER'))\nGROUP BY 1,2\nORDER BY 1,2",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "processutilization"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "avg"
+                ],
+                "type": "aggregate"
+              },
+              {
+                "params": [
+                  "SQL Server process"
+                ],
+                "type": "alias"
+              }
+            ]
+          ],
+          "table": "spg_mon_sqlserver.ring_buffer_scheduler_monitor",
+          "timeColumn": "sample_time",
+          "timeColumnType": "timestamptz",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            },
+            {
+              "datatype": "text",
+              "name": "",
+              "params": [
+                "display_name",
+                "IN",
+                "(select source_display_name  from spg_mon.spgdb_source ss where host=(select host from spg_mon.spgdb_source ss where source_display_name='$HostPicker') and policy_type_spec in ('SQLSERVER'))"
+              ],
+              "type": "expression"
+            }
+          ]
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "SQL Server Instance CPU Usage distribution",
+      "tooltip": {
+        "shared": true,
+        "sort": 2,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:1570",
+          "decimals": 0,
+          "format": "percent",
+          "label": null,
+          "logBase": 1,
+          "max": "100",
+          "min": "0",
+          "show": true
+        },
+        {
+          "$$hashKey": "object:1571",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "datasource": "$DataSourceVariable",
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": null,
+            "filterable": true
+          },
+          "links": [],
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Display Name"
+            },
+            "properties": [
+              {
+                "id": "links",
+                "value": [
+                  {
+                    "title": "Show PostgreSQL Workload Details for ${__data.fields[display name]}",
+                    "url": "d/QQclBUxZz/workload?orgId=1&${__url_time_range}﻿﻿﻿&﻿﻿﻿${__all_variables}﻿﻿﻿&var-datasource=﻿﻿﻿${__data.fields[display name]}"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 4,
+        "x": 0,
+        "y": 29
+      },
+      "id": 15,
+      "interval": "1m",
+      "links": [],
+      "options": {
+        "showHeader": true
+      },
+      "pluginVersion": "7.5.11",
+      "targets": [
+        {
+          "format": "table",
+          "group": [],
+          "hide": false,
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "select source_display_name  from spg_mon.spgdb_source ss where host=(select host from spg_mon.spgdb_source ss where source_display_name='$HostPicker') and policy_type_spec in ('POSTGRESQL')",
+          "refId": "B",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "PostgreSQL Databases monitored on this node",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "indexByName": {},
+            "renameByName": {
+              "policy_type_spec": "Type",
+              "source_display_name": "Display Name"
+            }
+          }
+        }
+      ],
+      "type": "table"
+    }
+  ],
+  "refresh": "1m",
+  "schemaVersion": 27,
+  "style": "dark",
+  "tags": [
+    "os",
+    "visible",
+    "custom"
+  ],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "selected": false,
+          "text": "pdb",
+          "value": "pdb"
+        },
+        "description": null,
+        "error": null,
+        "hide": 0,
+        "includeAll": false,
+        "label": "PDB",
+        "multi": false,
+        "name": "DataSourceVariable",
+        "options": [],
+        "query": "postgres",
+        "queryValue": "",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "type": "datasource"
+      },
+      {
+        "allValue": null,
+        "current": {},
+        "datasource": "$DataSourceVariable",
+        "definition": "select display_name from spg_mon_os.v_v_display_name where bucket BETWEEN '${__from:date:YYYY-MM-DD}Z' and '${__to:date:YYYY-MM-DD}Z'\ngroup by display_name",
+        "description": null,
+        "error": null,
+        "hide": 0,
+        "includeAll": false,
+        "label": "Display Name",
+        "multi": false,
+        "name": "HostPicker",
+        "options": [],
+        "query": "select display_name from spg_mon_os.v_v_display_name where bucket BETWEEN '${__from:date:YYYY-MM-DD}Z' and '${__to:date:YYYY-MM-DD}Z'\ngroup by display_name",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      }
+    ]
+  },
+  "time": {
+    "from": "now-3h",
+    "to": "now"
+  },
+  "timepicker": {
+    "refresh_intervals": [
+      "10s",
+      "30s",
+      "1m",
+      "5m",
+      "15m",
+      "30m",
+      "1h",
+      "2h",
+      "1d"
+    ],
+    "time_options": [
+      "5m",
+      "15m",
+      "1h",
+      "6h",
+      "12h",
+      "24h",
+      "2d",
+      "7d",
+      "30d"
+    ]
+  },
+  "timezone": "",
+  "title": "Workload - Database CPU Distribution",
+  "uid": "D3GHoeS4k",
+  "version": 3
+}
