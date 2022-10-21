@@ -1,46 +1,4 @@
 {
-  "__inputs": [
-    {
-      "name": "DS_PDB",
-      "label": "pdb",
-      "description": "",
-      "type": "datasource",
-      "pluginId": "postgres",
-      "pluginName": "PostgreSQL"
-    }
-  ],
-  "__requires": [
-    {
-      "type": "grafana",
-      "id": "grafana",
-      "name": "Grafana",
-      "version": "7.5.11"
-    },
-    {
-      "type": "panel",
-      "id": "grafana-piechart-panel",
-      "name": "Pie Chart",
-      "version": "1.6.2"
-    },
-    {
-      "type": "panel",
-      "id": "graph",
-      "name": "Graph",
-      "version": ""
-    },
-    {
-      "type": "datasource",
-      "id": "postgres",
-      "name": "PostgreSQL",
-      "version": "1.0.0"
-    },
-    {
-      "type": "panel",
-      "id": "table",
-      "name": "Table",
-      "version": ""
-    }
-  ],
   "annotations": {
     "list": [
       {
@@ -57,8 +15,8 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 1,
-  "id": null,
-  "iteration": 1666338283801,
+  "id": 88,
+  "iteration": 1666351341450,
   "links": [
     {
       "icon": "external link",
@@ -1578,7 +1536,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DS_PDB}",
+      "datasource": "${DataSourceVariable}",
       "description": "Shows total CPU usage of SQL Server process.\nValues are collected from Event \"SystemHealth\" in \"RING_BUFFER_SCHEDULER_MONITOR\"",
       "fieldConfig": {
         "defaults": {
@@ -1844,7 +1802,7 @@
   ],
   "refresh": "1m",
   "schemaVersion": 27,
-  "style": "dark",
+  "style": "",
   "tags": [
     "os",
     "visible",
@@ -1875,7 +1833,11 @@
       },
       {
         "allValue": null,
-        "current": {},
+        "current": {
+          "selected": false,
+          "text": "speedgaindockervm",
+          "value": "speedgaindockervm"
+        },
         "datasource": "$DataSourceVariable",
         "definition": "select display_name from spg_mon_os.v_v_display_name where bucket BETWEEN '${__from:date:YYYY-MM-DD}Z' and '${__to:date:YYYY-MM-DD}Z'\ngroup by display_name",
         "description": null,
@@ -1930,5 +1892,5 @@
   "timezone": "",
   "title": "Workload - Database CPU Distribution",
   "uid": "D3GHoeS4k",
-  "version": 3
+  "version": 4
 }
