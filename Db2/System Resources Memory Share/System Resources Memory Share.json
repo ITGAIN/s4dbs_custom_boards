@@ -16,7 +16,7 @@
     "gnetId": null,
     "graphTooltip": 1,
     "id": 90,
-    "iteration": 1666793973248,
+    "iteration": 1666793973256,
     "links": [
       {
         "icon": "external link",
@@ -125,7 +125,7 @@
         },
         "hiddenSeries": false,
         "id": 32,
-        "interval": "1m",
+        "interval": "$inter",
         "legend": {
           "alignAsTable": true,
           "avg": true,
@@ -155,6 +155,7 @@
         "renderer": "flot",
         "seriesOverrides": [
           {
+            "$$hashKey": "object:4589",
             "alias": "Memory PCT",
             "dashes": true,
             "fill": 0,
@@ -162,6 +163,7 @@
             "yaxis": 2
           },
           {
+            "$$hashKey": "object:2362",
             "alias": "memory_total",
             "fill": 0
           }
@@ -333,6 +335,7 @@
         },
         "yaxes": [
           {
+            "$$hashKey": "object:434",
             "format": "decmbytes",
             "label": "",
             "logBase": 1,
@@ -341,6 +344,7 @@
             "show": true
           },
           {
+            "$$hashKey": "object:435",
             "format": "percentunit",
             "label": null,
             "logBase": 1,
@@ -408,6 +412,7 @@
         "renderer": "flot",
         "seriesOverrides": [
           {
+            "$$hashKey": "object:1556",
             "alias": "num cores",
             "color": "#E02F44",
             "dashes": true,
@@ -561,6 +566,7 @@
         },
         "yaxes": [
           {
+            "$$hashKey": "object:434",
             "format": "short",
             "label": "",
             "logBase": 1,
@@ -569,6 +575,7 @@
             "show": true
           },
           {
+            "$$hashKey": "object:435",
             "format": "short",
             "label": null,
             "logBase": 1,
@@ -789,7 +796,7 @@
         },
         "hiddenSeries": false,
         "id": 34,
-        "interval": null,
+        "interval": "$inter",
         "legend": {
           "alignAsTable": true,
           "avg": true,
@@ -818,6 +825,7 @@
         "renderer": "flot",
         "seriesOverrides": [
           {
+            "$$hashKey": "object:297",
             "alias": "Total",
             "dashes": true,
             "fill": 0,
@@ -967,6 +975,7 @@
         },
         "yaxes": [
           {
+            "$$hashKey": "object:184",
             "format": "deckbytes",
             "label": null,
             "logBase": 1,
@@ -975,6 +984,7 @@
             "show": true
           },
           {
+            "$$hashKey": "object:185",
             "format": "short",
             "label": null,
             "logBase": 1,
@@ -1010,7 +1020,7 @@
         },
         "hiddenSeries": false,
         "id": 35,
-        "interval": null,
+        "interval": "$inter",
         "legend": {
           "alignAsTable": true,
           "avg": true,
@@ -1039,6 +1049,7 @@
         "renderer": "flot",
         "seriesOverrides": [
           {
+            "$$hashKey": "object:297",
             "alias": "Total",
             "dashes": true,
             "fill": 0,
@@ -1076,6 +1087,7 @@
         },
         "yaxes": [
           {
+            "$$hashKey": "object:184",
             "format": "deckbytes",
             "label": null,
             "logBase": 1,
@@ -1084,6 +1096,7 @@
             "show": true
           },
           {
+            "$$hashKey": "object:185",
             "format": "short",
             "label": null,
             "logBase": 1,
@@ -1119,7 +1132,7 @@
         },
         "hiddenSeries": false,
         "id": 36,
-        "interval": null,
+        "interval": "$inter",
         "legend": {
           "alignAsTable": true,
           "avg": true,
@@ -1148,6 +1161,7 @@
         "renderer": "flot",
         "seriesOverrides": [
           {
+            "$$hashKey": "object:297",
             "alias": "Total",
             "dashes": true,
             "fill": 0,
@@ -1185,6 +1199,7 @@
         },
         "yaxes": [
           {
+            "$$hashKey": "object:184",
             "format": "deckbytes",
             "label": null,
             "logBase": 1,
@@ -1193,6 +1208,7 @@
             "show": true
           },
           {
+            "$$hashKey": "object:185",
             "format": "short",
             "label": null,
             "logBase": 1,
@@ -1230,7 +1246,7 @@
           "y": 20
         },
         "id": 37,
-        "interval": null,
+        "interval": "$inter",
         "legend": {
           "percentage": true,
           "percentageDecimals": 2,
@@ -1324,7 +1340,7 @@
           "auto_count": 200,
           "auto_min": "1m",
           "current": {
-            "selected": true,
+            "selected": false,
             "text": "auto",
             "value": "$__auto_interval_inter"
           },
@@ -1460,5 +1476,5 @@
     "timezone": "",
     "title": "System Resources Memory Share",
     "uid": "LQ55kpN4k",
-    "version": 5
+    "version": 6
   }
