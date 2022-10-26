@@ -1,0 +1,1464 @@
+{
+    "annotations": {
+      "list": [
+        {
+          "builtIn": 1,
+          "datasource": "-- Grafana --",
+          "enable": true,
+          "hide": true,
+          "iconColor": "rgba(0, 211, 255, 1)",
+          "name": "Annotations & Alerts",
+          "type": "dashboard"
+        }
+      ]
+    },
+    "editable": true,
+    "gnetId": null,
+    "graphTooltip": 1,
+    "id": 90,
+    "iteration": 1666793973248,
+    "links": [
+      {
+        "icon": "external link",
+        "keepTime": true,
+        "tags": [
+          "s4dbsoverview"
+        ],
+        "type": "dashboards"
+      },
+      {
+        "asDropdown": true,
+        "icon": "external link",
+        "includeVars": true,
+        "keepTime": true,
+        "tags": [
+          "overview"
+        ],
+        "title": "Overview Dashboards",
+        "type": "dashboards"
+      },
+      {
+        "asDropdown": true,
+        "icon": "external link",
+        "includeVars": true,
+        "keepTime": true,
+        "tags": [
+          "db2",
+          "visible"
+        ],
+        "title": "Db2 Dashboards",
+        "type": "dashboards"
+      }
+    ],
+    "panels": [
+      {
+        "datasource": null,
+        "fieldConfig": {
+          "defaults": {},
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 10,
+          "w": 6,
+          "x": 0,
+          "y": 0
+        },
+        "id": 28,
+        "options": {
+          "content": "# Info\nAll values are averages based on a minimum interval of $inter. The minimum interval can be selected in dropdown box \"Minimum Interval\".\n\nMemory Usage and System Load are based on metrics collected from the database selected in the dropdown field. Origin is env_get_system_resources.\n\nDatabase Memory panels are based on every database that shares the same hostname in the speedgain configuration with the database selected. Origin is mon_get_memory_pool.\n\nLogical hostname is based on the configuration in speedgain, physical hostname is the hostname of the underlying operating system.",
+          "mode": "markdown"
+        },
+        "pluginVersion": "7.5.11",
+        "targets": [
+          {
+            "format": "time_series",
+            "group": [],
+            "metricColumn": "none",
+            "rawQuery": false,
+            "rawSql": "SELECT\n  $__time(time_column),\n  value1\nFROM\n  metric_table\nWHERE\n  $__timeFilter(time_column)\n",
+            "refId": "A",
+            "select": [
+              [
+                {
+                  "params": [
+                    "value"
+                  ],
+                  "type": "column"
+                }
+              ]
+            ],
+            "timeColumn": "time",
+            "where": [
+              {
+                "name": "$__timeFilter",
+                "params": [],
+                "type": "macro"
+              }
+            ]
+          }
+        ],
+        "timeFrom": null,
+        "timeShift": null,
+        "type": "text"
+      },
+      {
+        "aliasColors": {},
+        "bars": false,
+        "dashLength": 10,
+        "dashes": false,
+        "datasource": "$DataSourceVariable",
+        "decimals": 2,
+        "description": "System physical memory usage",
+        "fieldConfig": {
+          "defaults": {
+            "links": []
+          },
+          "overrides": []
+        },
+        "fill": 2,
+        "fillGradient": 0,
+        "gridPos": {
+          "h": 10,
+          "w": 9,
+          "x": 6,
+          "y": 0
+        },
+        "hiddenSeries": false,
+        "id": 32,
+        "interval": "1m",
+        "legend": {
+          "alignAsTable": true,
+          "avg": true,
+          "current": true,
+          "hideEmpty": false,
+          "hideZero": false,
+          "max": true,
+          "min": true,
+          "rightSide": false,
+          "show": true,
+          "sort": "avg",
+          "sortDesc": true,
+          "total": false,
+          "values": true
+        },
+        "lines": true,
+        "linewidth": 2,
+        "links": [],
+        "nullPointMode": "null",
+        "options": {
+          "alertThreshold": true
+        },
+        "percentage": false,
+        "pluginVersion": "7.5.11",
+        "pointradius": 2,
+        "points": false,
+        "renderer": "flot",
+        "seriesOverrides": [
+          {
+            "alias": "Memory PCT",
+            "dashes": true,
+            "fill": 0,
+            "linewidth": 2,
+            "yaxis": 2
+          },
+          {
+            "alias": "memory_total",
+            "fill": 0
+          }
+        ],
+        "spaceLength": 10,
+        "stack": false,
+        "steppedLine": false,
+        "targets": [
+          {
+            "format": "time_series",
+            "group": [
+              {
+                "params": [
+                  "$__interval",
+                  "none"
+                ],
+                "type": "time"
+              }
+            ],
+            "hide": false,
+            "metricColumn": "none",
+            "rawQuery": false,
+            "rawSql": "SELECT\n  $__timeGroupAlias(snapshot_time,$__interval),\n  avg(memory_total) AS \"memory_total\",\n  avg(memory_free) AS \"memory_free\"\nFROM spg_mon_db2.v_env_get_system_resources\nWHERE\n  $__timeFilter(snapshot_time) AND\n  display_name||member = '$datasource'\nGROUP BY 1\nORDER BY 1",
+            "refId": "A",
+            "select": [
+              [
+                {
+                  "params": [
+                    "memory_total"
+                  ],
+                  "type": "column"
+                },
+                {
+                  "params": [
+                    "avg"
+                  ],
+                  "type": "aggregate"
+                },
+                {
+                  "params": [
+                    "memory_total"
+                  ],
+                  "type": "alias"
+                }
+              ],
+              [
+                {
+                  "params": [
+                    "memory_free"
+                  ],
+                  "type": "column"
+                },
+                {
+                  "params": [
+                    "avg"
+                  ],
+                  "type": "aggregate"
+                },
+                {
+                  "params": [
+                    "memory_free"
+                  ],
+                  "type": "alias"
+                }
+              ]
+            ],
+            "table": "spg_mon_db2.v_env_get_system_resources",
+            "timeColumn": "snapshot_time",
+            "timeColumnType": "timestamptz",
+            "where": [
+              {
+                "name": "$__timeFilter",
+                "params": [],
+                "type": "macro"
+              },
+              {
+                "datatype": "text",
+                "name": "",
+                "params": [
+                  "display_name||member",
+                  "=",
+                  "'$datasource'"
+                ],
+                "type": "expression"
+              }
+            ]
+          }
+        ],
+        "thresholds": [],
+        "timeFrom": null,
+        "timeRegions": [],
+        "timeShift": null,
+        "title": "Memory Usage",
+        "tooltip": {
+          "shared": true,
+          "sort": 0,
+          "value_type": "individual"
+        },
+        "transformations": [
+          {
+            "id": "calculateField",
+            "options": {
+              "binary": {
+                "left": "memory_free",
+                "operator": "/",
+                "reducer": "sum",
+                "right": "memory_total"
+              },
+              "mode": "binary",
+              "reduce": {
+                "reducer": "sum"
+              }
+            }
+          },
+          {
+            "id": "calculateField",
+            "options": {
+              "alias": "Memory PCT",
+              "binary": {
+                "left": "1",
+                "operator": "-",
+                "reducer": "sum",
+                "right": "memory_free / memory_total"
+              },
+              "mode": "binary",
+              "reduce": {
+                "reducer": "sum"
+              },
+              "replaceFields": false
+            }
+          },
+          {
+            "id": "calculateField",
+            "options": {
+              "alias": "memory_used",
+              "binary": {
+                "left": "memory_total",
+                "operator": "-",
+                "reducer": "sum",
+                "right": "memory_free"
+              },
+              "mode": "binary",
+              "reduce": {
+                "reducer": "sum"
+              }
+            }
+          },
+          {
+            "id": "organize",
+            "options": {
+              "excludeByName": {
+                "memory_free": true,
+                "memory_free / memory_total": true,
+                "memory_swap_free / memory_swap_total": true,
+                "memory_total": false
+              },
+              "indexByName": {},
+              "renameByName": {}
+            }
+          }
+        ],
+        "type": "graph",
+        "xaxis": {
+          "buckets": null,
+          "mode": "time",
+          "name": null,
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "format": "decmbytes",
+            "label": "",
+            "logBase": 1,
+            "max": null,
+            "min": "0",
+            "show": true
+          },
+          {
+            "format": "percentunit",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          }
+        ],
+        "yaxis": {
+          "align": false,
+          "alignLevel": null
+        }
+      },
+      {
+        "aliasColors": {},
+        "bars": false,
+        "dashLength": 10,
+        "dashes": false,
+        "datasource": "$DataSourceVariable",
+        "decimals": 2,
+        "description": "system load averages; short->1min, mid->5min, long->15min\nRed dotted line is number of cores",
+        "fieldConfig": {
+          "defaults": {
+            "links": []
+          },
+          "overrides": []
+        },
+        "fill": 2,
+        "fillGradient": 0,
+        "gridPos": {
+          "h": 10,
+          "w": 9,
+          "x": 15,
+          "y": 0
+        },
+        "hiddenSeries": false,
+        "id": 18,
+        "interval": "$inter",
+        "legend": {
+          "alignAsTable": true,
+          "avg": true,
+          "current": true,
+          "hideEmpty": false,
+          "hideZero": false,
+          "max": true,
+          "min": true,
+          "rightSide": false,
+          "show": true,
+          "sort": "avg",
+          "sortDesc": true,
+          "total": false,
+          "values": true
+        },
+        "lines": true,
+        "linewidth": 2,
+        "links": [],
+        "nullPointMode": "null",
+        "options": {
+          "alertThreshold": true
+        },
+        "percentage": false,
+        "pluginVersion": "7.5.11",
+        "pointradius": 2,
+        "points": false,
+        "renderer": "flot",
+        "seriesOverrides": [
+          {
+            "alias": "num cores",
+            "color": "#E02F44",
+            "dashes": true,
+            "fill": 0,
+            "linewidth": 2,
+            "stack": false
+          }
+        ],
+        "spaceLength": 10,
+        "stack": false,
+        "steppedLine": false,
+        "targets": [
+          {
+            "format": "time_series",
+            "group": [
+              {
+                "params": [
+                  "$__interval",
+                  "none"
+                ],
+                "type": "time"
+              }
+            ],
+            "hide": false,
+            "metricColumn": "none",
+            "rawQuery": false,
+            "rawSql": "SELECT\n  $__timeGroupAlias(snapshot_time,$__interval),\n  avg(cpu_load_short) AS \"load short\",\n  avg(cpu_load_medium) AS \"load mid\",\n  avg(cpu_load_long) AS \"load long\",\n  avg(cpu_total) AS \"num cores\"\nFROM spg_mon_db2.v_env_get_system_resources\nWHERE\n  $__timeFilter(snapshot_time) AND\n  display_name||member = '$datasource'\nGROUP BY 1\nORDER BY 1",
+            "refId": "A",
+            "select": [
+              [
+                {
+                  "params": [
+                    "cpu_load_short"
+                  ],
+                  "type": "column"
+                },
+                {
+                  "params": [
+                    "avg"
+                  ],
+                  "type": "aggregate"
+                },
+                {
+                  "params": [
+                    "load short"
+                  ],
+                  "type": "alias"
+                }
+              ],
+              [
+                {
+                  "params": [
+                    "cpu_load_medium"
+                  ],
+                  "type": "column"
+                },
+                {
+                  "params": [
+                    "avg"
+                  ],
+                  "type": "aggregate"
+                },
+                {
+                  "params": [
+                    "load mid"
+                  ],
+                  "type": "alias"
+                }
+              ],
+              [
+                {
+                  "params": [
+                    "cpu_load_long"
+                  ],
+                  "type": "column"
+                },
+                {
+                  "params": [
+                    "avg"
+                  ],
+                  "type": "aggregate"
+                },
+                {
+                  "params": [
+                    "load long"
+                  ],
+                  "type": "alias"
+                }
+              ],
+              [
+                {
+                  "params": [
+                    "cpu_total"
+                  ],
+                  "type": "column"
+                },
+                {
+                  "params": [
+                    "avg"
+                  ],
+                  "type": "aggregate"
+                },
+                {
+                  "params": [
+                    "num cores"
+                  ],
+                  "type": "alias"
+                }
+              ]
+            ],
+            "table": "spg_mon_db2.v_env_get_system_resources",
+            "timeColumn": "snapshot_time",
+            "timeColumnType": "timestamptz",
+            "where": [
+              {
+                "name": "$__timeFilter",
+                "params": [],
+                "type": "macro"
+              },
+              {
+                "datatype": "text",
+                "name": "",
+                "params": [
+                  "display_name||member",
+                  "=",
+                  "'$datasource'"
+                ],
+                "type": "expression"
+              }
+            ]
+          }
+        ],
+        "thresholds": [],
+        "timeFrom": null,
+        "timeRegions": [],
+        "timeShift": null,
+        "title": "System Load",
+        "tooltip": {
+          "shared": true,
+          "sort": 2,
+          "value_type": "individual"
+        },
+        "transformations": [],
+        "type": "graph",
+        "xaxis": {
+          "buckets": null,
+          "mode": "time",
+          "name": null,
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "format": "short",
+            "label": "",
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          },
+          {
+            "format": "short",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": false
+          }
+        ],
+        "yaxis": {
+          "align": false,
+          "alignLevel": null
+        }
+      },
+      {
+        "datasource": "$DataSourceVariable",
+        "description": "",
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "custom": {
+              "align": null,
+              "filterable": false
+            },
+            "links": [],
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            }
+          },
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 20,
+          "w": 6,
+          "x": 0,
+          "y": 10
+        },
+        "id": 23,
+        "interval": "1m",
+        "links": [],
+        "options": {
+          "showHeader": true
+        },
+        "pluginVersion": "7.5.11",
+        "targets": [
+          {
+            "format": "table",
+            "group": [],
+            "hide": false,
+            "metricColumn": "none",
+            "rawQuery": false,
+            "rawSql": "SELECT\n  snapshot_time AS \"time\",\n  *\nFROM spg_mon_db2.v_env_get_system_resources\nWHERE\n  $__timeFilter(snapshot_time) AND\n  display_name||member = '$datasource'\nORDER BY 1",
+            "refId": "A",
+            "select": [
+              [
+                {
+                  "params": [
+                    "*"
+                  ],
+                  "type": "column"
+                }
+              ]
+            ],
+            "table": "spg_mon_db2.v_env_get_system_resources",
+            "timeColumn": "snapshot_time",
+            "timeColumnType": "timestamptz",
+            "where": [
+              {
+                "name": "$__timeFilter",
+                "params": [],
+                "type": "macro"
+              },
+              {
+                "datatype": "text",
+                "name": "",
+                "params": [
+                  "display_name||member",
+                  "=",
+                  "'$datasource'"
+                ],
+                "type": "expression"
+              }
+            ]
+          }
+        ],
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "System Info based on $datasource",
+        "transformations": [
+          {
+            "id": "organize",
+            "options": {
+              "excludeByName": {
+                "cpu_idle": true,
+                "cpu_iowait": true,
+                "cpu_load_long": true,
+                "cpu_load_medium": true,
+                "cpu_load_short": true,
+                "cpu_system": true,
+                "cpu_usage_total": true,
+                "cpu_user": true,
+                "db_name": true,
+                "display_name": true,
+                "hostname": false,
+                "id": true,
+                "inst_name": true,
+                "member": true,
+                "memory_free": true,
+                "memory_swap_free": true,
+                "memory_swap_total": true,
+                "memory_total": true,
+                "port": true,
+                "snapshot_time": true,
+                "swap_page_size": true,
+                "swap_pages_in": true,
+                "swap_pages_out": true,
+                "time": true,
+                "virtual_mem_free": true,
+                "virtual_mem_reserved": true,
+                "virtual_mem_total": true
+              },
+              "indexByName": {
+                "cpu_configured": 17,
+                "cpu_cores_per_socket": 21,
+                "cpu_hmt_degree": 20,
+                "cpu_idle": 34,
+                "cpu_iowait": 35,
+                "cpu_load_long": 31,
+                "cpu_load_medium": 30,
+                "cpu_load_short": 29,
+                "cpu_online": 16,
+                "cpu_speed": 18,
+                "cpu_system": 36,
+                "cpu_timebase": 19,
+                "cpu_total": 15,
+                "cpu_usage_total": 32,
+                "cpu_user": 33,
+                "db_name": 7,
+                "display_name": 5,
+                "host_name": 9,
+                "hostname": 3,
+                "id": 1,
+                "inst_name": 6,
+                "machine_identification": 13,
+                "member": 8,
+                "memory_free": 23,
+                "memory_swap_free": 25,
+                "memory_swap_total": 24,
+                "memory_total": 22,
+                "os_arch_type": 42,
+                "os_full_version": 40,
+                "os_kernel_version": 41,
+                "os_level": 14,
+                "os_name": 10,
+                "os_release": 12,
+                "os_version": 11,
+                "port": 4,
+                "snapshot_time": 2,
+                "swap_page_size": 37,
+                "swap_pages_in": 38,
+                "swap_pages_out": 39,
+                "time": 0,
+                "virtual_mem_free": 28,
+                "virtual_mem_reserved": 27,
+                "virtual_mem_total": 26
+              },
+              "renameByName": {
+                "host_name": "physical hostname",
+                "hostname": "logical hostname",
+                "os_name": ""
+              }
+            }
+          },
+          {
+            "id": "reduce",
+            "options": {
+              "includeTimeField": false,
+              "mode": "seriesToRows",
+              "reducers": [
+                "last"
+              ]
+            }
+          }
+        ],
+        "type": "table"
+      },
+      {
+        "aliasColors": {},
+        "bars": false,
+        "cacheTimeout": null,
+        "dashLength": 10,
+        "dashes": false,
+        "datasource": "${DataSourceVariable}",
+        "description": "",
+        "fieldConfig": {
+          "defaults": {},
+          "overrides": []
+        },
+        "fill": 1,
+        "fillGradient": 0,
+        "gridPos": {
+          "h": 10,
+          "w": 9,
+          "x": 6,
+          "y": 10
+        },
+        "hiddenSeries": false,
+        "id": 34,
+        "interval": null,
+        "legend": {
+          "alignAsTable": true,
+          "avg": true,
+          "current": true,
+          "hideEmpty": true,
+          "hideZero": true,
+          "max": true,
+          "min": true,
+          "show": true,
+          "sort": "avg",
+          "sortDesc": true,
+          "total": false,
+          "values": true
+        },
+        "lines": true,
+        "linewidth": 1,
+        "links": [],
+        "nullPointMode": "null",
+        "options": {
+          "alertThreshold": true
+        },
+        "percentage": false,
+        "pluginVersion": "7.5.11",
+        "pointradius": 2,
+        "points": false,
+        "renderer": "flot",
+        "seriesOverrides": [
+          {
+            "alias": "Total",
+            "dashes": true,
+            "fill": 0,
+            "linewidth": 2,
+            "stack": false
+          }
+        ],
+        "spaceLength": 10,
+        "stack": true,
+        "steppedLine": false,
+        "targets": [
+          {
+            "format": "time_series",
+            "group": [
+              {
+                "params": [
+                  "$__interval",
+                  "none"
+                ],
+                "type": "time"
+              }
+            ],
+            "hide": false,
+            "metricColumn": "memory_set_type||' - '||memory_pool_type",
+            "rawQuery": true,
+            "rawSql": "SELECT\n  $__timeGroupAlias(snapshot_time,$__interval,previous), metric, avg (\"memory_pool_used\") as  \"memory_pool_used\" from (\n  select \n    snapshot_time,\n    display_name AS metric,\n    sum(memory_pool_used) AS \"memory_pool_used\"\n  FROM spg_mon_db2.v_mon_get_memory_pool\n  WHERE\n    $__timeFilter(snapshot_time) AND\n    hostname=(select distinct hostname from spg_mon_db2.v_mon_get_database where $__timeFilter(snapshot_time) and display_name||member='$datasource' fetch first 1 row only)\n    and 0 = $logphysname\n  GROUP BY 1,2 ) as t\ngroup by 1,2\nORDER BY 1,2",
+            "refId": "A",
+            "select": [
+              [
+                {
+                  "params": [
+                    "memory_pool_used"
+                  ],
+                  "type": "column"
+                },
+                {
+                  "params": [
+                    "sum"
+                  ],
+                  "type": "aggregate"
+                },
+                {
+                  "params": [
+                    "memory_pool_used"
+                  ],
+                  "type": "alias"
+                }
+              ]
+            ],
+            "table": "spg_mon_db2.v_mon_get_memory_pool",
+            "timeColumn": "snapshot_time",
+            "timeColumnType": "timestamptz",
+            "where": [
+              {
+                "name": "$__timeFilter",
+                "params": [],
+                "type": "macro"
+              },
+              {
+                "name": "",
+                "params": [
+                  "display_name||member",
+                  "=",
+                  "'$datasource'"
+                ],
+                "type": "expression"
+              }
+            ]
+          },
+          {
+            "format": "time_series",
+            "group": [
+              {
+                "params": [
+                  "$__interval",
+                  "none"
+                ],
+                "type": "time"
+              }
+            ],
+            "hide": false,
+            "metricColumn": "memory_set_type||' - '||memory_pool_type",
+            "rawQuery": true,
+            "rawSql": "SELECT\n  $__timeGroupAlias(snapshot_time,$__interval,previous), metric, avg (\"memory_pool_used\") as  \"memory_pool_used\" from (\n  select \n    snapshot_time,\n    display_name AS metric,\n    sum(memory_pool_used) AS \"memory_pool_used\"\n  FROM spg_mon_db2.v_mon_get_memory_pool\n  WHERE\n    $__timeFilter(snapshot_time) AND\n    display_name in ((select \t\tdistinct display_name \tfrom \t\tspg_mon_db2.v_env_get_system_resources \twhere \t\t$__timeFilter(snapshot_time) \t\tand host_name=(select distinct host_name from spg_mon_db2.v_env_get_system_resources where $__timeFilter(snapshot_time) and display_name || member = '$datasource' ) \t\t))\n    and 1 = $logphysname\n  GROUP BY 1,2 ) as t\ngroup by 1,2\nORDER BY 1,2",
+            "refId": "B",
+            "select": [
+              [
+                {
+                  "params": [
+                    "memory_pool_used"
+                  ],
+                  "type": "column"
+                },
+                {
+                  "params": [
+                    "sum"
+                  ],
+                  "type": "aggregate"
+                },
+                {
+                  "params": [
+                    "memory_pool_used"
+                  ],
+                  "type": "alias"
+                }
+              ]
+            ],
+            "table": "spg_mon_db2.v_mon_get_memory_pool",
+            "timeColumn": "snapshot_time",
+            "timeColumnType": "timestamptz",
+            "where": [
+              {
+                "name": "$__timeFilter",
+                "params": [],
+                "type": "macro"
+              },
+              {
+                "name": "",
+                "params": [
+                  "display_name||member",
+                  "=",
+                  "'$datasource'"
+                ],
+                "type": "expression"
+              }
+            ]
+          }
+        ],
+        "thresholds": [],
+        "timeFrom": null,
+        "timeRegions": [],
+        "timeShift": null,
+        "title": "Database Memory (stacked)",
+        "tooltip": {
+          "shared": true,
+          "sort": 2,
+          "value_type": "individual"
+        },
+        "transformations": [],
+        "type": "graph",
+        "xaxis": {
+          "buckets": null,
+          "mode": "time",
+          "name": null,
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "format": "deckbytes",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          },
+          {
+            "format": "short",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          }
+        ],
+        "yaxis": {
+          "align": false,
+          "alignLevel": null
+        }
+      },
+      {
+        "aliasColors": {},
+        "bars": true,
+        "cacheTimeout": null,
+        "dashLength": 10,
+        "dashes": false,
+        "datasource": "-- Dashboard --",
+        "description": "",
+        "fieldConfig": {
+          "defaults": {},
+          "overrides": []
+        },
+        "fill": 1,
+        "fillGradient": 0,
+        "gridPos": {
+          "h": 10,
+          "w": 9,
+          "x": 15,
+          "y": 10
+        },
+        "hiddenSeries": false,
+        "id": 35,
+        "interval": null,
+        "legend": {
+          "alignAsTable": true,
+          "avg": true,
+          "current": true,
+          "hideEmpty": true,
+          "hideZero": true,
+          "max": true,
+          "min": true,
+          "show": true,
+          "sort": "avg",
+          "sortDesc": true,
+          "total": false,
+          "values": true
+        },
+        "lines": false,
+        "linewidth": 1,
+        "links": [],
+        "nullPointMode": "null",
+        "options": {
+          "alertThreshold": true
+        },
+        "percentage": false,
+        "pluginVersion": "7.5.11",
+        "pointradius": 2,
+        "points": false,
+        "renderer": "flot",
+        "seriesOverrides": [
+          {
+            "alias": "Total",
+            "dashes": true,
+            "fill": 0,
+            "linewidth": 2,
+            "stack": false
+          }
+        ],
+        "spaceLength": 10,
+        "stack": true,
+        "steppedLine": false,
+        "targets": [
+          {
+            "panelId": 34,
+            "refId": "A"
+          }
+        ],
+        "thresholds": [],
+        "timeFrom": null,
+        "timeRegions": [],
+        "timeShift": null,
+        "title": "Database Memory (stacked bars)",
+        "tooltip": {
+          "shared": true,
+          "sort": 2,
+          "value_type": "individual"
+        },
+        "transformations": [],
+        "type": "graph",
+        "xaxis": {
+          "buckets": null,
+          "mode": "time",
+          "name": null,
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "format": "deckbytes",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          },
+          {
+            "format": "short",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          }
+        ],
+        "yaxis": {
+          "align": false,
+          "alignLevel": null
+        }
+      },
+      {
+        "aliasColors": {},
+        "bars": false,
+        "cacheTimeout": null,
+        "dashLength": 10,
+        "dashes": false,
+        "datasource": "-- Dashboard --",
+        "description": "",
+        "fieldConfig": {
+          "defaults": {},
+          "overrides": []
+        },
+        "fill": 1,
+        "fillGradient": 1,
+        "gridPos": {
+          "h": 10,
+          "w": 9,
+          "x": 6,
+          "y": 20
+        },
+        "hiddenSeries": false,
+        "id": 36,
+        "interval": null,
+        "legend": {
+          "alignAsTable": true,
+          "avg": true,
+          "current": true,
+          "hideEmpty": true,
+          "hideZero": true,
+          "max": true,
+          "min": true,
+          "show": true,
+          "sort": "avg",
+          "sortDesc": true,
+          "total": false,
+          "values": true
+        },
+        "lines": true,
+        "linewidth": 2,
+        "links": [],
+        "nullPointMode": "null",
+        "options": {
+          "alertThreshold": true
+        },
+        "percentage": false,
+        "pluginVersion": "7.5.11",
+        "pointradius": 2,
+        "points": false,
+        "renderer": "flot",
+        "seriesOverrides": [
+          {
+            "alias": "Total",
+            "dashes": true,
+            "fill": 0,
+            "linewidth": 2,
+            "stack": false
+          }
+        ],
+        "spaceLength": 10,
+        "stack": false,
+        "steppedLine": false,
+        "targets": [
+          {
+            "panelId": 34,
+            "refId": "A"
+          }
+        ],
+        "thresholds": [],
+        "timeFrom": null,
+        "timeRegions": [],
+        "timeShift": null,
+        "title": "Database Memory (not stacked)",
+        "tooltip": {
+          "shared": true,
+          "sort": 2,
+          "value_type": "individual"
+        },
+        "transformations": [],
+        "type": "graph",
+        "xaxis": {
+          "buckets": null,
+          "mode": "time",
+          "name": null,
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "format": "deckbytes",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          },
+          {
+            "format": "short",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          }
+        ],
+        "yaxis": {
+          "align": false,
+          "alignLevel": null
+        }
+      },
+      {
+        "aliasColors": {},
+        "breakPoint": "50%",
+        "cacheTimeout": null,
+        "combine": {
+          "label": "Others",
+          "threshold": "0.05"
+        },
+        "datasource": "-- Dashboard --",
+        "decimals": 2,
+        "description": "",
+        "fieldConfig": {
+          "defaults": {},
+          "overrides": []
+        },
+        "fontSize": "80%",
+        "format": "deckbytes",
+        "gridPos": {
+          "h": 10,
+          "w": 9,
+          "x": 15,
+          "y": 20
+        },
+        "id": 37,
+        "interval": null,
+        "legend": {
+          "percentage": true,
+          "percentageDecimals": 2,
+          "show": true,
+          "sort": "avg",
+          "sortDesc": true,
+          "values": true
+        },
+        "legendType": "Right side",
+        "links": [],
+        "nullPointMode": "connected",
+        "pieType": "donut",
+        "pluginVersion": "7.5.11",
+        "strokeWidth": 1,
+        "targets": [
+          {
+            "panelId": 34,
+            "refId": "A"
+          }
+        ],
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "Database Memory (not stacked)",
+        "transformations": [],
+        "type": "grafana-piechart-panel",
+        "valueName": "avg"
+      }
+    ],
+    "refresh": "1m",
+    "schemaVersion": 27,
+    "style": "",
+    "tags": [
+      "db2",
+      "visible",
+      "custom",
+      "ram",
+      "system"
+    ],
+    "templating": {
+      "list": [
+        {
+          "current": {
+            "selected": false,
+            "text": "pdb",
+            "value": "pdb"
+          },
+          "description": null,
+          "error": null,
+          "hide": 0,
+          "includeAll": false,
+          "label": "PDB",
+          "multi": false,
+          "name": "DataSourceVariable",
+          "options": [],
+          "query": "postgres",
+          "refresh": 1,
+          "regex": "",
+          "skipUrlSync": false,
+          "type": "datasource"
+        },
+        {
+          "allValue": null,
+          "current": {
+            "selected": false,
+            "text": "db2_sample(0)",
+            "value": "db2_sample0"
+          },
+          "datasource": "$DataSourceVariable",
+          "definition": "select \ndisplay_name||member as __value,display_name||'('||member||')'  as __text\nfrom spg_mon_db2.v_v_display_name_member \nwhere bucket BETWEEN '${__from:date:YYYY-MM-DD}Z' and '${__to:date:YYYY-MM-DD}Z'\ngroup by display_name,member",
+          "description": null,
+          "error": null,
+          "hide": 1,
+          "includeAll": false,
+          "label": "datasource",
+          "multi": false,
+          "name": "datasource",
+          "options": [],
+          "query": "select \ndisplay_name||member as __value,display_name||'('||member||')'  as __text\nfrom spg_mon_db2.v_v_display_name_member \nwhere bucket BETWEEN '${__from:date:YYYY-MM-DD}Z' and '${__to:date:YYYY-MM-DD}Z'\ngroup by display_name,member",
+          "refresh": 2,
+          "regex": "",
+          "skipUrlSync": false,
+          "sort": 1,
+          "tagValuesQuery": "",
+          "tags": [],
+          "tagsQuery": "",
+          "type": "query",
+          "useTags": false
+        },
+        {
+          "auto": true,
+          "auto_count": 200,
+          "auto_min": "1m",
+          "current": {
+            "selected": true,
+            "text": "auto",
+            "value": "$__auto_interval_inter"
+          },
+          "description": null,
+          "error": null,
+          "hide": 0,
+          "label": "Minimum Interval",
+          "name": "inter",
+          "options": [
+            {
+              "selected": true,
+              "text": "auto",
+              "value": "$__auto_interval_inter"
+            },
+            {
+              "selected": false,
+              "text": "1m",
+              "value": "1m"
+            },
+            {
+              "selected": false,
+              "text": "10m",
+              "value": "10m"
+            },
+            {
+              "selected": false,
+              "text": "30m",
+              "value": "30m"
+            },
+            {
+              "selected": false,
+              "text": "1h",
+              "value": "1h"
+            },
+            {
+              "selected": false,
+              "text": "6h",
+              "value": "6h"
+            },
+            {
+              "selected": false,
+              "text": "12h",
+              "value": "12h"
+            },
+            {
+              "selected": false,
+              "text": "1d",
+              "value": "1d"
+            },
+            {
+              "selected": false,
+              "text": "7d",
+              "value": "7d"
+            },
+            {
+              "selected": false,
+              "text": "14d",
+              "value": "14d"
+            },
+            {
+              "selected": false,
+              "text": "30d",
+              "value": "30d"
+            }
+          ],
+          "query": "1m,10m,30m,1h,6h,12h,1d,7d,14d,30d",
+          "queryValue": "",
+          "refresh": 2,
+          "skipUrlSync": false,
+          "type": "interval"
+        },
+        {
+          "allValue": null,
+          "current": {
+            "selected": false,
+            "text": "logical hostname",
+            "value": "0"
+          },
+          "description": "Select to join via logical or physical hostname",
+          "error": null,
+          "hide": 0,
+          "includeAll": false,
+          "label": "Logical or Physical Hostname",
+          "multi": false,
+          "name": "logphysname",
+          "options": [
+            {
+              "selected": true,
+              "text": "logical hostname",
+              "value": "0"
+            },
+            {
+              "selected": false,
+              "text": "physical hostname",
+              "value": "1"
+            }
+          ],
+          "query": "logical hostname : 0,  physical hostname : 1",
+          "queryValue": "",
+          "skipUrlSync": false,
+          "type": "custom"
+        }
+      ]
+    },
+    "time": {
+      "from": "now-3h",
+      "to": "now"
+    },
+    "timepicker": {
+      "refresh_intervals": [
+        "10s",
+        "30s",
+        "1m",
+        "5m",
+        "15m",
+        "30m",
+        "1h",
+        "2h",
+        "1d"
+      ],
+      "time_options": [
+        "5m",
+        "15m",
+        "1h",
+        "6h",
+        "12h",
+        "24h",
+        "2d",
+        "7d",
+        "30d"
+      ]
+    },
+    "timezone": "",
+    "title": "System Resources Memory Share",
+    "uid": "LQ55kpN4k",
+    "version": 5
+  }
