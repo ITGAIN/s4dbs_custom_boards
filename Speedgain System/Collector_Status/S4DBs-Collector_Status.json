@@ -24,8 +24,7 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 1,
-  "id": 120,
-  "iteration": 1649928420497,
+  "iteration": 1668504565904,
   "links": [
     {
       "icon": "external link",
@@ -133,10 +132,419 @@
         "x": 0,
         "y": 2
       },
-      "id": 78,
+      "id": 89,
       "panels": [],
       "title": "Current Status",
       "type": "row"
+    },
+    {
+      "datasource": "${DataSourceVariable}",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "nodes_enabled"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "nodes_disabled"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "orange",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 4,
+        "x": 0,
+        "y": 3
+      },
+      "id": 86,
+      "options": {
+        "displayLabels": [],
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "values": [
+            "value",
+            "percent"
+          ]
+        },
+        "pieType": "donut",
+        "reduceOptions": {
+          "calcs": [
+            "sum"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {}
+      },
+      "pluginVersion": "7.5.11",
+      "targets": [
+        {
+          "format": "table",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "select\nsum(case when \"VALUE\" = 'true' then 1 else null end) as nodes_enabled,\nsum(case when \"VALUE\" = 'false' then 1 else null end) as nodes_disabled\n\nfrom\n\tspg_mon.spgdb_config t1\nwhere\n\tt1.\"CATEGORY\" = 'remote_node'\n\tand right(t1.\"PARAMETER\", 8) = '.enabled'\n",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "title": "Nodes Enabled",
+      "transformations": [],
+      "type": "piechart"
+    },
+    {
+      "datasource": "${DataSourceVariable}",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "databases_enabled"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "databases_disabled"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "orange",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 4,
+        "x": 4,
+        "y": 3
+      },
+      "id": 87,
+      "options": {
+        "displayLabels": [],
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "values": [
+            "percent",
+            "value"
+          ]
+        },
+        "pieType": "donut",
+        "reduceOptions": {
+          "calcs": [
+            "sum"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {}
+      },
+      "pluginVersion": "7.5.11",
+      "targets": [
+        {
+          "format": "table",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "select\nsum(case when \"VALUE\" = 'true' then 1 else null end) as databases_enabled,\nsum(case when \"VALUE\" = 'false' then 1 else null end) as databases_disabled\n\nfrom\n\tspg_mon.spgdb_config t1\nwhere\n\tt1.\"CATEGORY\" = 'database'\n\tand right(t1.\"PARAMETER\", 8) = '.enabled'\n",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "title": "Databases Enabled",
+      "transformations": [],
+      "type": "piechart"
+    },
+    {
+      "cacheTimeout": null,
+      "datasource": "$DataSourceVariable",
+      "description": "Status gets only updated if at least one collector is active for database/system",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "mappings": [
+            {
+              "from": "",
+              "id": 3,
+              "text": "Not known",
+              "to": "",
+              "type": 1,
+              "value": ""
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "orange",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": -1
+              },
+              {
+                "color": "green",
+                "value": 1
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "port"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "string"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "last_status_update"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "dateTimeAsIso"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "status_server_up"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "green",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "displayName",
+                "value": "status_nodes_up"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "status_server_down"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "displayName",
+                "value": "status_nodes_down"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 4,
+        "x": 8,
+        "y": 3
+      },
+      "id": 70,
+      "interval": null,
+      "links": [],
+      "options": {
+        "displayLabels": [],
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "values": [
+            "value",
+            "percent"
+          ]
+        },
+        "pieType": "donut",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "text": {}
+      },
+      "pluginVersion": "7.5.11",
+      "targets": [
+        {
+          "format": "table",
+          "group": [],
+          "hide": false,
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "select \r\nsum(case when ses.status_server ='DOWN' then 1 else 0 end) as status_server_down, \r\nsum(case when ses.status_server ='UP' then 1 else 0 END) as status_server_up\r\nfrom spg_mon.spgdb_environment_stats ses \r\njoin spg_mon.spgdb_source ssdb on ses.source_db_id = ssdb.source_id \r\nwhere end_time>'9999-12-12'\r\nand $__timeFilter(last_stats_time);",
+          "refId": "B",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Nodes Monitored Status",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "indexByName": {},
+            "renameByName": {
+              "status_server_down": ""
+            }
+          }
+        }
+      ],
+      "type": "piechart"
     },
     {
       "cacheTimeout": null,
@@ -234,9 +642,9 @@
         ]
       },
       "gridPos": {
-        "h": 6,
-        "w": 6,
-        "x": 0,
+        "h": 7,
+        "w": 4,
+        "x": 12,
         "y": 3
       },
       "id": 69,
@@ -246,7 +654,7 @@
         "displayLabels": [],
         "legend": {
           "displayMode": "list",
-          "placement": "right",
+          "placement": "bottom",
           "values": [
             "value",
             "percent"
@@ -294,753 +702,8 @@
       ],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Status Databases Monitored",
+      "title": "Databases Monitored Status",
       "type": "piechart"
-    },
-    {
-      "alert": {
-        "alertRuleTags": {},
-        "conditions": [
-          {
-            "evaluator": {
-              "params": [
-                0
-              ],
-              "type": "gt"
-            },
-            "operator": {
-              "type": "and"
-            },
-            "query": {
-              "params": [
-                "A",
-                "24h",
-                "now"
-              ]
-            },
-            "reducer": {
-              "params": [],
-              "type": "count"
-            },
-            "type": "query"
-          }
-        ],
-        "executionErrorState": "alerting",
-        "for": "5m",
-        "frequency": "30s",
-        "handler": 1,
-        "name": "Databases Down > 0",
-        "noDataState": "ok",
-        "notifications": []
-      },
-      "aliasColors": {},
-      "bars": true,
-      "cacheTimeout": null,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": null,
-      "description": "Status gets only updated if at least one collector is active for database/system",
-      "fieldConfig": {
-        "defaults": {
-          "unit": "short"
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "port"
-            },
-            "properties": [
-              {
-                "id": "unit",
-                "value": "string"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "last_status_update"
-            },
-            "properties": [
-              {
-                "id": "unit",
-                "value": "dateTimeAsIso"
-              }
-            ]
-          }
-        ]
-      },
-      "fill": 1,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 6,
-        "w": 6,
-        "x": 6,
-        "y": 3
-      },
-      "hiddenSeries": false,
-      "hideTimeOverride": true,
-      "id": 75,
-      "interval": null,
-      "legend": {
-        "alignAsTable": true,
-        "avg": false,
-        "current": false,
-        "max": false,
-        "min": false,
-        "rightSide": false,
-        "show": true,
-        "total": false,
-        "values": false
-      },
-      "lines": false,
-      "linewidth": 1,
-      "links": [],
-      "nullPointMode": "null",
-      "options": {
-        "alertThreshold": true
-      },
-      "percentage": false,
-      "pluginVersion": "7.5.11",
-      "pointradius": 2,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": true,
-      "steppedLine": false,
-      "targets": [
-        {
-          "format": "time_series",
-          "group": [],
-          "hide": false,
-          "metricColumn": "none",
-          "rawQuery": true,
-          "rawSql": "select \r\n$__timeGroupAlias(current_timestamp,$__interval),\r\n--sum(case when ses.status_db ='DOWN' then 1 else 0 end) as status_db_down\r\nhost||':'||port||'/'||database_name as metric,\r\ncount(*) as value\r\nfrom spg_mon.spgdb_environment_stats ses \r\njoin spg_mon.spgdb_source ssdb on ses.source_db_id = ssdb.source_id \r\nwhere end_time>'9999-12-12'\r\nand $__timeFilter(last_stats_time)\r\nand ses.status_db ='DOWN'\r\ngroup by 1,2;",
-          "refId": "A",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "column"
-              }
-            ]
-          ],
-          "timeColumn": "time",
-          "where": [
-            {
-              "name": "$__timeFilter",
-              "params": [],
-              "type": "macro"
-            }
-          ]
-        }
-      ],
-      "thresholds": [
-        {
-          "colorMode": "critical",
-          "fill": true,
-          "line": true,
-          "op": "gt",
-          "value": 0,
-          "visible": true
-        }
-      ],
-      "timeFrom": "5m",
-      "timeRegions": [],
-      "timeShift": null,
-      "title": "Databases Down",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "$$hashKey": "object:520",
-          "format": "short",
-          "label": "",
-          "logBase": 1,
-          "max": null,
-          "min": "0",
-          "show": true
-        },
-        {
-          "$$hashKey": "object:521",
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
-    },
-    {
-      "cacheTimeout": null,
-      "datasource": "$DataSourceVariable",
-      "description": "Status gets only updated if at least one collector is active for database/system",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "custom": {
-            "align": null,
-            "filterable": true
-          },
-          "mappings": [
-            {
-              "from": "",
-              "id": 1,
-              "text": "Down",
-              "to": "",
-              "type": 1,
-              "value": "-1"
-            },
-            {
-              "from": "",
-              "id": 2,
-              "text": "UP",
-              "to": "",
-              "type": 1,
-              "value": "1"
-            },
-            {
-              "from": "",
-              "id": 3,
-              "text": "Not known",
-              "to": "",
-              "type": 1,
-              "value": ""
-            }
-          ],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "orange",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": -1
-              },
-              {
-                "color": "green",
-                "value": 1
-              }
-            ]
-          },
-          "unit": "short"
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "status_db"
-            },
-            "properties": [
-              {
-                "id": "custom.displayMode",
-                "value": "color-background"
-              },
-              {
-                "id": "custom.width",
-               "value": 160
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "status_server"
-            },
-            "properties": [
-              {
-                "id": "custom.displayMode",
-                "value": "color-background"
-              },
-              {
-                "id": "custom.width",
-                "value": 160
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "port"
-            },
-            "properties": [
-              {
-                "id": "unit",
-                "value": "string"
-              },
-              {
-                "id": "custom.width",
-                "value": 160
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "last_status_update"
-            },
-            "properties": [
-              {
-                "id": "unit",
-                "value": "dateTimeAsIso"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "host"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 220
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "database_name"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 160
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 12,
-        "w": 12,
-        "x": 12,
-        "y": 3
-      },
-      "id": 67,
-      "interval": null,
-      "links": [],
-      "options": {
-        "showHeader": true,
-        "sortBy": [
-          {
-            "desc": true,
-            "displayName": "last_status_update"
-          }
-        ]
-      },
-      "pluginVersion": "7.5.11",
-      "targets": [
-        {
-          "format": "table",
-          "group": [],
-          "hide": false,
-          "metricColumn": "none",
-          "rawQuery": true,
-          "rawSql": "select ssdb.host ,ssdb.port ,ssdb.database_name,\r\ncase when ses.status_db ='DOWN' then -1 when ses.status_db ='UP' then 1 else NULL END as status_db,\r\ncase when ses.status_server ='DOWN' then -1 when ses.status_server='UP' then 1 else NULL END as status_server,\r\nses.last_stats_time as last_status_update\r\nfrom spg_mon.spgdb_environment_stats ses \r\njoin spg_mon.spgdb_source ssdb on ses.source_db_id = ssdb.source_id \r\nwhere end_time>'9999-12-12'\r\nand (ses.status_db in ($server_db_status) or ses.status_server in ($server_db_status))\r\nand $__timeFilter(last_stats_time)\r\nand ssdb.database_name in ($dbnamef)\r\nand ssdb.host in ($hostf);",
-          "refId": "B",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "column"
-              }
-            ]
-          ],
-          "timeColumn": "time",
-          "where": [
-            {
-              "name": "$__timeFilter",
-              "params": [],
-              "type": "macro"
-            }
-          ]
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Systems Monitored in Status $server_db_status | Databases $dbnamef | Hosts $hostf",
-      "type": "table"
-    },
-    {
-      "cacheTimeout": null,
-      "datasource": "$DataSourceVariable",
-      "description": "Status gets only updated if at least one collector is active for database/system",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "mappings": [
-            {
-              "from": "",
-              "id": 3,
-              "text": "Not known",
-              "to": "",
-              "type": 1,
-              "value": ""
-            }
-          ],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "orange",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": -1
-              },
-              {
-                "color": "green",
-                "value": 1
-              }
-            ]
-          },
-          "unit": "short"
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "port"
-            },
-            "properties": [
-              {
-                "id": "unit",
-                "value": "string"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "last_status_update"
-            },
-            "properties": [
-              {
-                "id": "unit",
-                "value": "dateTimeAsIso"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "status_server_up"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "green",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "status_server_down"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "red",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 6,
-        "w": 6,
-        "x": 0,
-        "y": 9
-      },
-      "id": 70,
-      "interval": null,
-      "links": [],
-      "options": {
-        "displayLabels": [],
-        "legend": {
-          "displayMode": "list",
-          "placement": "right",
-          "values": [
-            "value",
-            "percent"
-          ]
-        },
-        "pieType": "donut",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "text": {}
-      },
-      "pluginVersion": "7.5.11",
-      "targets": [
-        {
-          "format": "table",
-          "group": [],
-          "hide": false,
-          "metricColumn": "none",
-          "rawQuery": true,
-          "rawSql": "select \r\nsum(case when ses.status_server ='DOWN' then 1 else 0 end) as status_server_down, \r\nsum(case when ses.status_server ='UP' then 1 else 0 END) as status_server_up\r\nfrom spg_mon.spgdb_environment_stats ses \r\njoin spg_mon.spgdb_source ssdb on ses.source_db_id = ssdb.source_id \r\nwhere end_time>'9999-12-12'\r\nand $__timeFilter(last_stats_time);",
-          "refId": "B",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "column"
-              }
-            ]
-          ],
-          "timeColumn": "time",
-          "where": [
-            {
-              "name": "$__timeFilter",
-              "params": [],
-              "type": "macro"
-            }
-          ]
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Status Servers Monitored",
-      "type": "piechart"
-    },
-    {
-      "alert": {
-        "alertRuleTags": {},
-        "conditions": [
-          {
-            "evaluator": {
-              "params": [
-                0
-              ],
-              "type": "gt"
-            },
-            "operator": {
-              "type": "and"
-            },
-            "query": {
-              "params": [
-                "B",
-                "24h",
-                "now"
-              ]
-            },
-            "reducer": {
-              "params": [],
-              "type": "count"
-            },
-            "type": "query"
-          }
-        ],
-        "executionErrorState": "alerting",
-        "for": "5m",
-        "frequency": "30s",
-        "handler": 1,
-        "name": "Servers Down >0",
-        "noDataState": "ok",
-        "notifications": []
-      },
-      "aliasColors": {},
-      "bars": true,
-      "cacheTimeout": null,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": null,
-      "description": "Status gets only updated if at least one collector is active for database/system",
-      "fieldConfig": {
-        "defaults": {
-          "unit": "short"
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "port"
-            },
-            "properties": [
-              {
-                "id": "unit",
-                "value": "string"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "last_status_update"
-            },
-            "properties": [
-              {
-                "id": "unit",
-                "value": "dateTimeAsIso"
-              }
-            ]
-          }
-        ]
-      },
-      "fill": 1,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 6,
-        "w": 6,
-        "x": 6,
-        "y": 9
-      },
-      "hiddenSeries": false,
-      "hideTimeOverride": true,
-      "id": 76,
-      "interval": null,
-      "legend": {
-        "alignAsTable": true,
-        "avg": false,
-        "current": false,
-        "max": false,
-        "min": false,
-        "rightSide": false,
-        "show": true,
-        "total": false,
-        "values": false
-      },
-      "lines": false,
-      "linewidth": 1,
-      "links": [],
-      "nullPointMode": "null",
-      "options": {
-        "alertThreshold": true
-      },
-      "percentage": false,
-      "pluginVersion": "7.5.11",
-      "pointradius": 2,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": true,
-      "steppedLine": false,
-      "targets": [
-        {
-          "format": "table",
-          "group": [],
-          "hide": false,
-          "metricColumn": "none",
-          "rawQuery": true,
-          "rawSql": "select \r\n$__timeGroupAlias(current_timestamp,$__interval),\r\nhost||':'||port as metric,\r\ncount(*) as value\r\nfrom spg_mon.spgdb_environment_stats ses \r\njoin spg_mon.spgdb_source ssdb on ses.source_db_id = ssdb.source_id \r\nwhere end_time>'9999-12-12'\r\nand ses.status_server ='DOWN' \r\nand $__timeFilter(last_stats_time)\r\ngroup by 1,2;",
-          "refId": "B",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "column"
-              }
-            ]
-          ],
-          "timeColumn": "time",
-          "where": [
-            {
-              "name": "$__timeFilter",
-              "params": [],
-              "type": "macro"
-            }
-          ]
-        }
-      ],
-      "thresholds": [
-        {
-          "colorMode": "critical",
-          "fill": true,
-          "line": true,
-          "op": "gt",
-          "value": 0,
-          "visible": true
-        }
-      ],
-      "timeFrom": "5m",
-      "timeRegions": [],
-      "timeShift": null,
-      "title": "Servers Down",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "$$hashKey": "object:867",
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": "0",
-          "show": true
-        },
-        {
-          "$$hashKey": "object:868",
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
     },
     {
       "cacheTimeout": null,
@@ -1234,10 +897,10 @@
         ]
       },
       "gridPos": {
-        "h": 12,
-        "w": 6,
-        "x": 0,
-        "y": 15
+        "h": 7,
+        "w": 8,
+        "x": 16,
+        "y": 3
       },
       "id": 66,
       "interval": null,
@@ -1245,16 +908,17 @@
       "options": {
         "displayLabels": [],
         "legend": {
-          "displayMode": "list",
+          "displayMode": "table",
           "placement": "right",
           "values": [
-            "value"
+            "value",
+            "percent"
           ]
         },
         "pieType": "donut",
         "reduceOptions": {
           "calcs": [
-           "lastNotNull"
+            "lastNotNull"
           ],
           "fields": "",
           "values": true
@@ -1296,6 +960,394 @@
       "title": "Collector Status",
       "transformations": [],
       "type": "piechart"
+    },
+    {
+      "alert": {
+        "alertRuleTags": {},
+        "conditions": [
+          {
+            "evaluator": {
+              "params": [
+                0
+              ],
+              "type": "gt"
+            },
+            "operator": {
+              "type": "and"
+            },
+            "query": {
+              "params": [
+                "B",
+                "24h",
+                "now"
+              ]
+            },
+            "reducer": {
+              "params": [],
+              "type": "count"
+            },
+            "type": "query"
+          }
+        ],
+        "executionErrorState": "alerting",
+        "for": "5m",
+        "frequency": "30s",
+        "handler": 1,
+        "name": "Servers Down >0",
+        "noDataState": "ok",
+        "notifications": []
+      },
+      "aliasColors": {},
+      "bars": true,
+      "cacheTimeout": null,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": null,
+      "description": "Status gets only updated if at least one collector is active for database/system",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "port"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "string"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "last_status_update"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "dateTimeAsIso"
+              }
+            ]
+          }
+        ]
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 7,
+        "w": 6,
+        "x": 0,
+        "y": 10
+      },
+      "hiddenSeries": false,
+      "hideTimeOverride": true,
+      "id": 76,
+      "interval": null,
+      "legend": {
+        "alignAsTable": true,
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "rightSide": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": false,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "7.5.11",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": true,
+      "steppedLine": false,
+      "targets": [
+        {
+          "format": "table",
+          "group": [],
+          "hide": false,
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "select \r\n$__timeGroupAlias(current_timestamp,$__interval),\r\nhost||':'||port as metric,\r\ncount(*) as value\r\nfrom spg_mon.spgdb_environment_stats ses \r\njoin spg_mon.spgdb_source ssdb on ses.source_db_id = ssdb.source_id \r\nwhere end_time>'9999-12-12'\r\nand ses.status_server ='DOWN' \r\nand $__timeFilter(last_stats_time)\r\ngroup by 1,2;",
+          "refId": "B",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "thresholds": [
+        {
+          "colorMode": "critical",
+          "fill": true,
+          "line": true,
+          "op": "gt",
+          "value": 0,
+          "visible": true
+        }
+      ],
+      "timeFrom": "5m",
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Nodes Down",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:867",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": "0",
+          "show": true
+        },
+        {
+          "$$hashKey": "object:868",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "alert": {
+        "alertRuleTags": {},
+        "conditions": [
+          {
+            "evaluator": {
+              "params": [
+                0
+              ],
+              "type": "gt"
+            },
+            "operator": {
+              "type": "and"
+            },
+            "query": {
+              "params": [
+                "A",
+                "24h",
+                "now"
+              ]
+            },
+            "reducer": {
+              "params": [],
+              "type": "count"
+            },
+            "type": "query"
+          }
+        ],
+        "executionErrorState": "alerting",
+        "for": "5m",
+        "frequency": "30s",
+        "handler": 1,
+        "name": "Databases Down > 0",
+        "noDataState": "ok",
+        "notifications": []
+      },
+      "aliasColors": {},
+      "bars": true,
+      "cacheTimeout": null,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": null,
+      "description": "Status gets only updated if at least one collector is active for database/system",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "port"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "string"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "last_status_update"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "dateTimeAsIso"
+              }
+            ]
+          }
+        ]
+      },
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 7,
+        "w": 6,
+        "x": 6,
+        "y": 10
+      },
+      "hiddenSeries": false,
+      "hideTimeOverride": true,
+      "id": 75,
+      "interval": null,
+      "legend": {
+        "alignAsTable": true,
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "rightSide": false,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": false,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
+      "percentage": false,
+      "pluginVersion": "7.5.11",
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": true,
+      "steppedLine": false,
+      "targets": [
+        {
+          "format": "time_series",
+          "group": [],
+          "hide": false,
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "select \r\n$__timeGroupAlias(current_timestamp,$__interval),\r\n--sum(case when ses.status_db ='DOWN' then 1 else 0 end) as status_db_down\r\nhost||':'||port||'/'||database_name as metric,\r\ncount(*) as value\r\nfrom spg_mon.spgdb_environment_stats ses \r\njoin spg_mon.spgdb_source ssdb on ses.source_db_id = ssdb.source_id \r\nwhere end_time>'9999-12-12'\r\nand $__timeFilter(last_stats_time)\r\nand ses.status_db ='DOWN'\r\ngroup by 1,2;",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "thresholds": [
+        {
+          "colorMode": "critical",
+          "fill": true,
+          "line": true,
+          "op": "gt",
+          "value": 0,
+          "visible": true
+        }
+      ],
+      "timeFrom": "5m",
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Databases Down",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "$$hashKey": "object:520",
+          "format": "short",
+          "label": "",
+          "logBase": 1,
+          "max": null,
+          "min": "0",
+          "show": true
+        },
+        {
+          "$$hashKey": "object:521",
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     },
     {
       "alert": {
@@ -1381,10 +1433,10 @@
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
-        "h": 6,
+        "h": 7,
         "w": 6,
-        "x": 6,
-        "y": 15
+        "x": 12,
+        "y": 10
       },
       "hiddenSeries": false,
       "id": 82,
@@ -1495,244 +1547,6 @@
       }
     },
     {
-      "cacheTimeout": null,
-      "datasource": "$DataSourceVariable",
-      "description": "",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "custom": {
-            "align": null,
-            "filterable": true
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "blue",
-                "value": null
-              },
-              {
-                "color": "yellow",
-                "value": 1
-              },
-              {
-                "color": "green",
-                "value": 2
-              },
-              {
-                "color": "orange",
-                "value": 3
-              },
-              {
-                "color": "red",
-                "value": 4
-              },
-              {
-                "color": "purple",
-                "value": 5
-              }
-            ]
-          },
-          "unit": "short"
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "port"
-            },
-            "properties": [
-              {
-                "id": "unit",
-                "value": "string"
-              },
-              {
-                "id": "custom.width",
-                "value": 80
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "last_status_update"
-            },
-            "properties": [
-              {
-                "id": "unit",
-                "value": "dateTimeAsIso"
-              },
-              {
-                "id": "custom.width",
-                "value": 160
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "message"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 5000
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "host"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 220
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "collector_name"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 220
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "status"
-            },
-            "properties": [
-              {
-                "id": "mappings",
-                "value": [
-                  {
-                    "from": "",
-                    "id": 1,
-                    "text": "DISABLED",
-                    "to": "",
-                    "type": 1,
-                    "value": "0"
-                  },
-                  {
-                    "from": "",
-                    "id": 2,
-                    "text": "ENABLED",
-                    "to": "",
-                    "type": 1,
-                    "value": "1"
-                  },
-                  {
-                    "from": "",
-                    "id": 3,
-                    "text": "RUNNING",
-                    "to": "",
-                    "type": 1,
-                    "value": "2"
-                  },
-                  {
-                    "from": "",
-                    "id": 4,
-                   "text": "WARNING",
-                    "to": "",
-                    "type": 1,
-                    "value": "3"
-                  },
-                  {
-                    "from": "",
-                    "id": 5,
-                    "text": "ERROR",
-                    "to": "",
-                    "type": 1,
-                    "value": "4"
-                  },
-                  {
-                    "from": "",
-                    "id": 6,
-                    "text": "STOPPED",
-                    "to": "",
-                    "type": 1,
-                    "value": "5"
-                  }
-                ]
-              },
-              {
-                "id": "custom.displayMode",
-                "value": "color-background"
-              },
-              {
-                "id": "custom.width",
-                "value": 160
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 12,
-        "w": 12,
-        "x": 12,
-        "y": 15
-      },
-      "id": 81,
-      "interval": null,
-      "links": [],
-      "options": {
-        "showHeader": true,
-        "sortBy": [
-          {
-            "desc": true,
-            "displayName": "last_status_update"
-          }
-        ]
-      },
-      "pluginVersion": "7.5.11",
-      "targets": [
-        {
-          "format": "table",
-          "group": [],
-          "hide": false,
-          "metricColumn": "none",
-          "rawQuery": true,
-          "rawSql": "select ss.host,ss.port,ss.database_name,scs.collector_name ,\r\ncase  scs.status \r\n  when 'DISABLED' then 0\r\n  when 'ENABLED' then 1\r\n  when 'RUNNING' then 2\r\n  when 'WARNING' then 3\r\n  when 'ERROR' then 4\r\n  when 'STOPPED' then 5\r\n  else null end as status,\r\nscs.last_stats_time as last_status_update,scs.message from \r\nspg_mon.spgdb_collector_stats scs\r\njoin spg_mon.spgdb_source ss on scs.source_id =ss.source_id\r\nwhere --scs.end_time >'9999-12-12' \r\n--and \r\nscs.start_time=(select max(start_time) from spg_mon.spgdb_collector_stats i where i.source_id=scs.source_id and i.collector_name=scs.collector_name)\r\nand scs.status in ($col_status)\r\nand $__timeFilter(last_stats_time)\r\nand scs.collector_name in ($colnamef)\r\nand ss.database_name in ($dbnamef)\r\nand ss.host in ($hostf);",
-          "refId": "B",
-          "select": [
-            [
-              {
-                "params": [
-                  "value"
-                ],
-                "type": "column"
-              }
-            ]
-          ],
-          "timeColumn": "time",
-          "where": [
-            {
-              "name": "$__timeFilter",
-              "params": [],
-              "type": "macro"
-            }
-          ]
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Collector in Status $col_status | Collector $colnamef | Databases $dbnamef | Hosts $hostf",
-      "type": "table"
-    },
-    {
       "alert": {
         "alertRuleTags": {},
         "conditions": [
@@ -1816,10 +1630,10 @@
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
-        "h": 6,
+        "h": 7,
         "w": 6,
-        "x": 6,
-        "y": 21
+        "x": 18,
+        "y": 10
       },
       "hiddenSeries": false,
       "id": 68,
@@ -1936,7 +1750,678 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 27
+        "y": 17
+      },
+      "id": 91,
+      "panels": [
+        {
+          "datasource": "${DataSourceVariable}",
+          "description": "",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {
+                "align": null,
+                "filterable": true
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byRegexp",
+                  "options": "/.*enabled/"
+                },
+                "properties": [
+                  {
+                    "id": "custom.displayMode",
+                    "value": "color-background"
+                  },
+                  {
+                    "id": "thresholds",
+                    "value": {
+                      "mode": "absolute",
+                      "steps": [
+                        {
+                          "color": "orange",
+                          "value": null
+                        },
+                        {
+                          "color": "green",
+                          "value": 1
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "id": "mappings",
+                    "value": [
+                      {
+                        "from": "",
+                        "id": 1,
+                        "text": "false",
+                        "to": "",
+                        "type": 1,
+                        "value": "0"
+                      },
+                      {
+                        "from": "",
+                        "id": 2,
+                        "text": "true",
+                        "to": "",
+                        "type": 1,
+                        "value": "1"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 26,
+            "w": 12,
+            "x": 0,
+            "y": 18
+          },
+          "id": 84,
+          "options": {
+            "showHeader": true,
+            "sortBy": [
+              {
+                "desc": false,
+                "displayName": "node display name"
+              }
+            ]
+          },
+          "pluginVersion": "7.5.11",
+          "targets": [
+            {
+              "format": "table",
+              "group": [],
+              "metricColumn": "none",
+              "rawQuery": true,
+              "rawSql": "select\n\tt1.\"VALUE\" as host_display_name,\n\tcase t2.\"VALUE\" when 'true' then 1 else 0 end as host_enabled,\n\tt4.\"VALUE\" as db_display_name,\n\tcase t5.\"VALUE\" when 'true' then 1 else 0 end as db_enabled\nfrom\n\tspg_mon.spgdb_config t1\nleft outer join spg_mon.spgdb_config t2\non\n\tt1.\"CATEGORY\" = t2.\"CATEGORY\"\n\tand t1.\"GROUP\" = t2.\"GROUP\"\n\tand right(t2.\"PARAMETER\", 8) = '.enabled'\nleft outer join spg_mon.spgdb_config t3\non\n\tt3.\"CATEGORY\" = 'database'\n\tand right(t3.\"PARAMETER\", 12) = '.remote_node'\n\tand t3.\"VALUE\" = t1.\"GROUP\"\nleft outer join spg_mon.spgdb_config t4\non\n\tt4.\"CATEGORY\" = 'database'\n\tand right(t4.\"PARAMETER\", 7) = '[@name]'\n\tand t3.\"GROUP\" = t4.\"GROUP\"\nleft outer join spg_mon.spgdb_config t5\non\n\tt4.\"CATEGORY\" = t5.\"CATEGORY\"\n\tand t4.\"GROUP\" = t5.\"GROUP\"\n\tand right(t5.\"PARAMETER\", 8) = '.enabled'\nwhere\n\tt1.\"CATEGORY\" = 'remote_node'\n\tand right(t1.\"PARAMETER\", 7) = '[@name]'\n\n",
+              "refId": "A",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "value"
+                    ],
+                    "type": "column"
+                  }
+                ]
+              ],
+              "timeColumn": "time",
+              "where": [
+                {
+                  "name": "$__timeFilter",
+                  "params": [],
+                  "type": "macro"
+                }
+              ]
+            }
+          ],
+          "title": "Monitoring Enabled/Disabled",
+          "transformations": [
+            {
+              "id": "organize",
+              "options": {
+                "excludeByName": {},
+                "indexByName": {},
+                "renameByName": {
+                  "db_display_name": "database display name",
+                  "db_enabled": "database monitoring enabled",
+                  "host_display_name": "node display name",
+                  "host_enabled": "node monitoring enabled"
+                }
+              }
+            }
+          ],
+          "type": "table"
+        },
+        {
+          "cacheTimeout": null,
+          "datasource": "$DataSourceVariable",
+          "description": "Status gets only updated if at least one collector is active for database/system",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {
+                "align": null,
+                "filterable": true
+              },
+              "mappings": [
+                {
+                  "from": "",
+                  "id": 1,
+                  "text": "Down",
+                  "to": "",
+                  "type": 1,
+                  "value": "-1"
+                },
+                {
+                  "from": "",
+                  "id": 2,
+                  "text": "UP",
+                  "to": "",
+                  "type": 1,
+                  "value": "1"
+                },
+                {
+                  "from": "",
+                  "id": 3,
+                  "text": "Not known",
+                  "to": "",
+                  "type": 1,
+                  "value": ""
+                }
+              ],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "orange",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": -1
+                  },
+                  {
+                    "color": "green",
+                    "value": 1
+                  }
+                ]
+              },
+              "unit": "short"
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "status_db"
+                },
+                "properties": [
+                  {
+                    "id": "custom.displayMode",
+                    "value": "color-background"
+                  },
+                  {
+                    "id": "custom.width",
+                    "value": 75
+                  },
+                  {
+                    "id": "displayName",
+                    "value": "db"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "status_server"
+                },
+                "properties": [
+                  {
+                    "id": "custom.displayMode",
+                    "value": "color-background"
+                  },
+                  {
+                    "id": "custom.width",
+                    "value": 75
+                  },
+                  {
+                    "id": "displayName",
+                    "value": "node"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "port"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "string"
+                  },
+                  {
+                    "id": "custom.width",
+                    "value": 60
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "last_status_update"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "dateTimeAsIso"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "host"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 220
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "database_name"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 150
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "display_name"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 220
+                  },
+                  {
+                    "id": "displayName",
+                    "value": "display name"
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 12,
+            "w": 12,
+            "x": 12,
+            "y": 18
+          },
+          "id": 67,
+          "interval": null,
+          "links": [],
+          "options": {
+            "showHeader": true,
+            "sortBy": [
+              {
+                "desc": false,
+                "displayName": "display name"
+              }
+            ]
+          },
+          "pluginVersion": "7.5.11",
+          "targets": [
+            {
+              "format": "table",
+              "group": [],
+              "hide": false,
+              "metricColumn": "none",
+              "rawQuery": true,
+              "rawSql": "select ssdb.source_display_name as display_name, ssdb.host ,ssdb.port ,ssdb.database_name,\r\ncase when ses.status_db ='DOWN' then -1 when ses.status_db ='UP' then 1 else NULL END as status_db,\r\ncase when ses.status_server ='DOWN' then -1 when ses.status_server='UP' then 1 else NULL END as status_server,\r\nses.last_stats_time as last_status_update\r\nfrom spg_mon.spgdb_environment_stats ses \r\njoin spg_mon.spgdb_source ssdb on ses.source_db_id = ssdb.source_id \r\nwhere end_time>'9999-12-12'\r\nand (ses.status_db in ($server_db_status) or ses.status_server in ($server_db_status))\r\nand $__timeFilter(last_stats_time)\r\nand ssdb.database_name in ($dbnamef)\r\nand ssdb.host in ($hostf);",
+              "refId": "B",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "value"
+                    ],
+                    "type": "column"
+                  }
+                ]
+              ],
+              "timeColumn": "time",
+              "where": [
+                {
+                  "name": "$__timeFilter",
+                  "params": [],
+                  "type": "macro"
+                }
+              ]
+            }
+          ],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Nodes and Databases in Status $server_db_status | Databases $dbnamef | Hosts $hostf",
+          "transformations": [
+            {
+              "id": "organize",
+              "options": {
+                "excludeByName": {},
+                "indexByName": {
+                  "database_name": 6,
+                  "display_name": 0,
+                  "host": 4,
+                  "last_status_update": 3,
+                  "port": 5,
+                  "status_db": 1,
+                  "status_server": 2
+                },
+                "renameByName": {}
+              }
+            }
+          ],
+          "type": "table"
+        },
+        {
+          "cacheTimeout": null,
+          "datasource": "$DataSourceVariable",
+          "description": "",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "custom": {
+                "align": null,
+                "displayMode": "auto",
+                "filterable": true
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "blue",
+                    "value": null
+                  },
+                  {
+                    "color": "yellow",
+                    "value": 1
+                  },
+                  {
+                    "color": "green",
+                    "value": 2
+                  },
+                  {
+                    "color": "orange",
+                    "value": 3
+                  },
+                  {
+                    "color": "red",
+                    "value": 4
+                  },
+                  {
+                    "color": "purple",
+                    "value": 5
+                  }
+                ]
+              },
+              "unit": "short"
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "port"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "string"
+                  },
+                  {
+                    "id": "custom.width",
+                    "value": 60
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "last_status_update"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "dateTimeAsIso"
+                  },
+                  {
+                    "id": "custom.width",
+                    "value": 160
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "message"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 5000
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "host"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 220
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "collector_name"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 220
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "status"
+                },
+                "properties": [
+                  {
+                    "id": "mappings",
+                    "value": [
+                      {
+                        "from": "",
+                        "id": 1,
+                        "text": "DISABLED",
+                        "to": "",
+                        "type": 1,
+                        "value": "0"
+                      },
+                      {
+                        "from": "",
+                        "id": 2,
+                        "text": "ENABLED",
+                        "to": "",
+                        "type": 1,
+                        "value": "1"
+                      },
+                      {
+                        "from": "",
+                        "id": 3,
+                        "text": "RUNNING",
+                        "to": "",
+                        "type": 1,
+                        "value": "2"
+                      },
+                      {
+                        "from": "",
+                        "id": 4,
+                        "text": "WARNING",
+                        "to": "",
+                        "type": 1,
+                        "value": "3"
+                      },
+                      {
+                        "from": "",
+                        "id": 5,
+                        "text": "ERROR",
+                        "to": "",
+                        "type": 1,
+                        "value": "4"
+                      },
+                      {
+                        "from": "",
+                        "id": 6,
+                        "text": "STOPPED",
+                        "to": "",
+                        "type": 1,
+                        "value": "5"
+                      }
+                    ]
+                  },
+                  {
+                    "id": "custom.displayMode",
+                    "value": "color-background"
+                  },
+                  {
+                    "id": "custom.width",
+                    "value": 160
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "source_display_name"
+                },
+                "properties": [
+                  {
+                    "id": "displayName",
+                    "value": "display name"
+                  },
+                  {
+                    "id": "custom.width",
+                    "value": 220
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 14,
+            "w": 12,
+            "x": 12,
+            "y": 30
+          },
+          "id": 81,
+          "interval": null,
+          "links": [],
+          "options": {
+            "showHeader": true,
+            "sortBy": [
+              {
+                "desc": true,
+                "displayName": "last_status_update"
+              }
+            ]
+          },
+          "pluginVersion": "7.5.11",
+          "targets": [
+            {
+              "format": "table",
+              "group": [],
+              "hide": false,
+              "metricColumn": "none",
+              "rawQuery": true,
+              "rawSql": "select ss.source_display_name,ss.host,ss.port,ss.database_name,scs.collector_name ,\r\ncase  scs.status \r\n  when 'DISABLED' then 0\r\n  when 'ENABLED' then 1\r\n  when 'RUNNING' then 2\r\n  when 'WARNING' then 3\r\n  when 'ERROR' then 4\r\n  when 'STOPPED' then 5\r\n  else null end as status,\r\nscs.last_stats_time as last_status_update,scs.message from \r\nspg_mon.spgdb_collector_stats scs\r\njoin spg_mon.spgdb_source ss on scs.source_id =ss.source_id\r\nwhere --scs.end_time >'9999-12-12' \r\n--and \r\nscs.start_time=(select max(start_time) from spg_mon.spgdb_collector_stats i where i.source_id=scs.source_id and i.collector_name=scs.collector_name)\r\nand scs.status in ($col_status)\r\nand $__timeFilter(last_stats_time)\r\nand scs.collector_name in ($colnamef)\r\nand ss.database_name in ($dbnamef)\r\nand ss.host in ($hostf);",
+              "refId": "B",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "value"
+                    ],
+                    "type": "column"
+                  }
+                ]
+              ],
+              "timeColumn": "time",
+              "where": [
+                {
+                  "name": "$__timeFilter",
+                  "params": [],
+                  "type": "macro"
+                }
+              ]
+            }
+          ],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Collector in Status $col_status | Collector $colnamef | Databases $dbnamef | Hosts $hostf",
+          "transformations": [
+            {
+              "id": "organize",
+              "options": {
+                "excludeByName": {},
+                "indexByName": {
+                  "collector_name": 1,
+                  "database_name": 6,
+                  "host": 4,
+                  "last_status_update": 3,
+                  "message": 7,
+                  "port": 5,
+                  "source_display_name": 0,
+                  "status": 2
+                },
+                "renameByName": {}
+              }
+            }
+          ],
+          "type": "table"
+        }
+      ],
+      "title": "Detail Tables",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "datasource": null,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 18
       },
       "id": 80,
       "panels": [
@@ -2173,7 +2658,7 @@
             "h": 15,
             "w": 24,
             "x": 0,
-            "y": 26
+            "y": 48
           },
           "id": 73,
           "interval": null,
@@ -2419,7 +2904,7 @@
             "h": 20,
             "w": 24,
             "x": 0,
-            "y": 41
+            "y": 63
           },
           "id": 74,
           "interval": null,
@@ -2507,7 +2992,8 @@
       {
         "allValue": null,
         "current": {
-          "selected": false,
+          "selected": true,
+          "tags": [],
           "text": [
             "WARNING",
             "ERROR",
@@ -2566,7 +3052,8 @@
       {
         "allValue": null,
         "current": {
-          "selected": false,
+          "selected": true,
+          "tags": [],
           "text": [
             "DOWN"
           ],
@@ -2666,6 +3153,7 @@
         "allValue": "host",
         "current": {
           "selected": true,
+          "tags": [],
           "text": [
             "All"
           ],
@@ -2728,5 +3216,5 @@
   "timezone": "",
   "title": "S4DBs Collector Status",
   "uid": "TUef5tb7k",
-  "version": 3
+  "version": 4
 }
