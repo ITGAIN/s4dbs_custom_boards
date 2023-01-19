@@ -24,7 +24,7 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 1,
-  "iteration": 1668504565904,
+  "iteration": 1674135767395,
   "links": [
     {
       "icon": "external link",
@@ -2364,7 +2364,7 @@
               "hide": false,
               "metricColumn": "none",
               "rawQuery": true,
-              "rawSql": "select ss.source_display_name,ss.host,ss.port,ss.database_name,scs.collector_name ,\r\ncase  scs.status \r\n  when 'DISABLED' then 0\r\n  when 'ENABLED' then 1\r\n  when 'RUNNING' then 2\r\n  when 'WARNING' then 3\r\n  when 'ERROR' then 4\r\n  when 'STOPPED' then 5\r\n  else null end as status,\r\nscs.last_stats_time as last_status_update,scs.message from \r\nspg_mon.spgdb_collector_stats scs\r\njoin spg_mon.spgdb_source ss on scs.source_id =ss.source_id\r\nwhere --scs.end_time >'9999-12-12' \r\n--and \r\nscs.start_time=(select max(start_time) from spg_mon.spgdb_collector_stats i where i.source_id=scs.source_id and i.collector_name=scs.collector_name)\r\nand scs.status in ($col_status)\r\nand $__timeFilter(last_stats_time)\r\nand scs.collector_name in ($colnamef)\r\nand ss.database_name in ($dbnamef)\r\nand ss.host in ($hostf);",
+              "rawSql": "select ss.source_display_name,ss.host,ss.port,ss.username ,ss.database_name,scs.collector_name ,\r\ncase  scs.status \r\n  when 'DISABLED' then 0\r\n  when 'ENABLED' then 1\r\n  when 'RUNNING' then 2\r\n  when 'WARNING' then 3\r\n  when 'ERROR' then 4\r\n  when 'STOPPED' then 5\r\n  else null end as status,\r\nscs.last_stats_time as last_status_update,scs.message from \r\nspg_mon.spgdb_collector_stats scs\r\njoin spg_mon.spgdb_source ss on scs.source_id =ss.source_id\r\nwhere --scs.end_time >'9999-12-12' \r\n--and \r\nscs.start_time=(select max(start_time) from spg_mon.spgdb_collector_stats i where i.source_id=scs.source_id and i.collector_name=scs.collector_name)\r\nand scs.status in ($col_status)\r\nand $__timeFilter(last_stats_time)\r\nand scs.collector_name in ($colnamef)\r\nand ss.database_name in ($dbnamef)\r\nand ss.host in ($hostf);",
               "refId": "B",
               "select": [
                 [
@@ -2396,13 +2396,14 @@
                 "excludeByName": {},
                 "indexByName": {
                   "collector_name": 1,
-                  "database_name": 6,
+                  "database_name": 7,
                   "host": 4,
                   "last_status_update": 3,
-                  "message": 7,
+                  "message": 8,
                   "port": 5,
                   "source_display_name": 0,
-                  "status": 2
+                  "status": 2,
+                  "username": 6
                 },
                 "renameByName": {}
               }
@@ -2960,7 +2961,7 @@
   ],
   "refresh": false,
   "schemaVersion": 27,
-  "style": "",
+  "style": "dark",
   "tags": [
     "overview",
     "custom",
@@ -3153,7 +3154,6 @@
         "allValue": "host",
         "current": {
           "selected": true,
-          "tags": [],
           "text": [
             "All"
           ],
@@ -3216,5 +3216,5 @@
   "timezone": "",
   "title": "S4DBs Collector Status",
   "uid": "TUef5tb7k",
-  "version": 4
+  "version": 3
 }
