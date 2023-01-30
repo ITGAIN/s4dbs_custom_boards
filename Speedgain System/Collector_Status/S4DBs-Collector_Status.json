@@ -24,7 +24,7 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 1,
-  "iteration": 1675104857602,
+  "iteration": 1675104857610,
   "links": [
     {
       "icon": "external link",
@@ -2959,7 +2959,7 @@
               "hide": false,
               "metricColumn": "none",
               "rawQuery": true,
-              "rawSql": "select ssdb.host ,ssdb.port ,ssdb.database_name,\r\ncase when ses.status_db ='DOWN' then -1 when ses.status_db ='UP' then 1 else NULL END as status_db,\r\ncase when ses.status_server ='DOWN' then -1 when ses.status_server='UP' then 1 else NULL END as status_server,\r\nses.start_time,\r\nses.end_time,\r\nses.last_stats_time as last_status_update,\r\nses.message \r\nfrom spg_mon.spgdb_environment_stats ses \r\njoin spg_mon.spgdb_source ssdb on ses.source_db_id = ssdb.source_id \r\nwhere\r\n($__timeFilter(start_time) or $__timeFilter(last_stats_time) or $__timeFilter(end_time) )\r\n--and scs.status in ($col_status)\r\nand ssdb.database_name in ($dbnamef)\r\nand ssdb.host in ($hostf)\r\norder by last_stats_time desc\r\nfetch first 10000 row only",
+              "rawSql": "select ssdb.host ,ssdb.port ,ssdb.database_name,\r\ncase when ses.status_db ='DOWN' then -1 when ses.status_db ='UP' then 1 else NULL END as status_db,\r\ncase when ses.status_server ='DOWN' then -1 when ses.status_server='UP' then 1 else NULL END as status_server,\r\nses.start_time,\r\nses.end_time,\r\nses.last_stats_time as last_status_update,\r\nses.message \r\nfrom spg_mon.spgdb_environment_stats ses \r\njoin spg_mon.spgdb_source ssdb on ses.source_db_id = ssdb.source_id \r\nwhere\r\n($__timeFilter(start_time) or $__timeFilter(last_stats_time) or $__timeFilter(end_time) )\r\n--and scs.status in ($col_status)\r\nand ssdb.source_display_name in ($dispnamef)\r\nand ssdb.host in ($hostf)\r\norder by last_stats_time desc\r\nfetch first 10000 row only",
               "refId": "B",
               "select": [
                 [
@@ -2983,7 +2983,7 @@
           ],
           "timeFrom": null,
           "timeShift": null,
-          "title": "Systems Stats History - Databases $dbnamef | Hosts $hostf (fetch first 10k rows order by last_status_update) ",
+          "title": "Systems Stats History - Display Name $dispnamef | Hosts $hostf (fetch first 10k rows order by last_status_update) ",
           "type": "table"
         }
       ],
@@ -3250,5 +3250,5 @@
   "timezone": "",
   "title": "S4DBs Collector Status",
   "uid": "TUef5tb7k",
-  "version": 6
+  "version": 7
 }
