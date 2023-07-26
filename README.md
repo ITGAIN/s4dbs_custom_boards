@@ -28,7 +28,9 @@ Do always specifiy custom tag on custom boards.
 - Db2
     - Tablespace Filesystem Usage
     - System Resources CPU Share
+    - System Resources Memory Share
 - Linux
     - Disk Throughput Disk Map
+    - Workload - Database CPU Distribution
 - Speedgain System
     - Collector Status 
