@@ -24,7 +24,8 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 1,
-  "iteration": 1675108646647,
+  "id": 377,
+  "iteration": 1690541215475,
   "links": [
     {
       "icon": "external link",
@@ -531,7 +532,7 @@
           "hide": false,
           "metricColumn": "none",
           "rawQuery": true,
-          "rawSql": "select \r\nsum(case when ses.status_server ='DOWN' then 1 else 0 end) as status_server_down, \r\nsum(case when ses.status_server ='UP' then 1 else 0 END) as status_server_up\r\nfrom spg_mon.spgdb_environment_stats ses \r\njoin spg_mon.spgdb_source ssdb on ses.source_db_id = ssdb.source_id \r\nwhere end_time>'9999-12-12'\r\nand $__timeFilter(last_stats_time);",
+          "rawSql": "with enabled_nodes as (\r\nselect t1.\"VALUE\" as display_name from \r\nspg_mon.spgdb_config t1\r\n join spg_mon.spgdb_config t2 on t1.\"GROUP\" = t2.\"GROUP\" and t1.\"CATEGORY\" = t2.\"CATEGORY\" and right(t2.\"PARAMETER\", 8) = '.enabled' and t2.\"VALUE\" ='true'\r\nwhere \r\nright(t1.\"PARAMETER\",7) = '[@name]'\r\nand t1.\"CATEGORY\" ='remote_node'\r\n)\r\nselect sum(status_server_down) as status_server_down, sum(status_server_up) as status_server_up from (select ses.source_server_id,\r\nlast(case when ses.status_server ='DOWN' then 1 else 0 end,last_stats_time) as status_server_down, \r\nlast(case when ses.status_server ='UP' then 1 else 0 END,last_stats_time) as status_server_up\r\nfrom  spg_mon.spgdb_source ssdb\r\n join spg_mon.spgdb_environment_stats ses  on ses.source_server_id = ssdb.source_id \r\n join enabled_nodes enn on enn.display_name = ssdb.source_display_name \r\nwhere end_time>'9999-12-12'\r\nand policy_type in ('REMOTE_NODE','LOCAL')\r\nand $__timeFilter(last_mon_time)\r\ngroup by ses.source_server_id) as t",
           "refId": "B",
           "select": [
             [
@@ -3121,7 +3122,7 @@
       {
         "allValue": "collector_name",
         "current": {
-          "selected": false,
+          "selected": true,
           "text": [
             "All"
           ],
@@ -3153,7 +3154,7 @@
       {
         "allValue": "source_display_name",
         "current": {
-          "selected": false,
+          "selected": true,
           "text": [
             "All"
           ],
@@ -3186,7 +3187,6 @@
         "allValue": "host",
         "current": {
           "selected": true,
-          "tags": [],
           "text": [
             "All"
           ],
@@ -3219,7 +3219,6 @@
         "allValue": "",
         "current": {
           "selected": true,
-          "tags": [],
           "text": [
             "All"
           ],
@@ -3282,5 +3281,5 @@
   "timezone": "",
   "title": "S4DBs Collector Status",
   "uid": "TUef5tb7k",
-  "version": 8
+  "version": 9
 }
