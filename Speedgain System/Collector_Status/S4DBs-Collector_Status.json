@@ -24,7 +24,7 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 1,
-  "iteration": 1690542202924,
+  "iteration": 1690543395092,
   "links": [
     {
       "icon": "external link",
@@ -1383,14 +1383,7 @@
         "handler": 1,
         "name": "Collector in Status Stopped alert",
         "noDataState": "ok",
-        "notifications": [
-          {
-            "uid": "AB9rqmsnk"
-          },
-          {
-            "uid": "ZWLsbJ87z"
-          }
-        ]
+        "notifications": []
       },
       "aliasColors": {},
       "bars": false,
@@ -1525,6 +1518,7 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:213",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -1533,6 +1527,7 @@
           "show": true
         },
         {
+          "$$hashKey": "object:214",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -1580,14 +1575,7 @@
         "handler": 1,
         "name": "Collector in Status ERROR alert",
         "noDataState": "ok",
-        "notifications": [
-          {
-            "uid": "AB9rqmsnk"
-          },
-          {
-            "uid": "ZWLsbJ87z"
-          }
-        ]
+        "notifications": []
       },
       "aliasColors": {},
       "bars": false,
@@ -1722,6 +1710,7 @@
       },
       "yaxes": [
         {
+          "$$hashKey": "object:573",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -1730,6 +1719,7 @@
           "show": true
         },
         {
+          "$$hashKey": "object:574",
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -3248,5 +3238,5 @@
   "timezone": "",
   "title": "S4DBs Collector Status",
   "uid": "TUef5tb7k",
-  "version": 10
+  "version": 11
 }
