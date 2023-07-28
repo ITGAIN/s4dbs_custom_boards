@@ -24,8 +24,7 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 1,
-  "id": 377,
-  "iteration": 1690541215475,
+  "iteration": 1690542202924,
   "links": [
     {
       "icon": "external link",
@@ -613,31 +612,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "port"
-            },
-            "properties": [
-              {
-                "id": "unit",
-                "value": "string"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "last_status_update"
-            },
-            "properties": [
-              {
-                "id": "unit",
-                "value": "dateTimeAsIso"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "status_db_down"
+              "options": "down"
             },
             "properties": [
               {
@@ -646,17 +621,13 @@
                   "fixedColor": "red",
                   "mode": "fixed"
                 }
-              },
-              {
-                "id": "displayName",
-                "value": "down"
               }
             ]
           },
           {
             "matcher": {
               "id": "byName",
-              "options": "status_db_up"
+              "options": "up"
             },
             "properties": [
               {
@@ -665,10 +636,6 @@
                   "fixedColor": "green",
                   "mode": "fixed"
                 }
-              },
-              {
-                "id": "displayName",
-                "value": "up"
               }
             ]
           }
@@ -680,7 +647,7 @@
         "x": 12,
         "y": 3
       },
-      "id": 69,
+      "id": 93,
       "interval": null,
       "links": [],
       "options": {
@@ -711,8 +678,8 @@
           "hide": false,
           "metricColumn": "none",
           "rawQuery": true,
-          "rawSql": "select \r\nsum(case when ses.status_db ='DOWN' then 1 else 0 end) as status_db_down, \r\nsum(case when ses.status_db ='UP' then 1 else 0 END) as status_db_up\r\nfrom spg_mon.spgdb_environment_stats ses \r\njoin spg_mon.spgdb_source ssdb on ses.source_db_id = ssdb.source_id \r\nwhere end_time>'9999-12-12'\r\nand $__timeFilter(last_stats_time);",
-          "refId": "B",
+          "rawSql": "with enabled_databases as (\nselect t1.\"VALUE\" as display_name from \nspg_mon.spgdb_config t1\n join spg_mon.spgdb_config t2 on t1.\"GROUP\" = t2.\"GROUP\" and t1.\"CATEGORY\" = t2.\"CATEGORY\" and right(t2.\"PARAMETER\", 8) = '.enabled' and t2.\"VALUE\" ='true'\nwhere \nright(t1.\"PARAMETER\",7) = '[@name]'\nand t1.\"CATEGORY\" ='database'\n)\nselect sum(status_db_down) as down, sum(status_db_up) as up from (select ses.source_db_id,\nlast(case when ses.status_db ='DOWN' then 1 else 0 end,last_stats_time) as status_db_down, \nlast(case when ses.status_db ='UP' then 1 else 0 END,last_stats_time) as status_db_up\nfrom  spg_mon.spgdb_source ssdb\n join spg_mon.spgdb_environment_stats ses  on ses.source_db_id = ssdb.source_id \n join enabled_databases enn on enn.display_name = ssdb.source_display_name \nwhere end_time>'9999-12-12'\nand policy_type not in ('REMOTE_NODE','LOCAL')\nand $__timeFilter(last_mon_time)\ngroup by ses.source_db_id) as t",
+          "refId": "A",
           "select": [
             [
               {
@@ -3281,5 +3248,5 @@
   "timezone": "",
   "title": "S4DBs Collector Status",
   "uid": "TUef5tb7k",
-  "version": 9
+  "version": 10
 }
