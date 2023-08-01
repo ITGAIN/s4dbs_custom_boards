@@ -994,7 +994,7 @@
       "cacheTimeout": null,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DataSourceVariable}",
+      "datasource": "pdb",
       "description": "Only those that got an update withing last week will be shown",
       "fieldConfig": {
         "defaults": {
@@ -1186,7 +1186,7 @@
       "cacheTimeout": null,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DataSourceVariable}",
+      "datasource": "pdb",
       "description": "Only those that got an update withing last week will be shown",
       "fieldConfig": {
         "defaults": {
@@ -1378,7 +1378,7 @@
       "cacheTimeout": null,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DataSourceVariable}",
+      "datasource": "pdb",
       "description": "Status gets only updated if at least one collector is active for database/system",
       "fieldConfig": {
         "defaults": {
@@ -1572,7 +1572,7 @@
       "cacheTimeout": null,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DataSourceVariable}",
+      "datasource": "pdb",
       "description": "Status gets only updated if at least one collector is active for database/system",
       "fieldConfig": {
         "defaults": {
@@ -3230,5 +3230,5 @@
   "timezone": "",
   "title": "S4DBs Collector Status",
   "uid": "TUef5tb7k",
-  "version": 12
+  "version": 13
 }
