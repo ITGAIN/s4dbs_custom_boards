@@ -1,4 +1,7 @@
 # Collector Status
+
+This dashboard will be natively integrated in the main product with version 1.5. It will be deleted later on this project!
+
 ## Requirements
 - Version: minimum 1.0
 
